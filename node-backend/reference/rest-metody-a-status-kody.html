@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — REST metody &amp; status kódy</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Reference · REST</p>
+<h1>REST cheat sheet</h1>
+<p class="subtitle">Metody, idempotence, status kódy. Kompaktní tahák do kapsy — z lekce 04.</p>
+
+<h2>Metody</h2>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;">
+    <th style="padding:.4rem;">Metoda</th><th style="padding:.4rem;">Dělá</th><th style="padding:.4rem;">Cíl</th><th style="padding:.4rem;">Safe</th><th style="padding:.4rem;">Idemp.</th><th style="padding:.4rem;">Úspěch</th>
+  </tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>GET</code></td><td style="padding:.4rem;">čte</td><td style="padding:.4rem;">/users nebo /users/42</td><td style="padding:.4rem;">✅</td><td style="padding:.4rem;">✅</td><td style="padding:.4rem;">200</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>POST</code></td><td style="padding:.4rem;">vytvoří</td><td style="padding:.4rem;"><strong>kolekce</strong> /users</td><td style="padding:.4rem;">❌</td><td style="padding:.4rem;">❌</td><td style="padding:.4rem;"><strong>201</strong></td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>PUT</code></td><td style="padding:.4rem;">nahradí celý</td><td style="padding:.4rem;"><strong>položka</strong> /users/42</td><td style="padding:.4rem;">❌</td><td style="padding:.4rem;">✅</td><td style="padding:.4rem;">200 / 204</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>PATCH</code></td><td style="padding:.4rem;">upraví část</td><td style="padding:.4rem;">položka /users/42</td><td style="padding:.4rem;">❌</td><td style="padding:.4rem;">❌*</td><td style="padding:.4rem;">200</td></tr>
+  <tr><td style="padding:.4rem;"><code>DELETE</code></td><td style="padding:.4rem;">smaže</td><td style="padding:.4rem;">položka /users/42</td><td style="padding:.4rem;">❌</td><td style="padding:.4rem;">✅</td><td style="padding:.4rem;">204</td></tr>
+</table>
+<p style="font-size:.85rem; margin-top:.5rem;"><strong>Safe</strong> = jen čte, nemění stav. <strong>Idempotentní</strong> = 1× nebo N× po sobě = stejný stav serveru. <em>*PATCH obecně nemusí být idempotentní.</em></p>
+
+<div class="callout aha">
+  <span class="label">Mnemotechnika</span>
+  <code>POST</code> míří na <strong>kolekci</strong> („přidej nového") → <strong>není</strong> idempotentní. <code>PUT</code> míří na <strong>konkrétní URI</strong> („ať tenhle vypadá takhle") → idempotentní. Retry POSTu = duplikát; retry PUTu = klid.
+</div>
+
+<h2>Status kódy — třídy</h2>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;"><th style="padding:.4rem;">Třída</th><th style="padding:.4rem;">Význam</th><th style="padding:.4rem;">Retryovat?</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>2xx</code></td><td style="padding:.4rem;">úspěch</td><td style="padding:.4rem;">—</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>3xx</code></td><td style="padding:.4rem;">přesměrování</td><td style="padding:.4rem;">—</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>4xx</code></td><td style="padding:.4rem;">chyba klienta (tvůj vstup)</td><td style="padding:.4rem;"><strong>ne</strong> (změň request)</td></tr>
+  <tr><td style="padding:.4rem;"><code>5xx</code></td><td style="padding:.4rem;">chyba serveru</td><td style="padding:.4rem;"><strong>ano</strong> (zkus později)</td></tr>
+</table>
+
+<h2>Status kódy — konkrétní</h2>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;"><th style="padding:.4rem;">Kód</th><th style="padding:.4rem;">Název</th><th style="padding:.4rem;">Kdy</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>200</code></td><td style="padding:.4rem;">OK</td><td style="padding:.4rem;">úspěch s tělem (GET, PUT)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>201</code></td><td style="padding:.4rem;">Created</td><td style="padding:.4rem;">vznikl nový zdroj (POST)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>204</code></td><td style="padding:.4rem;">No Content</td><td style="padding:.4rem;">úspěch bez těla (DELETE)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>400</code></td><td style="padding:.4rem;">Bad Request</td><td style="padding:.4rem;">nevalidní vstup</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>401</code></td><td style="padding:.4rem;">Unauthorized</td><td style="padding:.4rem;">nepřihlášen (kdo jsi?)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>403</code></td><td style="padding:.4rem;">Forbidden</td><td style="padding:.4rem;">přihlášen, ale nesmíš</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>404</code></td><td style="padding:.4rem;">Not Found</td><td style="padding:.4rem;">zdroj neexistuje</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>409</code></td><td style="padding:.4rem;">Conflict</td><td style="padding:.4rem;">koliduje se stavem (dup. e-mail, verze)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>422</code></td><td style="padding:.4rem;">Unprocessable</td><td style="padding:.4rem;">syntakticky OK, sémanticky ne</td></tr>
+  <tr><td style="padding:.4rem;"><code>500</code></td><td style="padding:.4rem;">Server Error</td><td style="padding:.4rem;">neošetřená výjimka</td></tr>
+</table>
+
+<div class="callout myth">
+  <span class="label">Antipattern</span>
+  <strong>Ne</strong> vracet <code>200</code> na všechno a chybu schovávat do těla. Status kód <em>je</em> ta informace — klient podle něj rozhoduje, aniž čte tělo.
+</div>
+
+<h2>400 vs 409 vs 500 — jemný rozdíl</h2>
+<ul>
+  <li><strong>400</strong> — <em>vstup</em> je vadný (chybí pole, špatný formát). Klient poslal nesmysl.</li>
+  <li><strong>409</strong> — vstup je v pořádku, ale <em>stav serveru</em> to nedovolí (e-mail už zabraný, verze se rozešla).</li>
+  <li><strong>500</strong> — nic z toho jsi nečekal, spadl <em>ti kód</em>. Vždy zaloguj a oprav.</li>
+</ul>
+
+<div class="lesson-footer">
+  <p class="source"><strong>Zdroje:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods">MDN Methods</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">MDN Status</a> · <a href="https://developer.mozilla.org/en-US/docs/Glossary/Idempotent">MDN Idempotent</a> · norma: RFC 9110.</p>
+  <p><strong>Z lekce:</strong> <a href="../lessons/0004-rest-poradne-idempotence-a-status-kody.html">Lekce 04 — REST pořádně</a></p>
+</div>
+
+</body>
+</html>

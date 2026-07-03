@@ -13,3 +13,5 @@
 
 ## Working notes
 - 2026-07-03: Workspace initialized. Ran an initial diagnostic quiz to locate ZPD (awaiting answers).
+- 2026-07-03: Lekce 0004 (REST — idempotence + status kódy + 409) dodána, + reference cheat sheet. Zavírá poslední REST mezeru z baseline. Další ZPD: databáze (Postgres/SQL) — perzistence + `pg` z Node.
+- **Prostředí (remote web session): egress policy blokuje web fetch** (MDN/httpwg vrací 403 z proxy). Ne bug, ne obejít — je to network policy prostředí. Fix = povolit/rozšířit síťovou politiku při vytváření environmentu (docs: code.claude.com/docs → Claude Code on the web). Povolené jsou balíčkové registry (npm, pypi…) a anthropic.com.

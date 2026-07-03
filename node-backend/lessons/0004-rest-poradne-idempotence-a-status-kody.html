@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 04 — REST pořádně: idempotence a status kódy</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 04 · REST</p>
+<h1>REST pořádně: idempotence &amp; status kódy</h1>
+<p class="subtitle">Endpointy už umíš postavit (lekce 03). Teď ať mluví jazykem, který od tebe u pohovoru čekají — správná metoda, správné číslo v odpovědi.</p>
+
+<div class="callout aha">
+  <span class="label">Throughline téhle lekce</span>
+  „REST API" není o tom, že vracíš JSON. Je to <strong>dohoda</strong>: metoda říká <em>co</em> děláš, status kód říká <em>jak to dopadlo</em>. Když tu dohodu dodržíš, klient (i tvůj budoucí kolega) ví, co čekat, aniž by četl tvůj kód. Když ne, působíš jako junior.
+</div>
+
+<h2>Klíčový pojem: idempotence</h2>
+
+<p>Jedno slovo, které u pohovoru rozliší, jestli REST <em>chápeš</em>, nebo jen používáš. Definice <a href="https://developer.mozilla.org/en-US/docs/Glossary/Idempotent">(MDN)</a>:</p>
+
+<div class="callout">
+  <span class="label">Idempotentní metoda</span>
+  Zavoláš ji jednou, nebo pětkrát po sobě se <strong>stejnými daty</strong> — a stav serveru skončí <strong>stejně</strong>. Odpověď se lišit může (druhý <code>DELETE</code> vrátí 404), ale <em>stav</em> ne.
+</div>
+
+<div class="bridge">
+  <span class="label">Most z Flutteru — proč ti na tom záleží</span>
+  Znáš to z appky: request spadne na timeout, tak ho <strong>zkusíš znovu</strong>. Otázka zní: <em>je bezpečné retryovat?</em>
+  <ul style="margin:.3rem 0 0">
+    <li><code>GET</code> / <code>PUT</code> / <code>DELETE</code> → retry v pohodě. Idempotentní.</li>
+    <li><code>POST</code> → <strong>pozor</strong>. Retryem můžeš vytvořit záznam dvakrát (klasika: dvojitá objednávka, dvojitá platba). Není idempotentní.</li>
+  </ul>
+  Idempotence není akademický pojem — je to důvod, proč platební brány řeší <code>Idempotency-Key</code>.
+</div>
+
+<h2>Metody: co dělá, jestli je bezpečná a idempotentní</h2>
+
+<p><strong>Safe</strong> = jen čte, nemění stav. <strong>Idempotent</strong> = opakování nevadí. Tohle je celý REST slovník metod v jedné tabulce <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods">(MDN Methods)</a>:</p>
+
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;">
+    <th style="padding:.45rem;">Metoda</th><th style="padding:.45rem;">Dělá</th><th style="padding:.45rem;">Safe?</th><th style="padding:.45rem;">Idemp.?</th>
+  </tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>GET</code></td><td style="padding:.45rem;">čte</td><td style="padding:.45rem;">✅</td><td style="padding:.45rem;">✅</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>POST</code></td><td style="padding:.45rem;">vytváří nový</td><td style="padding:.45rem;">❌</td><td style="padding:.45rem;"><strong>❌</strong></td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>PUT</code></td><td style="padding:.45rem;">nahradí celý</td><td style="padding:.45rem;">❌</td><td style="padding:.45rem;">✅</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>PATCH</code></td><td style="padding:.45rem;">upraví část</td><td style="padding:.45rem;">❌</td><td style="padding:.45rem;">❌*</td></tr>
+  <tr><td style="padding:.45rem;"><code>DELETE</code></td><td style="padding:.45rem;">smaže</td><td style="padding:.45rem;">❌</td><td style="padding:.45rem;">✅</td></tr>
+</table>
+
+<p style="margin-top:.6rem; font-size:.9rem;"><em>* <code>PATCH</code> obecně idempotentní být nemusí (např. „přičti 1" opakováním roste). <code>PUT</code> ano, protože posíláš <strong>celý</strong> výsledný stav — ať pošleš jednou nebo třikrát, výsledek je tentýž.</em></p>
+
+<div class="callout aha">
+  <span class="label">Aha — proč PUT je idempotentní a POST ne</span>
+  <code>PUT /users/42</code> říká „ať uživatel 42 vypadá <em>takhle</em>". Opakuj kolikrát chceš — pořád vypadá takhle. <code>POST /users</code> říká „<em>přidej</em> nového". Opakuj → přidáš víc lidí. Rozdíl je v tom, jestli cílíš na <strong>konkrétní URI</strong> (PUT), nebo na <strong>kolekci</strong> (POST).
+</div>
+
+<h2>Status kódy: mapa, kterou musíš mít v hlavě</h2>
+
+<p>První číslice je třída. Zbytek jsou detaily. U pohovoru stačí znát tuhle kostru <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">(MDN Status)</a>:</p>
+
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;">
+    <th style="padding:.45rem;">Třída</th><th style="padding:.45rem;">Znamená</th><th style="padding:.45rem;">Kdo to zavinil</th>
+  </tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>2xx</code></td><td style="padding:.45rem;">Povedlo se</td><td style="padding:.45rem;">—</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>3xx</code></td><td style="padding:.45rem;">Přesměrování</td><td style="padding:.45rem;">—</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>4xx</code></td><td style="padding:.45rem;">Chyba <strong>klienta</strong></td><td style="padding:.45rem;">volající (špatný vstup)</td></tr>
+  <tr><td style="padding:.45rem;"><code>5xx</code></td><td style="padding:.45rem;">Chyba <strong>serveru</strong></td><td style="padding:.45rem;">ty (spadl ti kód)</td></tr>
+</table>
+
+<p style="margin-top:.6rem"><strong>Pravidlo palce:</strong> 4xx = „udělal jsi něco špatně, neposílej to znovu beze změny". 5xx = „moje chyba, klidně to zkus později". Tenhle rozdíl je důvod, proč klienti retryují 5xx, ale ne 4xx.</p>
+
+<h3>Konkrétní kódy, které budeš psát pořád</h3>
+
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;">
+    <th style="padding:.45rem;">Kód</th><th style="padding:.45rem;">Název</th><th style="padding:.45rem;">Kdy ho vrátit</th>
+  </tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>200</code></td><td style="padding:.45rem;">OK</td><td style="padding:.45rem;">GET/PUT vyšel, vracíš tělo</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>201</code></td><td style="padding:.45rem;">Created</td><td style="padding:.45rem;"><strong>POST</strong> vytvořil nový záznam</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>204</code></td><td style="padding:.45rem;">No Content</td><td style="padding:.45rem;">povedlo se, ale <strong>nic nevracíš</strong> (typicky DELETE)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>400</code></td><td style="padding:.45rem;">Bad Request</td><td style="padding:.45rem;">rozbitý/nevalidní vstup</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>401</code></td><td style="padding:.45rem;">Unauthorized</td><td style="padding:.45rem;">nepřihlášen (kdo jsi?)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>403</code></td><td style="padding:.45rem;">Forbidden</td><td style="padding:.45rem;">přihlášen, ale nesmíš</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>404</code></td><td style="padding:.45rem;">Not Found</td><td style="padding:.45rem;">zdroj neexistuje</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>409</code></td><td style="padding:.45rem;"><strong>Conflict</strong></td><td style="padding:.45rem;">koliduje se současným stavem (viz níž)</td></tr>
+  <tr><td style="padding:.45rem;"><code>500</code></td><td style="padding:.45rem;">Server Error</td><td style="padding:.45rem;">spadl ti kód (neošetřená výjimka)</td></tr>
+</table>
+
+<div class="callout myth">
+  <span class="label">Ta jedna past, co dělají junioři</span>
+  Vrátit <code>200 OK</code> na <strong>všechno</strong> a chybu schovat do těla (<code>{ "error": "..." }</code> se statusem 200). Klient pak nepozná úspěch od selhání bez čtení těla. Status kód <em>je</em> ta informace — používej ho.
+</div>
+
+<h2>Záhadné 409 Conflict — konečně</h2>
+
+<p>Slíbil jsem ho už v lekci 03. <code>409</code> znamená: <em>„požadavek je v pořádku, ale nemůžu ho splnit, protože by koliduje se současným stavem zdroje"</em> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/409">(MDN 409)</a>. Dva školní příklady:</p>
+
+<pre><code>// 1) Unikátní e-mail — někdo se registruje na už zabraný e-mail
+app.post('/users', (req, res) => {
+  if (emailAlreadyTaken(req.body.email)) {
+    return res.status(409).json({ error: 'E-mail už je zaregistrovaný' });
+  }
+  // ...vytvoř a vrať 201
+});</code></pre>
+
+<p><strong>Proč ne 400?</strong> Vstup <em>není</em> špatný — e-mail je validní. Problém je stav serveru (už tam někdo je). Proto 409, ne 400. <strong>Proč ne 500?</strong> Nic ti nespadlo, situaci jsi čekal. To je ta jemnost, na kterou se ptají.</p>
+
+<pre><code>// 2) Edit conflict — dva lidi editují ten samý záznam
+// Klient poslal PUT s verzí, kterou mezitím někdo přepsal.
+app.put('/docs/:id', (req, res) => {
+  if (req.body.version !== currentVersion(req.params.id)) {
+    return res.status(409).json({ error: 'Dokument někdo mezitím změnil' });
+  }
+  // ...ulož
+});</code></pre>
+
+<h2>🖐 Zkus si to — poznej správný kód</h2>
+<p>Ke každé situaci si <em>nejdřív</em> řekni kód nahlas, pak si ho ověř v kvízu:</p>
+<pre><code>POST /users vytvořil uživatele          → ?
+DELETE /users/42 proběhl, tělo prázdné   → ?
+GET /users/999, ale 999 neexistuje       → ?
+POST /users s e-mailem, co už je zabraný  → ?
+V handleru padla neošetřená výjimka       → ?</code></pre>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Co přesně znamená, že metoda je <em>idempotentní</em>?",
+    "options": [
+      "Nikdy nemění stav zdroje na serveru",
+      "Opakované volání nechá stav serveru stejný",
+      "Vrací při každém volání identickou odpověď",
+      "Je bezpečné ji cachovat na straně klienta"
+    ],
+    "answer": 1,
+    "why": "Idempotence je o STAVU serveru po opakování, ne o odpovědi ani o cachování. GET je navíc safe (nemění stav) — ale idempotence sama znamená jen: jednou nebo víckrát = stejný stav."
+  },
+  {
+    "q": "Request spadl na timeout. Který je NEBEZPEČNÉ jen tak zopakovat?",
+    "options": [
+      "GET /users/42 — načtení profilu",
+      "PUT /users/42 — přepis profilu",
+      "POST /orders — vytvoření objednávky",
+      "DELETE /users/42 — smazání účtu"
+    ],
+    "answer": 2,
+    "why": "POST není idempotentní — retryem vytvoříš objednávku dvakrát. GET/PUT/DELETE jsou idempotentní, opakování stav nezmění. Proto platební brány řeší Idempotency-Key právě u POST."
+  },
+  {
+    "q": "POST /users úspěšně vytvořil nový záznam. Jaký status vrátíš?",
+    "options": [
+      "200, protože request prostě vyšel",
+      "201, protože vznikl nový zdroj",
+      "204, protože klientovi nic nevracíš",
+      "409, protože jde o zápis do kolekce"
+    ],
+    "answer": 1,
+    "why": "201 Created je přesně pro úspěšné vytvoření nového zdroje (typicky POST). 200 je obecný úspěch, 204 když nevracíš tělo, 409 při konfliktu se stavem."
+  },
+  {
+    "q": "Registrace na e-mail, který už někdo má. Nejsprávnější kód?",
+    "options": [
+      "400 Bad Request, protože vstup je vadný",
+      "500 Server Error, protože zápis selhal",
+      "403 Forbidden, protože akce není povolená",
+      "409 Conflict, protože koliduje se stavem"
+    ],
+    "answer": 3,
+    "why": "409 Conflict: vstup je validní (400 by lhal), nic nespadlo (500 by lhal), přihlášení s tím nesouvisí (403 by lhal). Problém je kolize se současným stavem serveru — přesně 409."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Zaseklo se něco?</strong> Napiš mi. Třeba „kdy 422 místo 400?", „co Location hlavička u 201?", „jak řeším 409 přes DB unique constraint?" nebo „proč PATCH nemusí být idempotentní?". Ptej se průběžně — jsem tvůj učitel.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods">MDN — HTTP Methods</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">HTTP Status Codes</a> · <a href="https://developer.mozilla.org/en-US/docs/Glossary/Idempotent">Idempotent</a>. Standard je RFC 9110. Textové, oficiální.</p>
+  <p><strong>Reference:</strong> <a href="../reference/rest-metody-a-status-kody.html">Cheat sheet — REST metody &amp; status kódy</a> (vytiskni si, vrací se to)</p>
+  <p><strong>Souvisí:</strong> <a href="0003-express-konec-if-else-pekla.html">Lekce 03 — Express</a> (kde tyhle metody a kódy píšeš)</p>
+  <p><strong>Mise:</strong> teď tvoje API mluví REST. Příště narazíme na data, která mají přežít restart serveru → <strong>databáze (Postgres/SQL)</strong>. A 409 se vrátí — tentokrát vynucené přes DB unique constraint.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
