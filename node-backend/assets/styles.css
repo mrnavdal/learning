@@ -1,0 +1,87 @@
+/* Shared stylesheet for all lessons & reference docs.
+   Tufte-inspired: readable measure, generous margins, restrained palette. */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --paper: #fdfcf9;
+  --rule: #e0ddd4;
+  --accent: #7a2e0e;      /* brick red — links, emphasis */
+  --good: #1f6b3b;
+  --bad: #9b1c1c;
+  --code-bg: #f4f1ea;
+  --measure: 40rem;
+}
+
+html { font-size: 18px; }
+
+body {
+  margin: 0 auto;
+  padding: 4rem 2rem 8rem;
+  max-width: var(--measure);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.2; font-weight: 700; }
+h1 { font-size: 2rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.35rem; margin: 2.6rem 0 .8rem; border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+h3 { font-size: 1.05rem; margin: 1.8rem 0 .5rem; color: var(--ink-soft); }
+p, li { color: var(--ink); }
+.subtitle { font-family: -apple-system, "Segoe UI", sans-serif; color: var(--ink-soft); font-size: 1rem; margin: 0 0 2rem; }
+.kicker { font-family: -apple-system, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; color: var(--accent); font-weight: 700; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(122,46,14,.3); }
+a:hover { border-bottom-color: var(--accent); }
+
+/* ---- Code ---- */
+code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .85em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; font-size: .8rem; }
+
+/* ---- Callouts ---- */
+.callout { border-left: 3px solid var(--accent); background: rgba(122,46,14,.04); padding: .8rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+.callout.myth { border-left-color: var(--bad); background: rgba(155,28,28,.05); }
+.callout.myth strong { color: var(--bad); }
+.callout.aha { border-left-color: var(--good); background: rgba(31,107,59,.05); }
+.callout .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Analogy box (bridge from Flutter/Dart) ---- */
+.bridge { border: 1px dashed var(--rule); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.4rem 0; font-size: .95rem; }
+.bridge .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Footer nav ---- */
+.lesson-footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); font-family: -apple-system, sans-serif; font-size: .9rem; color: var(--ink-soft); }
+.lesson-footer .ask { background: rgba(122,46,14,.05); border-radius: 6px; padding: .9rem 1.1rem; margin-bottom: 1.2rem; }
+.source { font-family: -apple-system, sans-serif; font-size: .9rem; }
+
+/* ---- Quiz widget ---- */
+.quiz { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; }
+.quiz-card { margin: 0 0 1.6rem; }
+.quiz-q { font-size: 1rem; margin-bottom: .7rem; font-weight: 600; }
+.quiz-num { color: var(--accent); font-weight: 700; }
+.quiz-opts { display: flex; flex-direction: column; gap: .45rem; }
+.quiz-opt {
+  text-align: left; font: inherit; font-size: .92rem;
+  padding: .6rem .8rem; border: 1px solid var(--rule); border-radius: 6px;
+  background: #fff; color: var(--ink); cursor: pointer; transition: background .12s, border-color .12s;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(122,46,14,.03); }
+.quiz-opt:disabled { cursor: default; opacity: .95; }
+.quiz-opt.is-correct { border-color: var(--good); background: rgba(31,107,59,.12); font-weight: 600; }
+.quiz-opt.is-wrong { border-color: var(--bad); background: rgba(155,28,28,.1); }
+.quiz-why { margin-top: .6rem; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; line-height: 1.5; }
+.quiz-why.ok { background: rgba(31,107,59,.08); }
+.quiz-why.no { background: rgba(155,28,28,.06); }
+.quiz-score { font-size: .95rem; color: var(--ink-soft); margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); }
+
+/* ---- Print ---- */
+@media print {
+  body { background: #fff; padding: 1rem; max-width: 100%; }
+  .quiz button { display: none; }
+  a { border: none; color: var(--ink); }
+}

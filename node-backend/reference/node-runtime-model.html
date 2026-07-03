@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Node runtime model</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Reference · Cheat sheet</p>
+<h1>Node runtime model</h1>
+<p class="subtitle">Zhuštěná esence. K rychlému opakování před pohovorem.</p>
+
+<h2>Model v jedné větě</h2>
+<p>Jedno vlákno na tvůj JavaScript + <strong>event loop</strong>, který žongluje s čekáním na I/O, + malý <strong>libuv thread pool</strong> (výchozí 4) na pár těžkých operací na pozadí.</p>
+
+<h2>Proč to škáluje</h2>
+<ul>
+  <li>Server tráví většinu času <strong>čekáním</strong> (DB, disk, síť), ne počítáním.</li>
+  <li>Neblokující operace = vlákno se během čekání uvolní a obsluhuje další požadavky.</li>
+  <li>Callback/promise se vyřídí, až data dorazí.</li>
+</ul>
+
+<h2>Blokující vs. neblokující</h2>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.9rem;">
+  <tr style="border-bottom:1px solid var(--rule); text-align:left;"><th style="padding:.4rem;">Blokující ❌</th><th style="padding:.4rem;">Neblokující ✅</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>fs.readFileSync()</code></td><td style="padding:.4rem;"><code>await fs.promises.readFile()</code></td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>crypto.pbkdf2Sync()</code></td><td style="padding:.4rem;"><code>await db.query()</code>, <code>await fetch()</code></td></tr>
+  <tr><td style="padding:.4rem;">Cokoliv s <code>…Sync</code></td><td style="padding:.4rem;">Cokoliv s callbackem / promise</td></tr>
+</table>
+<p><strong>Pravidlo:</strong> na serveru se <code>…Sync</code> a těžkému CPU v hlavním vlákně vyhýbáš — zablokuješ event loop a čekají <em>všichni</em>.</p>
+
+<h2>libuv thread pool</h2>
+<ul>
+  <li>Výchozí <strong>4 vlákna</strong> (<code>UV_THREADPOOL_SIZE</code>), sdílená — <em>ne</em> vlákno na požadavek.</li>
+  <li>Používá ho: <code>fs</code>, <code>dns.lookup</code>, <code>crypto</code>, <code>zlib</code>.</li>
+  <li><strong>Mimo pool</strong> (přímo přes OS): síťové/HTTP I/O — sockety.</li>
+  <li>Tvůj JS <strong>nikdy</strong> neběží v poolu paralelně.</li>
+</ul>
+
+<h2>Důsledky (proto to řešíš)</h2>
+<ul>
+  <li>Node = skvělý na I/O-heavy služby (API, gateway, real-time). Slabší na number crunching.</li>
+  <li>Těžký CPU výpočet → přesuň mimo hlavní vlákno (Worker Threads, fronta, jiná služba).</li>
+  <li><code>async/await</code> je všudypřítomné, protože je to způsob, jak „počkat, aniž bys blokoval".</li>
+</ul>
+
+<p class="source"><strong>Zdroje:</strong>
+<a href="https://nodejs.org/en/learn/asynchronous-work/overview-of-blocking-vs-non-blocking">Blocking vs Non-Blocking</a> ·
+<a href="https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop">Don't Block the Event Loop</a> ·
+<a href="../lessons/0001-jak-node-obslouzi-tisice-pozadavku.html">Lekce 01</a></p>
+
+</body>
+</html>

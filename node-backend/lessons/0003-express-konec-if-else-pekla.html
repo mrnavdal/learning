@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 03 — Express: konec if/else pekla</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 03 · Express</p>
+<h1>Express: konec <code>if/else</code> pekla</h1>
+<p class="subtitle">Stejný server jako minule — ale routing a middleware místo ručního žonglování. Tady tvoje REST API dostane tvar.</p>
+
+<div class="callout aha">
+  <span class="label">Throughline téhle lekce</span>
+  Každá bolest z lekce 02 (ruční routing, parsování <code>/users/42</code>, čtení těla, opakované hlavičky) má v Expressu jednořádkovou náplast. Nic nového koncepčně — jen elegantnější obal nad tím, co už znáš.
+</div>
+
+<h2>Nejdřív: první závislost (a <code>package.json</code>)</h2>
+
+<p>Express není vestavěný — musíš ho nainstalovat. Tím se konečně dotkneme <code>package.json</code>, na který ses ptal v úvodním kvízu:</p>
+
+<pre><code>mkdir muj-api &amp;&amp; cd muj-api
+npm init -y            # vytvoří package.json
+npm install express    # stáhne Express + zapíše ho do package.json</code></pre>
+
+<div class="bridge">
+  <span class="label">Most z Flutteru — package.json vs pubspec.yaml</span>
+  <ul style="margin:.3rem 0 0">
+    <li><code>npm install express</code> ≈ <code>flutter pub add</code>. Zapíše závislost do <code>package.json</code> (obdoba <code>pubspec.yaml</code>).</li>
+    <li><code>node_modules/</code> ≈ <code>.dart_tool/</code> / pub cache — stažený kód, <strong>necommituje se</strong> (patří do <code>.gitignore</code>).</li>
+    <li><strong>Navíc oproti pubspecu:</strong> <code>package.json</code> má sekci <code>"scripts"</code> — pojmenované příkazy, které pouštíš přes <code>npm run &lt;název&gt;</code> (třeba <code>npm start</code>, <code>npm test</code>). To pubspec nemá.</li>
+    <li>Verze používají <strong>semver</strong> (<code>^5.1.0</code> = „kompatibilní s 5.x"). <code>package-lock.json</code> ≈ <code>pubspec.lock</code> — zamkne přesné verze.</li>
+  </ul>
+</div>
+
+<h2>Ten samý server, teď v Expressu</h2>
+
+<p>Vzpomeň na <code>if/else</code> peklo z minula. Takhle vypadá v Expressu:</p>
+
+<pre><code>const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('domovská stránka');
+});
+
+app.get('/users', (req, res) => {
+  res.json([{ id: 1, name: 'Ada' }]);   // res.json = auto stringify + správná hlavička
+});
+
+app.listen(3000, () => console.log('http://localhost:3000'));</code></pre>
+
+<p>Všimni si, co zmizelo: žádné <code>if (req.url === …)</code>, žádné ruční <code>writeHead</code>, žádné <code>JSON.stringify</code>. <a href="https://expressjs.com/en/starter/hello-world.html">(Express docs)</a> Každá cesta je vlastní funkce. A když nic nesedí, Express sám vrátí <strong>404</strong>.</p>
+
+<h3>Route params — konec ručního parsování</h3>
+<p>Pamatuješ, jak otravné by bylo z <code>req.url</code> vytáhnout <code>42</code> z <code>/users/42</code>? Express to dá zadarmo dvojtečkou:</p>
+
+<pre><code>app.get('/users/:id', (req, res) => {
+  res.json({ id: req.params.id });   // GET /users/42 → req.params.id === '42'
+});</code></pre>
+
+<h2>HTTP metody = CRUD (a oprava z kvízu)</h2>
+
+<p>V úvodním kvízu jsi měl <code>POST</code> a <code>PUT</code> lehce prohozené. Narovnejme to — v Expressu je každá metoda vlastní funkce, takže se ti mapování vryje do prstů:</p>
+
+<div class="callout myth">
+  <span class="label">Oprava</span>
+  Řekl jsi „POST zapisuje, PUT vytváří nové entity". Ve skutečnosti je to naopak: <strong>POST vytváří</strong>, <strong>PUT nahrazuje/aktualizuje</strong> existující.
+</div>
+
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.92rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;">
+    <th style="padding:.45rem;">Metoda</th><th style="padding:.45rem;">CRUD</th><th style="padding:.45rem;">Příklad</th>
+  </tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>GET</code></td><td style="padding:.45rem;">Read (čti)</td><td style="padding:.45rem;"><code>app.get('/users/:id')</code></td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>POST</code></td><td style="padding:.45rem;"><strong>Create (vytvoř)</strong></td><td style="padding:.45rem;"><code>app.post('/users')</code></td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.45rem;"><code>PUT</code></td><td style="padding:.45rem;"><strong>Update (nahraď)</strong></td><td style="padding:.45rem;"><code>app.put('/users/:id')</code></td></tr>
+  <tr><td style="padding:.45rem;"><code>DELETE</code></td><td style="padding:.45rem;">Delete (smaž)</td><td style="padding:.45rem;"><code>app.delete('/users/:id')</code></td></tr>
+</table>
+
+<p style="margin-top:.6rem"><strong>Paměťová pomůcka:</strong> <code>POST</code> jde na kolekci (<code>/users</code>) — „přidej nového". <code>PUT</code> jde na konkrétní kus (<code>/users/42</code>) — „přepiš tenhle". <em>(Proč přesně tak — idempotence a status kód 409 — rozebereme příště v REST lekci.)</em></p>
+
+<h2>Middleware — konečně ta správná definice</h2>
+
+<p>V úvodním kvízu jsi middleware popsal dobře („ověří autentizaci/autorizaci"). Teď ti dám <strong>přesný tvar</strong>. Middleware je funkce se <strong>třemi</strong> parametry, která sedí <em>mezi</em> příchozím requestem a tvým handlerem:</p>
+
+<pre><code>app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);   // udělej něco (log, auth, …)
+  next();   // ⬅ KLÍČOVÉ: pusť request dál na další middleware/handler
+});</code></pre>
+
+<div class="callout">
+  <span class="label">Ta jedna věc, co lidi pletou</span>
+  <code>next()</code> = „jsem hotový, pošli request dál". Když ho <strong>nezavoláš</strong> (a ani neodpovíš přes <code>res</code>), request <strong>uvázne</strong> a klient visí — přesně jako zapomenutý <code>res.end()</code> z minulé lekce. Middleware buď zavolá <code>next()</code>, nebo odpoví (např. <code>res.status(401).json(...)</code> u nepřihlášeného).
+</div>
+
+<p>A jeden middleware používáš skoro vždy — <strong>čtení JSON těla</strong>. Vzpomeň, jak jsi v lekci 02 musel tělo POST požadavku číst po kouskách? Tohle je ta náplast:</p>
+
+<pre><code>app.use(express.json());   // naparsuje JSON tělo → naplní req.body
+
+app.post('/users', (req, res) => {
+  const newUser = req.body;              // { name: 'Ada' } — už hotové
+  res.status(201).json({ id: 1, ...newUser });   // 201 = Created
+});</code></pre>
+
+<h2>🖐 Zkus si to</h2>
+<pre><code>node server.js
+# v druhém terminálu:
+curl http://localhost:3000/users/42
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Ada"}'
+# → {"id":1,"name":"Ada"}  se statusem 201</code></pre>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Chceš endpoint, který VYTVOŘÍ nového uživatele. Kterou volbu použiješ?",
+    "options": [
+      "app.put(\"/users/:id\", handler)",
+      "app.get(\"/users\", handler)",
+      "app.post(\"/users\", handler)",
+      "app.delete(\"/users\", handler)"
+    ],
+    "answer": 2,
+    "why": "POST na kolekci /users = vytvoř nový záznam (Create). PUT by naopak nahradil konkrétní existující /users/:id. To je ta oprava z úvodního kvízu."
+  },
+  {
+    "q": "Middleware zavoláš, ale zapomeneš v něm <code>next()</code> i jakoukoli odpověď. Co se stane?",
+    "options": [
+      "Express automaticky zavolá next() za tebe",
+      "Request uvázne a klient visí, dokud nevyprší timeout",
+      "Vyhodí se chyba a spadne celý server",
+      "Přeskočí se rovnou na handler dané cesty"
+    ],
+    "answer": 1,
+    "why": "next() posílá request dál. Bez něj (a bez res.*) request nikam nepokračuje a klient čeká do timeoutu — stejná past jako zapomenutý res.end()."
+  },
+  {
+    "q": "K čemu je <code>app.use(express.json())</code>?",
+    "options": [
+      "Nastaví, že server vrací odpovědi ve formátu JSON",
+      "Zapne logování všech příchozích požadavků",
+      "Naparsuje JSON tělo požadavku a naplní req.body",
+      "Ověří, že klient poslal platný JSON, jinak vrátí 400"
+    ],
+    "answer": 2,
+    "why": "express.json() je vestavěný middleware, který přečte JSON tělo příchozího požadavku a dá ti ho hotové v req.body. Bez něj by req.body bylo undefined."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Zaseklo se něco?</strong> Napiš mi. Třeba „co je express.Router?", „jak se dělá error-handling middleware?" nebo „co ten <code>...newUser</code> spread?". Ptej se průběžně.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://expressjs.com/en/starter/hello-world.html">Express — Hello World</a> · <a href="https://expressjs.com/en/guide/routing.html">Routing</a> · <a href="https://expressjs.com/en/guide/using-middleware.html">Using middleware</a>. Oficiální, textové.</p>
+  <p><strong>Souvisí:</strong> <a href="0002-http-server-holyma-rukama.html">Lekce 02 — server holýma rukama</a> (co Express dělá pod pokličkou)</p>
+  <p><strong>Mise:</strong> teď umíš postavit API endpointy. Příště <strong>REST pořádně</strong>: proč které metody, idempotence, a status kódy včetně <code>201</code> a záhadného <code>409</code> — ať tvoje API mluví jazykem, který od tebe u pohovoru čekají.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

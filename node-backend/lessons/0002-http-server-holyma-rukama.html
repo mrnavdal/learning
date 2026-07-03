@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 02 — HTTP server holýma rukama</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 02 · HTTP</p>
+<h1>HTTP server holýma rukama</h1>
+<p class="subtitle">Žádný Express. Nejdřív uvidíš, co server dělá na kost — pak oceníš, co za tebe framework dělá.</p>
+
+<div class="bridge">
+  <span class="label">Most z Flutteru</span>
+  Roky jsi psal <code>http.get('https://api…')</code> — byl jsi <strong>klient</strong>, který se ptá. Teď jsi na druhé straně drátu: jsi <strong>server</strong>, ta věc, co odpovídá. Request/response je pořád ten samý pár, jen ho teď <em>vyrábíš</em>, ne konzumuješ.
+</div>
+
+<h2>Co server vlastně dělá?</h2>
+
+<p>Pod vší tou abstrakcí je server překvapivě jednoduchý. Dělá jen tohle, pořád dokola:</p>
+
+<ol>
+  <li><strong>Poslouchá</strong> na nějakém <strong>portu</strong> (např. 3000) — jako když si necháš otevřenou linku a čekáš na hovor.</li>
+  <li>Když dorazí <strong>request</strong>, dostaneš dva objekty: <code>req</code> (co klient chce) a <code>res</code> (kam píšeš odpověď).</li>
+  <li>Sestavíš <strong>response</strong>: status kód + hlavičky + tělo → a pošleš zpět.</li>
+</ol>
+
+<h2>Nejmenší možný server</h2>
+
+<p>V Node je vestavěný modul <code>http</code> — žádná instalace. Tady je celý „hello" server, přesně jak ho ukazuje <a href="https://nodejs.org/learn/http/anatomy-of-an-http-transaction">oficiální dokumentace</a>:</p>
+
+<pre><code>const http = require('node:http');
+
+// Tahle funkce se zavolá při KAŽDÉM požadavku.
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('hello');
+});
+
+server.listen(3000, () => {
+  console.log('Poslouchám na http://localhost:3000');
+});</code></pre>
+
+<p>To je vše. Devět řádků a máš běžící web server. Rozeberme tři klíčové kousky:</p>
+
+<h3>1 · <code>req</code> — co klient chce</h3>
+<p>Dvě věci z <code>req</code> budeš potřebovat pořád:</p>
+<ul>
+  <li><code>req.method</code> → <code>'GET'</code>, <code>'POST'</code>, … (vzpomeň na kvíz z minula 🙂)</li>
+  <li><code>req.url</code> → cesta, třeba <code>'/users/42'</code></li>
+</ul>
+
+<h3>2 · <code>res</code> — odpověď, kterou vyrábíš</h3>
+<ul>
+  <li><code>res.writeHead(200, { 'Content-Type': 'text/plain' })</code> → status kód + hlavičky <strong>naráz</strong></li>
+  <li>(nebo jednotlivě: <code>res.statusCode = 200</code> a <code>res.setHeader('Content-Type', 'text/plain')</code>)</li>
+  <li><code>res.end('hello')</code> → pošle tělo a <strong>ukončí</strong> odpověď. Bez <code>res.end()</code> klient visí a čeká donekonečna.</li>
+</ul>
+
+<div class="callout aha">
+  <span class="label">Aha moment</span>
+  Odpověď je jen <strong>text, který sestavíš a pošleš</strong>: řádek se statusem, pár hlaviček, prázdný řádek, tělo. Žádná magie. Framework jako Express tenhle text jen skládá elegantněji.
+</div>
+
+<h2>Routing… ručně (a proč to bolí)</h2>
+
+<p>Reálný server nemá jednu odpověď pro všechno. Musíš se rozhodnout podle <code>req.url</code> a <code>req.method</code>. Bez frameworku to vypadá takhle:</p>
+
+<pre><code>const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('domovská stránka');
+  } else if (req.method === 'GET' && req.url === '/users') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify([{ id: 1, name: 'Ada' }]));
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');   // 404 když nic nesedí
+  }
+});</code></pre>
+
+<p>Cítíš to? Pár cest a je z toho <code>if/else</code> peklo. Ruční parsování <code>/users/42</code>, čtení těla POST požadavku po kouskách, opakované hlavičky… Přesně tuhle bolest <strong>řeší Express</strong> — a proto ho v příští lekci oceníš. Ale teď už víš, co dělá <em>pod pokličkou</em>: nic magického, jen tohle <code>if/else</code> hezky zabalené.</p>
+
+<h2>🖐 Zkus si to (teď hned)</h2>
+<p>Tady je ta nejlepší zpětná vazba — spusť si to sám. V terminálu:</p>
+<pre><code># 1. Vytvoř soubor
+mkdir hello-server &amp;&amp; cd hello-server
+# vlož do server.js ten devítiřádkový příklad výše
+
+# 2. Spusť ho
+node server.js
+
+# 3. V dalším terminálu (nebo v prohlížeči na localhost:3000):
+curl http://localhost:3000
+# → hello</code></pre>
+<p>Zkus změnit <code>'hello'</code> na něco jiného, restartuj (<code>Ctrl+C</code>, znovu <code>node server.js</code>) a curlni znovu. Když tohle uvidíš na vlastní oči, „server" přestane být abstrakce.</p>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "K čemu slouží číslo v <code>server.listen(3000)</code>?",
+    "options": [
+      "Maximální počet požadavků za sekundu, které server zvládne",
+      "Port, na kterém server poslouchá příchozí připojení",
+      "Timeout v milisekundách, po kterém se spojení zavře",
+      "ID procesu, pod kterým server běží v systému"
+    ],
+    "answer": 1,
+    "why": "Port je jako číslo linky — server na něm poslouchá a klient se na něj připojuje (http://localhost:3000). Jeden port = jeden naslouchající proces."
+  },
+  {
+    "q": "Zapomeneš v handleru zavolat <code>res.end()</code>. Co se stane?",
+    "options": [
+      "Node vyhodí chybu a proces spadne",
+      "Odpověď se odešle, jen bez těla",
+      "Klient nedostane kompletní odpověď a visí / čeká na timeout",
+      "Nic, res.end() je nepovinné a doplní se samo"
+    ],
+    "answer": 2,
+    "why": "res.end() říká \"odpověď je hotová, posílám\". Bez něj server drží spojení otevřené a klient čeká, dokud nevyprší timeout. Vždycky odpověď ukonči."
+  },
+  {
+    "q": "Klient pošle GET na <code>/neco-co-neexistuje</code>. Jaký status kód bys měl vrátit?",
+    "options": [
+      "200, protože server odpověděl v pořádku",
+      "500, protože se stala chyba na serveru",
+      "404, protože daná cesta / zdroj neexistuje",
+      "403, protože klient nemá oprávnění"
+    ],
+    "answer": 2,
+    "why": "404 Not Found = zdroj na téhle cestě neexistuje. 500 je chyba serveru (bug), 403 je \"nemáš právo\", 200 by tvrdilo, že vše OK. Status kódy si pořádně projedeme u REST lekce."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Zaseklo se něco?</strong> Napiš mi. Třeba „co je JSON.stringify?", „jak přečtu tělo POST požadavku?" nebo „proč <code>node:http</code> a ne jen <code>http</code>?". Ptej se průběžně.
+  </div>
+  <p class="source"><strong>Primární zdroj k přečtení:</strong> <a href="https://nodejs.org/learn/http/anatomy-of-an-http-transaction">Node.js docs — Anatomy of an HTTP Transaction</a>. Oficiální, textové, přesně o tomhle serveru.</p>
+  <p><strong>Souvisí:</strong> <a href="0001-jak-node-obslouzi-tisice-pozadavku.html">Lekce 01 — runtime model</a> · <a href="../reference/node-runtime-model.html">cheat sheet</a></p>
+  <p><strong>Mise:</strong> tohle je „assembler" web serveru. Příště: <strong>Express</strong> — stejný server, ale routing a middleware (které už koncepčně znáš!) místo <code>if/else</code> pekla. Tvůj REST API začne mít tvar.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

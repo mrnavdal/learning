@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 01 — Jak Node obslouží tisíce požadavků</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 01 · Node runtime</p>
+<h1>Jak Node obslouží tisíce požadavků naráz</h1>
+<p class="subtitle">Jedno vlákno, a přesto tisíce klientů. Kouzlo není ve vláknech — je v čekání.</p>
+
+<h2>Nejdřív oprava mýtu</h2>
+
+<div class="callout myth">
+  <span class="label">Mýtus (tvoje odpověď z kvízu)</span>
+  <strong>„Node má víc vláken a používá load balancing — každý požadavek si vezme volné vlákno."</strong>
+  <p style="margin:.6rem 0 0">Tohle je model, jak funguje třeba klasický Java/PHP server (vlákno na požadavek). Node to dělá <em>úplně jinak</em> — a právě proto na tuhle otázku u pohovoru padne spousta lidí. Tvůj JavaScript běží v <strong>jednom jediném vlákně</strong>.</p>
+</div>
+
+<p>Otázka tedy zní: když je vlákno jen jedno, jak Node zvládne tisíce klientů současně, aniž by se ostatní museli řadit do fronty a čekat?</p>
+
+<div class="callout aha">
+  <span class="label">Klíčová myšlenka</span>
+  Server tráví většinu času <strong>čekáním</strong> — na databázi, na disk, na síť. Node z toho čekání udělá přednost: místo aby jedno vlákno stálo a zíralo na databázi, <strong>pustí ho mezitím obsloužit další požadavky</strong>. Vlákno nikdy nezahálí.
+</div>
+
+<h2>Most z Flutteru</h2>
+
+<div class="bridge">
+  <span class="label">Co už znáš z Dartu</span>
+  Dart/Flutter běží na jednom <strong>isolate</strong> s <strong>event loopem</strong>. Když napíšeš <code>await http.get(...)</code>, UI vlákno <em>nezamrzne</em> — Dart si odskočí dělat jinou práci a k tvému kódu se vrátí, až odpověď dorazí. Node je <strong>přesně ten samý princip</strong>, jen na serveru místo na UI. Když tohle chápeš u Flutteru, chápeš i Node — jen ten „await" tady čeká na klienty a databáze místo na UI eventy.
+</div>
+
+<h2>Blokující vs. neblokující</h2>
+
+<p>Celé to stojí a padá na jednom rozhodnutí: <strong>blokující</strong> nebo <strong>neblokující</strong> operace.</p>
+
+<pre><code>// ❌ BLOKUJÍCÍ — vlákno stojí, dokud se soubor nenačte.
+//    Po tuhle dobu NEOBSLOUŽÍ nikoho jiného.
+const data = fs.readFileSync('big.txt');
+console.log('hotovo');
+
+// ✅ NEBLOKUJÍCÍ — Node řekne systému "dej vědět, až to bude",
+//    a mezitím obsluhuje další požadavky.
+const data = await fs.promises.readFile('big.txt');
+console.log('hotovo');</code></pre>
+
+<p>Konvence, kterou si zapamatuj: funkce končící na <code>Sync</code> (např. <code>readFileSync</code>) jsou <strong>blokující</strong> — na serveru se jim vyhýbáš. <a href="https://nodejs.org/en/learn/asynchronous-work/overview-of-blocking-vs-non-blocking">(Node docs)</a></p>
+
+<p>Oficiální dokumentace to ukazuje na číslech: <em>„Každý požadavek trvá 50 ms a z toho je 45 ms databázové I/O, které lze dělat asynchronně. Neblokující operace uvolní těch 45 ms na obsluhu jiných požadavků."</em> Jedno vlákno tak stíhá dělat práci za mnoho.</p>
+
+<h2>„Ale nějaká vlákna tam přece jsou…"</h2>
+
+<p>Ano — a tady se to jemně komplikuje (a tvoje intuice o vláknech nebyla úplně mimo). Node pod sebou používá knihovnu <strong>libuv</strong>, která má malý <strong>thread pool</strong> (ve výchozím stavu 4 vlákna). Ale pozor na dva rozdíly oproti tvé původní představě:</p>
+
+<ul>
+  <li><strong>Není to vlákno na požadavek.</strong> Je to malý sdílený pool — <em>„k workerů, kde k je mnohem menší než počet klientů"</em> <a href="https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop">(Node docs)</a>.</li>
+  <li><strong>Tvůj JS v něm neběží.</strong> Pool dělá jen pár konkrétních věcí na pozadí: souborový systém (<code>fs</code>), DNS lookup, <code>crypto</code>, <code>zlib</code>. Síťové I/O (sockety — tedy HTTP požadavky!) jde úplně mimo pool, přímo přes operační systém.</li>
+</ul>
+
+<p>Mentální model, který si odneseš: <strong>jedno vlákno na tvůj kód + event loop, který žongluje s čekáním, + malý pomocný pool na pár těžkých operací.</strong></p>
+
+<div class="callout">
+  <span class="label">Proč tě to budou ptát u pohovoru</span>
+  Z tohohle modelu plyne všechno ostatní o Node: proč nesmíš na serveru dělat těžké CPU výpočty v hlavním vlákně (zablokuješ event loop a <em>všichni</em> klienti čekají), proč je <code>async/await</code> všudypřítomné a proč Node exceluje na I/O-heavy službách (API, gateway), ale ne na number crunchingu.
+</div>
+
+<h2>Rychlý kvíz</h2>
+<p>Odpověz z hlavy. Feedback dostaneš hned.</p>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Server dostane 3 požadavky naráz. Každý potřebuje 40 ms čekat na databázi. Co dělá Node?",
+    "options": [
+      "Spustí 3 vlákna, každé obslouží jeden požadavek",
+      "Odešle všechny 3 dotazy a mezitím obsluhuje dál, výsledky zpracuje jak dorazí",
+      "Vyřídí je postupně, každý klient čeká na předchozí",
+      "Odmítne 2 požadavky, protože má jen jedno vlákno"
+    ],
+    "answer": 1,
+    "why": "Jedno vlákno pošle všechny tři neblokující dotazy, uvolní se a obsluhuje další práci. Callbacky/promisy vyřídí ve chvíli, kdy odpovědi dorazí. Žádné vlákno na požadavek."
+  },
+  {
+    "q": "Kterým voláním na serveru NEJSPÍŠ zablokuješ event loop pro všechny klienty?",
+    "options": [
+      "await db.query(...) na dotaz do databáze",
+      "await fetch(...) na volání jiného API",
+      "crypto.pbkdf2Sync(...) na hashování hesla synchronně",
+      "await fs.promises.readFile(...) na načtení souboru"
+    ],
+    "answer": 2,
+    "why": "Verze se Sync běží synchronně v hlavním vlákně a drží ho, dokud nedopočítá — a hashování je CPU-náročné. Po tu dobu neobsloužíš nikoho. Ostatní tři jsou neblokující (await pustí vlákno dál)."
+  },
+  {
+    "q": "K čemu slouží libuv thread pool (výchozí 4 vlákna)?",
+    "options": [
+      "Spustit jedno vlákno pro každého připojeného klienta",
+      "Běží v něm tvůj JavaScript kód paralelně",
+      "Na pozadí obsluhuje pár operací jako fs, DNS, crypto a zlib",
+      "Rozkládá HTTP požadavky mezi CPU jádra (load balancing)"
+    ],
+    "answer": 2,
+    "why": "Pool je malý a sdílený, dělá jen konkrétní těžké operace na pozadí. Tvůj JS v něm neběží (ten je single-thread) a HTTP/síťové I/O jde mimo pool přímo přes OS."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Zaseklo se něco?</strong> Jsem tvůj lektor — napiš mi. Klidně „proč zrovna 4 vlákna?", „co je to callback vs. promise?" nebo „ukaž mi to na reálném příkladu." Nejasnost = další mikro-lekce.
+  </div>
+  <p class="source"><strong>Primární zdroj k přečtení (ne video 🙂):</strong> <a href="https://nodejs.org/en/learn/asynchronous-work/overview-of-blocking-vs-non-blocking">Node.js docs — Overview of Blocking vs Non-Blocking</a>. Krátké, oficiální, přesně o tomhle.</p>
+  <p><strong>Reference:</strong> <a href="../reference/node-runtime-model.html">Node runtime model (cheat sheet)</a> — zhuštěná podoba téhle lekce k rychlému opakování.</p>
+  <p><strong>Mise:</strong> tohle je základ, na kterém stojí celý zbytek — HTTP server, Express, databáze i auth. Další lekce: postavíme HTTP server holýma rukama (bez knihoven), ať vidíš, co Express dělá za tebe.</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
