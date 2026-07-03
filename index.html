@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>learning — rozcestník</title>
+<link rel="stylesheet" href="node-backend/assets/styles.css">
+<style>
+  .topic { margin: 2rem 0; }
+  .lesson-list { list-style: none; padding: 0; }
+  .lesson-list li { margin: 0 0 .6rem; }
+  .lesson-list a { display: block; padding: .8rem 1rem; border: 1px solid var(--rule); border-radius: 8px; background: #fff; border-bottom: 1px solid var(--rule); }
+  .lesson-list a:hover { border-color: var(--accent); }
+  .lesson-list .num { color: var(--accent); font-weight: 700; font-family: -apple-system, sans-serif; margin-right: .4rem; }
+  .lesson-list .ref a { background: rgba(122,46,14,.04); }
+</style>
+</head>
+<body>
+
+<p class="kicker">Osobní učební repo</p>
+<h1>learning</h1>
+<p class="subtitle">Interaktivní lekce. Přidej si tuhle stránku na plochu telefonu (Sdílet → Přidat na plochu) a máš to jako appku.</p>
+
+<div class="topic">
+  <h2>Node.js backend</h2>
+  <ul class="lesson-list">
+    <li><a href="node-backend/lessons/0001-jak-node-obslouzi-tisice-pozadavku.html"><span class="num">01</span> Jak Node obslouží tisíce požadavků</a></li>
+    <li><a href="node-backend/lessons/0002-http-server-holyma-rukama.html"><span class="num">02</span> HTTP server holýma rukama</a></li>
+    <li><a href="node-backend/lessons/0003-express-konec-if-else-pekla.html"><span class="num">03</span> Express: konec if/else pekla</a></li>
+    <li class="ref"><a href="node-backend/reference/node-runtime-model.html"><span class="num">📄</span> Reference — Node runtime model (cheat sheet)</a></li>
+  </ul>
+</div>
+
+<div class="lesson-footer">
+  <p class="source">Nové lekce přibývají shora. Pull ve svém Claude Code a rozcestník se aktualizuje sám.</p>
+</div>
+
+</body>
+</html>
