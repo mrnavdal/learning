@@ -79,6 +79,19 @@ pre code { background: none; padding: 0; font-size: .8rem; }
 .quiz-why.no { background: rgba(155,28,28,.06); }
 .quiz-score { font-size: .95rem; color: var(--ink-soft); margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); }
 
+/* ---- Mobile (telefon) ---- */
+@media (max-width: 560px) {
+  html { font-size: 17px; }
+  body { padding: 1.5rem 1.1rem 4rem; }
+  h1 { font-size: 1.55rem; }
+  h2 { font-size: 1.2rem; margin-top: 1.9rem; }
+  pre { padding: .8rem .9rem; border-radius: 5px; }
+  pre code { font-size: .74rem; }        /* kód se vejde / roluje vodorovně */
+  table { font-size: .82rem !important; }
+  .quiz-opt { padding: .7rem .8rem; }     /* větší cíl na dotek */
+  .bridge, .callout { padding: .75rem .9rem; }
+}
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }
