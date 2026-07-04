@@ -18,6 +18,15 @@
 - [Express docs: Hello World / Routing / Using middleware](https://expressjs.com/en/starter/hello-world.html)
   Official Express 5.x. `app.get/post/put/delete`, `req.params`, `res.status().json()`, middleware `(req, res, next)`, `express.json()`. Use for: lesson 0003 and all Express work.
 
+- [MDN: HTTP methods / status codes / Idempotent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods)
+  High-trust. Safe/idempotent methods, status-code classes, 201/204/409. Norma je RFC 9110. Use for: lesson 0004, REST semantics.
+- [node-postgres (`pg`) docs](https://node-postgres.com/features/queries)
+  Official. `Pool`, `pool.query(text, values)`, `.rows`, parametrizace `$1`. Use for: lesson 0005, all DB access from Node.
+- [OWASP: SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
+  High-trust security reference. Parameterized queries as the primary defense. Use for: lesson 0005, anything security/injection.
+- [PostgreSQL: Error Codes](https://www.postgresql.org/docs/current/errcodes-appendix.html)
+  Official. `23505 = unique_violation` (→ map to HTTP 409) etc. Use for: mapping DB errors to status codes.
+
 ## Wisdom (Communities)
 
 - [r/node](https://www.reddit.com/r/node/)
@@ -27,4 +36,5 @@
 
 ## Gaps
 
-- Not yet sourced: Express/routing, REST design, SQL/Postgres, auth (JWT/sessions), testing, deployment. Fill as those lessons come up.
+- Not yet sourced: auth (JWT/sessions, password hashing — bcrypt/argon2), testing, deployment/containerization. Fill as those lessons come up.
+- Note: web fetch je v remote session blokovaný egress policy (403), takže tyhle odkazy nešly živě ověřit — jsou to kanonické URL. Až fetch půjde, projít a doplnit anotace.

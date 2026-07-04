@@ -130,6 +130,28 @@ pre code { background: none; padding: 0; font-size: .8rem; }
 .rp-log-req { font-family: "SF Mono", Menlo, Consolas, monospace; color: var(--ink-soft); }
 @media (max-width: 560px) { .rp-grid { grid-template-columns: 1fr; } }
 
+/* ---- SQL injection demo ---- */
+.sql-injection { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.sqli-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: .6rem 0 .4rem; }
+.sqli-h:first-child { margin-top: 0; }
+.sqli-form { display: flex; flex-direction: column; gap: .5rem; }
+.sqli-field { display: flex; align-items: center; gap: .6rem; }
+.sqli-lbl { font-size: .8rem; color: var(--ink-soft); min-width: 5rem; }
+.sqli-input { font: inherit; font-size: .9rem; flex: 1; padding: .45rem .6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.sqli-modes { display: flex; gap: .5rem; margin: .9rem 0 .2rem; flex-wrap: wrap; }
+.sqli-mode { font: inherit; font-size: .85rem; font-weight: 700; padding: .4rem .8rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.sqli-mode.is-on { background: var(--ink); border-color: var(--ink); color: #fff; }
+.sqli-actions { display: flex; gap: .5rem; margin: .6rem 0; flex-wrap: wrap; }
+.sqli-chip { font: inherit; font-size: .82rem; padding: .4rem .8rem; border: 1px dashed var(--bad); border-radius: 20px; background: var(--paper); color: var(--bad); cursor: pointer; transition: all .12s; }
+.sqli-chip:hover { background: rgba(155,28,28,.06); border-style: solid; }
+.sqli-btn { font: inherit; font-weight: 700; font-size: .88rem; padding: .4rem .9rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.sqli-btn:hover { opacity: .88; }
+.sqli-sql { font-size: .8rem; margin: 0 0 .7rem; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .7rem .8rem; overflow-x: auto; white-space: pre; line-height: 1.5; }
+.sqli-result { font-size: .9rem; line-height: 1.5; padding: .6rem .8rem; border-radius: 8px; border: 1px solid var(--rule); }
+.sqli-result.ok { background: rgba(31,107,59,.1); border-color: var(--good); }
+.sqli-result.deny { background: var(--code-bg); }
+.sqli-result.breach { background: rgba(155,28,28,.12); border-color: var(--bad); }
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }

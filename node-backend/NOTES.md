@@ -17,7 +17,8 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
-- **Hotové:** `styles.css` (sdílený Tufte styl), `quiz.js` (kvíz s okamžitým feedbackem).
+- **Hotové:** `styles.css` (sdílený Tufte styl), `quiz.js` (kvíz), `rest-playground.js` (REST API simulátor, lekce 04), `sql-injection.js` (SQL injection demo s reálným mini WHERE evaluátorem, lekce 05).
+- **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`. Drž se ho — ověřuj logiku, ne jen typecheck.
 - **Backlog (nápady dle mise, stav 2026-07-04):**
   - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
   - `http-sim` — zadáš `POST /users/42`, ukáže match na Express route + `req.params` + status.
@@ -27,7 +28,8 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 
 ## Working notes
 - 2026-07-03: Workspace initialized. Ran an initial diagnostic quiz to locate ZPD (awaiting answers).
-- 2026-07-03: Lekce 0004 (REST — idempotence + status kódy + 409) dodána, + reference cheat sheet. Zavírá poslední REST mezeru z baseline. Další ZPD: databáze (Postgres/SQL) — perzistence + `pg` z Node.
+- 2026-07-03: Lekce 0004 (REST — idempotence + status kódy + 409) dodána, + reference cheat sheet + interaktivní REST hrací plocha (`rest-playground.js`).
+- 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`. Další ZPD: **auth (lekce 06)** — hashování hesel + JWT vs session.
 - **Prostředí (remote web session): egress policy blokuje web fetch** (MDN/httpwg vrací 403 z proxy). Ne bug, ne obejít — je to network policy prostředí. Fix = povolit/rozšířit síťovou politiku při vytváření environmentu (docs: code.claude.com/docs → Claude Code on the web). Povolené jsou balíčkové registry (npm, pypi…) a anthropic.com.
 
 ## Hosting lekcí (jak si je uživatel prohlíží v browseru)

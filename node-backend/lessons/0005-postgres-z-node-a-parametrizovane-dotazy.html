@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 05 — Postgres z Node a proč parametry zachrání tvůj backend</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 05 · Databáze</p>
+<h1>Postgres z Node <span style="font-weight:400">(a proč tě parametry zachrání)</span></h1>
+<p class="subtitle">Tvoje API zatím zapomene všechno při restartu. Databáze je paměť. SQL už umíš — tady je server-side delta: jak ho pustit z Node <em>bezpečně</em>.</p>
+
+<div class="callout aha">
+  <span class="label">Throughline téhle lekce</span>
+  Neučím tě SQL — <code>SELECT ... WHERE user_id = 42</code> jsi v diagnostice napsal správně. Učím tě dvě věci, které SQL-znalý frontendista nemá: <strong>jak z Node poslat dotaz do Postgresu</strong> a <strong>jedno pravidlo</strong>, jehož porušení je nejčastější díra v juniorních backendech — <em>SQL injection</em>.
+</div>
+
+<h2>Mluvit z Node s Postgresem: <code>pg</code></h2>
+
+<p>Standardní knihovna je <a href="https://node-postgres.com/">node-postgres (<code>pg</code>)</a>. Nainstaluješ ji stejně jako Express:</p>
+
+<pre><code>npm install pg</code></pre>
+
+<div class="bridge">
+  <span class="label">Most z Flutteru</span>
+  <code>pg</code> je pro databázi to, co pro tebe byl <strong>HTTP klient</strong> pro API: otevřeš spojení, pošleš dotaz, dostaneš odpověď. A protože je to I/O (jde to po síti do DB), je to <strong>async</strong> → vrací <code>Promise</code>, dáváš <code>await</code>. Přesně jako <code>Future</code> v Dartu. <em>(Vzpomeň lekci 01: tohle je ta neblokující I/O, kde Node exceluje.)</em>
+</div>
+
+<pre><code>const { Pool } = require('pg');
+const pool = new Pool();   // čte připojení z env proměnných (PGHOST, PGUSER, …)
+
+app.get('/users/:id', async (req, res) => {
+  const result = await pool.query(
+    'SELECT * FROM users WHERE id = $1',   // ⬅ $1 je placeholder
+    [req.params.id]                        // ⬅ hodnoty zvlášť
+  );
+  if (result.rows.length === 0) return res.status(404).json({ error: 'Nenalezen' });
+  res.json(result.rows[0]);
+});</code></pre>
+
+<p><strong>Pool</strong> = zásobník znovupoužitelných spojení (otevřít spojení je drahé, tak je držíme). <code>pool.query()</code> vrátí objekt, kde tě zajímá <code>.rows</code> — pole výsledků. Zbytek je SQL, které umíš.</p>
+
+<h2>To jediné pravidlo: <strong>nikdy</strong> nelep vstup do SQL</h2>
+
+<p>Všiml sis <code>$1</code> a hodnot v poli zvlášť? To je <strong>parametrizovaný dotaz</strong> a je to hráz proti nejklasičtější bezpečnostní díře. Podívej se na ten rozdíl:</p>
+
+<pre><code>// ❌ NIKDY: skládání stringem
+const bad = `SELECT * FROM users WHERE username = '${username}'`;
+
+// ✅ VŽDY: parametr — hodnota jde mimo SQL text
+const good = await pool.query(
+  'SELECT * FROM users WHERE username = $1', [username]
+);</code></pre>
+
+<div class="callout myth">
+  <span class="label">Proč to je smrtelné</span>
+  U concat verze zadá útočník do <code>username</code> třeba <code>' OR '1'='1' --</code>. Tvoje SQL se stane <code>… WHERE username = '' OR '1'='1' --'</code> → podmínka je vždy pravda, <code>--</code> odkomentuje zbytek. Přihlásí se bez hesla. U parametrizované verze je ten samý text brán jako <strong>doslovná hodnota</strong> — DB ho nikdy nevykoná jako kód.
+</div>
+
+<h2>🧪 Osahej si to: prolom login (a pak ho oprav)</h2>
+<p>Vlevo napiš přihlášení. Klikni <strong>💉 Zkus injection</strong> a pak přepínej mezi režimy. Ve „String concat" injection <strong>projde</strong>, v „Parametrizováno" <strong>ne</strong> — stejný vstup, opačný výsledek. (Uvnitř běží skutečný mini SQL vyhodnocovač, není to podvod.)</p>
+
+<div class="sql-injection"></div>
+
+<h2>Bonus: konečně to slíbené <code>409</code> přes DB</h2>
+
+<p>Pamatuješ 409 z lekce 04 (zabraný e-mail)? V lekci jsme kontrolovali „ručně". Ale <strong>zkontroluj-pak-vlož má race condition</strong> — dva souběžné requesty oba projdou kontrolou a oba vloží. Správně: <strong>nech unikátnost vynutit databázi</strong> a odchyť její chybu (Postgres kód <code>23505</code>):</p>
+
+<pre><code>try {
+  const { rows } = await pool.query(
+    'INSERT INTO users(email, name) VALUES($1, $2) RETURNING *',
+    [email, name]
+  );
+  res.status(201).location(`/users/${rows[0].id}`).json(rows[0]);
+} catch (e) {
+  if (e.code === '23505') {                       // unique_violation
+    return res.status(409).json({ error: 'E-mail už existuje' });
+  }
+  throw e;   // jinou chybu přenech error middlewaru → 500
+}</code></pre>
+
+<p>Tohle je učebnicový důvod, proč databáze mají <em>constraints</em>: jsou atomické a jsou zdroj pravdy. Aplikační kontrola je jen zdvořilost navíc.</p>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Proč <code>pool.query(sql, [x])</code> a ne <code>`... = ${x}`</code> ?",
+    "options": [
+      "Parametrizovaný dotaz je znatelně rychlejší",
+      "Hodnota jde mimo SQL text → nejde injektovat",
+      "Šablonové řetězce v Node nefungují s pg",
+      "Pool vyžaduje hodnoty výhradně jako pole"
+    ],
+    "answer": 1,
+    "why": "Parametr se do DB pošle zvlášť od SQL textu, takže se nikdy nevykoná jako kód — to je hráz proti SQL injection. Rychlost není ten hlavní důvod."
+  },
+  {
+    "q": "Útočník zadá do username <code>&#39; OR &#39;1&#39;=&#39;1&#39; --</code>. U kterého kódu projde?",
+    "options": [
+      "U parametrizovaného dotazu s $1",
+      "U skládání SQL stringem (concat)",
+      "U obou, injection nejde zastavit",
+      "U žádného, Postgres to blokuje sám"
+    ],
+    "answer": 1,
+    "why": "Concat vloží text přímo do SQL → tautologie projde. Parametr ho bere jako doslovnou hodnotu, takže žádný řádek nesedí. Postgres sám o sobě nic neblokuje — záleží na tobě."
+  },
+  {
+    "q": "Vkládáš uživatele s e-mailem, co už existuje. Nejlepší postup?",
+    "options": [
+      "Nejdřív SELECT, pak když nic, tak INSERT",
+      "INSERT a odchytit chybu 23505 → 409",
+      "Vrátit 500, ať se klient zkusí znovu",
+      "Ignorovat a přepsat existující záznam"
+    ],
+    "answer": 1,
+    "why": "SELECT-pak-INSERT má race condition (dva requesty projdou zároveň). Nech unikátnost na DB constraintu a odchyť 23505 (unique_violation) → 409. Atomické a bez závodu."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Zaseklo se něco?</strong> Napiš mi. Třeba „jak vypadá <code>CREATE TABLE</code> a migrace?", „co connection string vs env proměnné?", „jak na transakce (BEGIN/COMMIT)?" nebo „ORM (Prisma/Knex) vs syrové SQL?". Ptej se průběžně.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://node-postgres.com/features/queries">node-postgres — Queries</a> (parametrizace) · <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">OWASP — SQL Injection Prevention</a>. Oficiální a vysoce důvěryhodné.</p>
+  <p><strong>Reference:</strong> <a href="../reference/rest-metody-a-status-kody.html">REST cheat sheet</a> (status kódy včetně 409)</p>
+  <p><strong>Souvisí:</strong> <a href="0004-rest-poradne-idempotence-a-status-kody.html">Lekce 04 — REST</a> (odkud přišlo 409)</p>
+  <p><strong>Mise:</strong> tvoje API má teď paměť <em>a</em> umí se bránit injection. Příště <strong>autentizace</strong> — hashování hesel a JWT vs session. (Ať to <code>password</code> v DB není plaintext jako v téhle demo tabulce!)</p>
+</div>
+
+<script src="../assets/sql-injection.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
