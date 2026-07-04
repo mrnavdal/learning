@@ -1,3 +1,6 @@
+# Generated standalone builds (Artifact-ready, regenerable via node-backend/tools/build-standalone.js)
+node-backend/build/
+
 # Node
 node_modules/
 npm-debug.log*
