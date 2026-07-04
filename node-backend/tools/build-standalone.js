@@ -37,7 +37,12 @@ body = body.replace(/<script[^>]*src=["'][^"']*quiz\.js["'][^>]*>\s*<\/script>/i
 
 // 3) inline assety
 const css = fs.readFileSync(path.join(root, 'assets', 'styles.css'), 'utf8');
-const quizJs = fs.readFileSync(path.join(root, 'assets', 'quiz.js'), 'utf8');
+let quizJs = fs.readFileSync(path.join(root, 'assets', 'quiz.js'), 'utf8');
+
+// DŮLEŽITÉ: když v inlinovaném JS je řetězec "</script>" (třeba v komentáři),
+// HTML parser by na něm skript předčasně ukončil a zbytek vykreslil jako text.
+// Zneškodníme ho na "<\/script>" — pro JS identické, pro HTML parser neviditelné.
+quizJs = quizJs.replace(/<\/script/gi, '<\\/script');
 
 // 4) sestav soběstačnou stránku (bez doctype/html/head/body — Artifact je obalí)
 const out =
