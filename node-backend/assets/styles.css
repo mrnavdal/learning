@@ -92,6 +92,44 @@ pre code { background: none; padding: 0; font-size: .8rem; }
   .bridge, .callout { padding: .75rem .9rem; }
 }
 
+/* ---- REST playground (interaktivní simulátor) ---- */
+.rest-playground { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.rp-controls { display: flex; flex-direction: column; gap: .5rem; }
+.rp-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.rp-select, .rp-input { font: inherit; font-size: .9rem; padding: .45rem .6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.rp-select { font-weight: 700; }
+.rp-input { flex: 1; min-width: 8rem; }
+.rp-body-label { font-size: .8rem; color: var(--ink-soft); }
+.rp-btn { font: inherit; font-weight: 700; font-size: .9rem; padding: .45rem .9rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; transition: opacity .12s; }
+.rp-btn:hover { opacity: .88; }
+.rp-presets { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: .8rem 0 .2rem; }
+.rp-presets-label { font-size: .8rem; color: var(--ink-soft); }
+.rp-chip { font: inherit; font-size: .8rem; padding: .3rem .7rem; border: 1px dashed var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.rp-chip:hover { border-color: var(--accent); color: var(--accent); border-style: solid; }
+.rp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.rp-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin-bottom: .4rem; }
+.rp-response, .rp-state { border: 1px solid var(--rule); border-radius: 8px; padding: .7rem .8rem; background: var(--paper); min-height: 3rem; }
+.rp-reqline { font-size: .85rem; margin-bottom: .4rem; }
+.rp-status { display: inline-block; font-weight: 700; font-size: .9rem; padding: .2rem .6rem; border-radius: 6px; margin-bottom: .4rem; }
+.rp-status.rp-ok { background: rgba(31,107,59,.14); color: var(--good); }
+.rp-status.rp-warn { background: rgba(155,28,28,.12); color: var(--bad); }
+.rp-status.rp-err { background: rgba(90,90,90,.15); color: var(--ink); }
+.rp-note { font-size: .84rem; line-height: 1.45; color: var(--ink-soft); margin-bottom: .5rem; }
+.rp-json { font-size: .78rem; margin: 0; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .6rem .7rem; overflow-x: auto; }
+.rp-hint { font-size: .82rem; color: var(--ink-soft); }
+.rp-user { font-size: .85rem; padding: .3rem 0; border-bottom: 1px solid var(--rule); }
+.rp-user:last-child { border-bottom: none; }
+.rp-empty { font-size: .85rem; color: var(--ink-soft); font-style: italic; }
+.rp-logwrap { margin-top: 1rem; }
+.rp-log { display: flex; flex-direction: column; gap: .25rem; max-height: 9rem; overflow-y: auto; }
+.rp-log-line { display: flex; align-items: center; gap: .5rem; font-size: .82rem; }
+.rp-badge { display: inline-block; min-width: 2.2rem; text-align: center; font-weight: 700; font-size: .75rem; padding: .1rem .3rem; border-radius: 4px; }
+.rp-badge.rp-ok { background: rgba(31,107,59,.14); color: var(--good); }
+.rp-badge.rp-warn { background: rgba(155,28,28,.12); color: var(--bad); }
+.rp-badge.rp-err { background: rgba(90,90,90,.15); color: var(--ink); }
+.rp-log-req { font-family: "SF Mono", Menlo, Consolas, monospace; color: var(--ink-soft); }
+@media (max-width: 560px) { .rp-grid { grid-template-columns: 1fr; } }
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }

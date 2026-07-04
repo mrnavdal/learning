@@ -127,6 +127,17 @@ GET /users/999, ale 999 neexistuje       → ?
 POST /users s e-mailem, co už je zabraný  → ?
 V handleru padla neošetřená výjimka       → ?</code></pre>
 
+<h2>🧪 Hrací plocha: osahej si idempotenci</h2>
+
+<p>Teorie sedí líp, když ji vidíš hýbat se. Tohle je <strong>mini REST API v prohlížeči</strong> — má paměť (<code>/users</code>), posílej requesty a sleduj <strong>status kód</strong> vlevo a <strong>stav serveru</strong> vpravo. Žádný server neběží, je to simulace přesně těch pravidel z lekce.</p>
+
+<div class="callout aha">
+  <span class="label">Co vyzkoušet především</span>
+  Klikni na scénáře dole: <strong>POST 2× stejný email</strong> (uvidíš <code>201</code> pak <code>409</code>), <strong>PUT 2×</strong> (dvakrát <code>200</code>, stav se nezmění — <em>idempotence naživo</em>) a <strong>DELETE 2×</strong> (<code>204</code> pak <code>404</code>, ale uživatel je pryč tak jako tak). To je celý dnešní pojem na dlani.
+</div>
+
+<div class="rest-playground"></div>
+
 <h2>Rychlý kvíz</h2>
 
 <div class="quiz" data-quiz='[
@@ -186,6 +197,7 @@ V handleru padla neošetřená výjimka       → ?</code></pre>
   <p><strong>Mise:</strong> teď tvoje API mluví REST. Příště narazíme na data, která mají přežít restart serveru → <strong>databáze (Postgres/SQL)</strong>. A 409 se vrátí — tentokrát vynucené přes DB unique constraint.</p>
 </div>
 
+<script src="../assets/rest-playground.js"></script>
 <script src="../assets/quiz.js"></script>
 </body>
 </html>

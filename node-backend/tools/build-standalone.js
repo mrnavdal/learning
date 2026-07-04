@@ -7,7 +7,7 @@
  *   1) vezme HTML lekce,
  *   2) vytáhne obsah <body>,
  *   3) inlinuje assets/styles.css do <style>,
- *   4) inlinuje assets/quiz.js do <script> (nahradí <script src=...>),
+ *   4) inlinuje VŠECHNY odkazované assets/*.js do <script> (nahradí <script src=...>),
  *   5) zahodí <!DOCTYPE>/<html>/<head>/<body> obal (Artifact ho dodá sám).
  *
  * Použití:  node tools/build-standalone.js lessons/0004-....html
@@ -32,19 +32,25 @@ const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
 if (!bodyMatch) { console.error('Nenašel jsem <body>.'); process.exit(1); }
 let body = bodyMatch[1];
 
-// 2) pryč s odkazem na quiz.js (skript inlinujeme níž) a případnými prázdnými řádky
-body = body.replace(/<script[^>]*src=["'][^"']*quiz\.js["'][^>]*>\s*<\/script>/i, '').trim();
+// 2) najdi všechny odkazované assets/*.js (v pořadí), inlinuj je a odstraň jejich <script src>
+const scriptRe = /<script[^>]*src=["']([^"']*assets\/([\w-]+\.js))["'][^>]*>\s*<\/script>/gi;
+const inlined = [];
+let m;
+while ((m = scriptRe.exec(body)) !== null) {
+  let js = fs.readFileSync(path.join(root, 'assets', m[2]), 'utf8');
+  // DŮLEŽITÉ: "</script>" uvnitř JS (třeba v komentáři) by HTML parser bral jako
+  // konec skriptu a zbytek vykreslil jako text. "<\/script>" je pro JS identické,
+  // pro HTML parser neviditelné.
+  js = js.replace(/<\/script/gi, '<\\/script');
+  inlined.push(js);
+}
+body = body.replace(scriptRe, '').trim();
 
-// 3) inline assety
+// 3) inline stylesheet
 const css = fs.readFileSync(path.join(root, 'assets', 'styles.css'), 'utf8');
-let quizJs = fs.readFileSync(path.join(root, 'assets', 'quiz.js'), 'utf8');
-
-// DŮLEŽITÉ: když v inlinovaném JS je řetězec "</script>" (třeba v komentáři),
-// HTML parser by na něm skript předčasně ukončil a zbytek vykreslil jako text.
-// Zneškodníme ho na "<\/script>" — pro JS identické, pro HTML parser neviditelné.
-quizJs = quizJs.replace(/<\/script/gi, '<\\/script');
 
 // 4) sestav soběstačnou stránku (bez doctype/html/head/body — Artifact je obalí)
+const scriptsBlock = inlined.map(js => `<script>\n${js}\n</script>`).join('\n\n');
 const out =
 `<style>
 ${css}
@@ -52,9 +58,7 @@ ${css}
 
 ${body}
 
-<script>
-${quizJs}
-</script>
+${scriptsBlock}
 `;
 
 const outDir = path.join(root, 'build');
