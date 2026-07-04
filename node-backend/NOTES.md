@@ -10,6 +10,12 @@
 - Wants to be quizzed on what they already know (diagnostic-driven).
 - Tight feedback loops. Effortful retrieval over passive reading.
 - **Language: Czech.** The user learns better in Czech — teach and converse in Czech. Keep technical terms, code, and API/HTTP keywords in English (industry standard), but explain in Czech. Lessons (HTML) should also be authored in Czech.
+- **⭐⭐ HLOUBKA: téma = oblouk více lekcí, ne jeden průlet (výslovné přání, 2026-07-04).** Uživatel řekl, že lekce jsou moc povrchní a že teasery advanced věcí na konci jsou málo. Cíl: *„porozumět tématu natolik, aby mě ty otázky napadly samy od sebe."*
+  - Každé téma rozpadni na **sekvenci lekcí** (oblouk), ne jednu. Lekce dál krátká (pracovní paměť), ale **téma jde do hloubky napříč více lekcemi**.
+  - Uč **proč / z prvních principů / mentální model**, ne jen *jak*. Learner musí umět odvodit, ne jen zopakovat.
+  - Advanced otázky, co jsem dřív dával jako teaser na konec, jsou ve skutečnosti **osnova dalších lekcí v oblouku** — nedávej je jako „mimo rozsah", ale jako „další zastávka".
+  - Test hloubky: napadly by tyhle follow-up otázky uživatele SAMY? Když ne, lekce byla moc mělká.
+  - Dřívější lekce 01–05 byly dělané starým (mělkým) stylem — kandidáti na prohloubení do oblouků (viz roadmapa, až vznikne).
 - **⭐ Interaktivní komponenty > statický text (výslovné přání, 2026-07-04).** Uživatel chce VĚTŠÍ důraz na tvorbu a používání interaktivních prvků. Je explicitně OK obětovat víc úsilí/času na stavbu komponentů. Kvízy jsou teprve začátek — nezůstávat u nich.
   - **Default posture:** když má koncept vizuální/interaktivní úhel (event loop, tok requestu, stavový automat, matching, „napiš kód a zvaliduj"), postav pro něj **komponent**, ne jen odstavec + kvíz.
   - Každý nový prvek piš jako **znovupoužitelný komponent do `assets/`** a linkuj ho z lekcí (nikdy neinlinovat to, co by druhá lekce duplikovala) — viz [Assets] v SKILL.md.
