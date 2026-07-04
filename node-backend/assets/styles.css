@@ -152,6 +152,33 @@ pre code { background: none; padding: 0; font-size: .8rem; }
 .sqli-result.deny { background: var(--code-bg); }
 .sqli-result.breach { background: rgba(155,28,28,.12); border-color: var(--bad); }
 
+/* ---- Constraint sandbox ---- */
+.constraint-sandbox { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.cs-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: .9rem 0 .4rem; }
+.cs-h:first-child { margin-top: 0; }
+.cs-schema { font-size: .78rem; margin: 0; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: .7rem .8rem; overflow-x: auto; line-height: 1.5; }
+.cs-form { display: flex; flex-direction: column; gap: .5rem; }
+.cs-field { display: flex; align-items: center; gap: .6rem; }
+.cs-lbl { font-size: .8rem; color: var(--ink-soft); min-width: 6rem; font-family: "SF Mono", Menlo, Consolas, monospace; }
+.cs-input { font: inherit; font-size: .9rem; flex: 1; padding: .45rem .6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.cs-presets { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin: .8rem 0 .3rem; }
+.cs-presets-label { font-size: .8rem; color: var(--ink-soft); }
+.cs-chip { font: inherit; font-size: .8rem; padding: .3rem .7rem; border: 1px dashed var(--bad); border-radius: 20px; background: var(--paper); color: var(--bad); cursor: pointer; transition: all .12s; }
+.cs-chip:hover { background: rgba(155,28,28,.06); border-style: solid; }
+.cs-btn { font: inherit; font-weight: 700; font-size: .88rem; padding: .45rem .9rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.cs-btn:hover { opacity: .88; }
+.cs-result { margin: .8rem 0; font-size: .9rem; line-height: 1.5; padding: .6rem .8rem; border-radius: 8px; border: 1px solid var(--rule); }
+.cs-result.ok { background: rgba(31,107,59,.1); border-color: var(--good); }
+.cs-result.reject { background: rgba(155,28,28,.08); border-color: var(--bad); }
+.cs-map { margin-top: .4rem; font-size: .82rem; }
+.cs-code { font-family: "SF Mono", Menlo, Consolas, monospace; background: rgba(155,28,28,.12); color: var(--bad); padding: .1rem .4rem; border-radius: 4px; }
+.cs-http { font-weight: 700; background: var(--code-bg); padding: .1rem .4rem; border-radius: 4px; }
+.cs-table { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; font-size: .82rem; }
+.cs-tr { display: grid; grid-template-columns: 2.5rem 1fr 3rem 5rem; gap: .4rem; padding: .35rem .6rem; border-bottom: 1px solid var(--rule); }
+.cs-tr:last-child { border-bottom: none; }
+.cs-thead { background: var(--code-bg); font-weight: 700; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .75rem; }
+.cs-td { overflow: hidden; text-overflow: ellipsis; }
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }

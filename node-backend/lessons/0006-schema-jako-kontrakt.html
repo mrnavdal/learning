@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 06 — Schéma jako kontrakt (Databáze 2/7)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 06 · Databáze — díl 2 ze 7</p>
+<h1>Schéma jako kontrakt</h1>
+<p class="subtitle">V dílu 1 jsi z Node poslal dotaz. Teď o úroveň hlouběji: <em>jak</em> data vypadají a proč dobře navržené schéma udělá půlku tvé validační práce za tebe — a to spolehlivěji, než bys ji kdy udělal v kódu.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý díl</span>
+  Constraint přesune invariant z <strong>naděje</strong> do <strong>záruky</strong>. Aplikační validace je naděje: „doufám, že si každý endpoint vzpomene zkontrolovat, že e-mail je vyplněný a unikátní". DB constraint je záruka: <strong>databáze to vynutí u každého zápisu, z jakéhokoli místa, navždy</strong> — i z migrace, i z ruky v <code>psql</code>, i z kolegova skriptu. Tohle je ten posun v myšlení, který dělá z „umím SQL" opravdové porozumění.
+</div>
+
+<h2>Typ sloupce je první constraint</h2>
+
+<p>Než dojde na pravidla, rozhoduje <strong>typ</strong> — a volba typu je návrhové rozhodnutí, ne formalita. Pár, které v pohovoru odliší juniora od mid-level:</p>
+
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.88rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;"><th style="padding:.4rem;">Místo</th><th style="padding:.4rem;">Použij</th><th style="padding:.4rem;">Proč</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;">peníze</td><td style="padding:.4rem;"><code>numeric</code></td><td style="padding:.4rem;">nikdy <code>float</code> — <code>0.1+0.2≠0.3</code>, zaokrouhlovací chyby v účtech</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;">čas</td><td style="padding:.4rem;"><code>timestamptz</code></td><td style="padding:.4rem;">ukládá v UTC, řeší timezony; <code>timestamp</code> bez tz je zdroj nočních můr</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;">text</td><td style="padding:.4rem;"><code>text</code></td><td style="padding:.4rem;">v Postgresu není <code>varchar(n)</code> rychlejší; limit řeš přes <code>CHECK</code>, ne typem</td></tr>
+  <tr><td style="padding:.4rem;">identita</td><td style="padding:.4rem;"><code>bigint</code>/<code>uuid</code></td><td style="padding:.4rem;"><code>serial</code> (int) přeteče u velkých tabulek; <code>uuid</code> když nechceš hádatelná ID</td></tr>
+</table>
+
+<p style="margin-top:.6rem">Špatný typ propašuje bug hluboko do systému. Správný typ ho <strong>znemožní</strong> — nevalidní hodnota se do sloupce ani nevejde.</p>
+
+<h2>Constraints: pět vynucených slibů</h2>
+
+<pre><code>CREATE TABLE users (
+  id          serial PRIMARY KEY,          -- identita, automaticky unikátní
+  email       text   NOT NULL UNIQUE,      -- musí být + žádné dva stejné
+  age         int    CHECK (age &gt;= 0),      -- pravidlo na hodnotu
+  country_id  int    REFERENCES countries(id)  -- musí ukazovat na reálnou zemi
+);</code></pre>
+
+<ul>
+  <li><strong><code>NOT NULL</code></strong> — „tohle musí existovat". Bez něj se ti do dat vplíží <code>NULL</code> a každý dotaz na to musí myslet.</li>
+  <li><strong><code>UNIQUE</code></strong> — „žádné dva řádky nesdílí tuhle hodnotu". Tohle je ten samý constraint, který v dílu 1 vyhodil <code>23505</code> → tvoje <code>409</code>. Teď víš, odkud to číslo je.</li>
+  <li><strong><code>CHECK</code></strong> — libovolné pravidlo na hodnotu (<code>age &gt;= 0</code>, <code>price &gt; 0</code>). Validace, kterou nejde obejít.</li>
+  <li><strong><code>PRIMARY KEY</code></strong> — identita řádku. <code>NOT NULL</code> + <code>UNIQUE</code> v jednom, a DB podle něj řádky rychle najde.</li>
+  <li><strong><code>FOREIGN KEY</code></strong> — referenční integrita. Viz níž, tohle je ten hlubší kus.</li>
+</ul>
+
+<h3>Foreign key = tvoje data nemůžou „lhát"</h3>
+<p><code>country_id REFERENCES countries(id)</code> znamená: <strong>nemůžeš vložit uživatele s <code>country_id = 99</code>, když žádná země 99 neexistuje</strong>. DB to odmítne (<code>23503</code>). Bez FK by ti v datech vznikaly „osiřelé" odkazy — řádky ukazující do prázdna.</p>
+<p>A druhá strana mince: co když někdo smaže zemi, na kterou ukazují uživatelé? Na to je <code>ON DELETE</code>:</p>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.88rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;"><th style="padding:.4rem;"><code>ON DELETE …</code></th><th style="padding:.4rem;">Co se stane při smazání země</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>RESTRICT</code></td><td style="padding:.4rem;">smazání zakázáno, dokud na ni někdo ukazuje (default, nejbezpečnější)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>CASCADE</code></td><td style="padding:.4rem;">smažou se i všichni ti uživatelé (pozor — snadno smažeš víc, než chceš)</td></tr>
+  <tr><td style="padding:.4rem;"><code>SET NULL</code></td><td style="padding:.4rem;"><code>country_id</code> se u nich nastaví na <code>NULL</code></td></tr>
+</table>
+
+<div class="callout myth">
+  <span class="label">Naděje vs. záruka — proč ne „to ošetřím v kódu"</span>
+  Junior řekne: „validaci e-mailu udělám v Express handleru". Jenže tenhle constraint pak platí <strong>jen pro ten jeden endpoint</strong>. Přijde druhý endpoint, admin skript, datová migrace — a invariant je pryč. Constraint v DB platí <strong>pro všechny zapisovatele bez výjimky</strong>. Aplikační validace je navíc (lepší chybová hláška), ne náhrada.
+</div>
+
+<h2>🧪 Sandbox: nech si od DB odmítnout řádek</h2>
+<p>Tohle je ta samá tabulka <code>users</code> výše. Zkus do ní vkládat řádky — a hlavně je <strong>rozbít</strong> (tlačítka dole). DB ti řekne, <em>který</em> constraint jsi porušil, jaký má Postgres <strong>error kód</strong> a jaký HTTP status bys v API vrátil. Tady se ti spojí schéma → error kód → status kód dohromady.</p>
+
+<div class="constraint-sandbox"></div>
+
+<div class="callout aha">
+  <span class="label">Všimni si toho mostu</span>
+  Každé porušení má svůj <strong>Postgres kód</strong> (<code>23502</code>, <code>23505</code>, <code>23514</code>, <code>23503</code>) a ty je v API <strong>mapuješ na HTTP status</strong> (400 / 409 / 422). Odchytáváš je přesně tím <code>try/catch</code> vzorem z dílu 1. Schéma (tenhle díl) + status kódy (lekce 04) + <code>pg</code> (díl 1) jsou teď jeden příběh.
+</div>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Proč dát <code>UNIQUE(email)</code> do DB, když už e-mail kontroluješ v Express handleru?",
+    "options": [
+      "Kvůli rychlosti dotazů na e-mail",
+      "DB to vynutí pro všechny zapisovatele, ne jen ten endpoint",
+      "Express validaci nejde spolehlivě napsat",
+      "Bez toho by sloupec nešel indexovat"
+    ],
+    "answer": 1,
+    "why": "Aplikační kontrola platí jen tam, kde ji zavoláš. DB constraint je záruka pro každý zápis — druhý endpoint, migrace, ruční SQL. To je ten posun naděje → záruka."
+  },
+  {
+    "q": "Uživatelé mají <code>country_id REFERENCES countries(id)</code>. Někdo smaže zemi, na kterou ukazují. Co udělá default chování?",
+    "options": [
+      "Smaže i všechny ty uživatele (CASCADE)",
+      "Nastaví jim country_id na NULL",
+      "Zakáže smazání země (RESTRICT)",
+      "Nechá osiřelé odkazy na neexistující zemi"
+    ],
+    "answer": 2,
+    "why": "Default je RESTRICT — DB smazání nedovolí, dokud na zemi někdo ukazuje. To brání osiřelým odkazům. CASCADE/SET NULL si musíš vyžádat vědomě."
+  },
+  {
+    "q": "Proč pro cenu <code>numeric</code> a ne <code>float</code>?",
+    "options": [
+      "numeric zabírá v tabulce méně místa",
+      "float neumí uložit záporná čísla",
+      "float má zaokrouhlovací chyby (0.1+0.2≠0.3)",
+      "numeric je jediný typ s CHECK constraintem"
+    ],
+    "answer": 2,
+    "why": "float je binární plovoucí čárka → desetinné hodnoty se nedají uložit přesně a chyby se v účtech kumulují. numeric počítá přesně. U peněz je to must."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Cítíš, jak se ti otázky rojí samy?</strong> „Jde <code>UNIQUE</code> jen na část řádků (partial index)?" „Co složený primární klíč?" „Kdy se FK kontroluje — hned, nebo až na konci transakce?" To jsou přesně <strong>další zastávky v tomhle oblouku</strong>, ne slepé uličky. Napiš, kterou chceš dřív.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/ddl-constraints.html">PostgreSQL — Constraints</a> · <a href="https://www.postgresql.org/docs/current/datatype.html">Data Types</a>. Oficiální, textové.</p>
+  <p><strong>Souvisí:</strong> <a href="0005-postgres-z-node-a-parametrizovane-dotazy.html">Databáze 1/7 — dotaz z Node</a> · <a href="0004-rest-poradne-idempotence-a-status-kody.html">Lekce 04 — status kódy</a></p>
+  <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz z Node ✓ · <strong>2 Schéma jako kontrakt ✓ (jsi tu)</strong> · 3 Migrace · 4 JOINy &amp; N+1 · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
+</div>
+
+<script src="../assets/constraint-sandbox.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

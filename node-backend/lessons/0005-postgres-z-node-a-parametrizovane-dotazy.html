@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<p class="kicker">Lekce 05 · Databáze</p>
+<p class="kicker">Lekce 05 · Databáze — díl 1 ze 7</p>
 <h1>Postgres z Node <span style="font-weight:400">(a proč tě parametry zachrání)</span></h1>
 <p class="subtitle">Tvoje API zatím zapomene všechno při restartu. Databáze je paměť. SQL už umíš — tady je server-side delta: jak ho pustit z Node <em>bezpečně</em>.</p>
 
@@ -128,7 +128,8 @@ const good = await pool.query(
   <p class="source"><strong>Primární zdroj:</strong> <a href="https://node-postgres.com/features/queries">node-postgres — Queries</a> (parametrizace) · <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">OWASP — SQL Injection Prevention</a>. Oficiální a vysoce důvěryhodné.</p>
   <p><strong>Reference:</strong> <a href="../reference/rest-metody-a-status-kody.html">REST cheat sheet</a> (status kódy včetně 409)</p>
   <p><strong>Souvisí:</strong> <a href="0004-rest-poradne-idempotence-a-status-kody.html">Lekce 04 — REST</a> (odkud přišlo 409)</p>
-  <p><strong>Mise:</strong> tvoje API má teď paměť <em>a</em> umí se bránit injection. Příště <strong>autentizace</strong> — hashování hesel a JWT vs session. (Ať to <code>password</code> v DB není plaintext jako v téhle demo tabulce!)</p>
+  <p><strong>Další v oblouku:</strong> <a href="0006-schema-jako-kontrakt.html">Databáze 2/7 — Schéma jako kontrakt</a> (typy, constraints, foreign keys — a odkud se bere to <code>23505</code>).</p>
+  <p><strong>DB oblouk (7 dílů):</strong> <strong>1 Dotaz z Node ✓ (jsi tu)</strong> · 2 Schéma jako kontrakt · 3 Migrace · 4 JOINy &amp; N+1 · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
 </div>
 
 <script src="../assets/sql-injection.js"></script>

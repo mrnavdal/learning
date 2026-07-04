@@ -23,7 +23,7 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
-- **Hotové:** `styles.css` (sdílený Tufte styl), `quiz.js` (kvíz), `rest-playground.js` (REST API simulátor, lekce 04), `sql-injection.js` (SQL injection demo s reálným mini WHERE evaluátorem, lekce 05).
+- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06 — INSERT vs constraints, PG error kódy → HTTP status).
 - **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`. Drž se ho — ověřuj logiku, ne jen typecheck.
 - **Backlog (nápady dle mise, stav 2026-07-04):**
   - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
@@ -35,7 +35,18 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 ## Working notes
 - 2026-07-03: Workspace initialized. Ran an initial diagnostic quiz to locate ZPD (awaiting answers).
 - 2026-07-03: Lekce 0004 (REST — idempotence + status kódy + 409) dodána, + reference cheat sheet + interaktivní REST hrací plocha (`rest-playground.js`).
-- 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`. Další ZPD: **auth (lekce 06)** — hashování hesel + JWT vs session.
+- 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`.
+- 2026-07-04: **Přechod na hloubkový styl (téma = oblouk).** Databáze se stávají oblohem 7 dílů. Lekce 05 přeznačena jako díl 1/7. Dodán **díl 2/7 (0006 Schéma jako kontrakt)** + komponent `constraint-sandbox.js`. Auth přesunut ZA DB oblouk.
+
+## DB oblouk (7 dílů) — plán a stav
+1. **Dotaz z Node** — `pg`, pool, parametrizace, injection · lekce 0005 ✓
+2. **Schéma jako kontrakt** — typy, NOT NULL/UNIQUE/CHECK/PK/FK, ON DELETE · lekce 0006 ✓
+3. **Migrace** — jak měnit schéma bez ztráty dat, verzování (node-pg-migrate / knex migrations) · TODO
+4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO
+5. **Indexy & výkon** — proč SELECT bez indexu škáluje blbě, B-tree, EXPLAIN, kdy (ne)indexovat · TODO
+6. **Transakce & souběh** — ACID, BEGIN/COMMIT, race conditions (navazuje na 23505), izolační úrovně, optimistic vs pessimistic locking · TODO
+7. **Provoz & bezpečnost** — connection pooling do hloubky, secrets/env, least privilege, zálohy · TODO
+(Otevřené hloubkové otázky, co si mají „napadnout samy": partial unique index, composite PK, deferred FK checks, ON DELETE volby — zapleteny do dílů 3–6.)
 - **Prostředí (remote web session): egress policy blokuje web fetch** (MDN/httpwg vrací 403 z proxy). Ne bug, ne obejít — je to network policy prostředí. Fix = povolit/rozšířit síťovou politiku při vytváření environmentu (docs: code.claude.com/docs → Claude Code on the web). Povolené jsou balíčkové registry (npm, pypi…) a anthropic.com.
 
 ## Hosting lekcí (jak si je uživatel prohlíží v browseru)
