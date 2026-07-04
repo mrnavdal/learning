@@ -10,6 +10,20 @@
 - Wants to be quizzed on what they already know (diagnostic-driven).
 - Tight feedback loops. Effortful retrieval over passive reading.
 - **Language: Czech.** The user learns better in Czech — teach and converse in Czech. Keep technical terms, code, and API/HTTP keywords in English (industry standard), but explain in Czech. Lessons (HTML) should also be authored in Czech.
+- **⭐ Interaktivní komponenty > statický text (výslovné přání, 2026-07-04).** Uživatel chce VĚTŠÍ důraz na tvorbu a používání interaktivních prvků. Je explicitně OK obětovat víc úsilí/času na stavbu komponentů. Kvízy jsou teprve začátek — nezůstávat u nich.
+  - **Default posture:** když má koncept vizuální/interaktivní úhel (event loop, tok requestu, stavový automat, matching, „napiš kód a zvaliduj"), postav pro něj **komponent**, ne jen odstavec + kvíz.
+  - Každý nový prvek piš jako **znovupoužitelný komponent do `assets/`** a linkuj ho z lekcí (nikdy neinlinovat to, co by druhá lekce duplikovala) — viz [Assets] v SKILL.md.
+  - Preferovat interaktivitu, která dává **automatický feedback** (jako quiz.js), ne jen dekorativní animace.
+
+## Komponenty (assets/) — inventář & backlog
+Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
+- **Hotové:** `styles.css` (sdílený Tufte styl), `quiz.js` (kvíz s okamžitým feedbackem).
+- **Backlog (nápady dle mise, stav 2026-07-04):**
+  - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
+  - `http-sim` — zadáš `POST /users/42`, ukáže match na Express route + `req.params` + status.
+  - `code-fill` — doplň handler / kód, okamžitá validace (tvrdší feedback loop než kvíz).
+  - `drag-match` — spoj status kódy ↔ situace, HTTP metody ↔ CRUD.
+- Omezení hostingu: Pages i artifacty = **statický hosting**, jen client-side JS. Reálný Node server nerozjedeš → **simuluj** logiku v JS.
 
 ## Working notes
 - 2026-07-03: Workspace initialized. Ran an initial diagnostic quiz to locate ZPD (awaiting answers).
