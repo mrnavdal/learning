@@ -113,6 +113,7 @@ CREATE INDEX CONCURRENTLY idx_users_email ON users(email);</code></pre>
     <strong>Co ti teď vrtá hlavou?</strong> „Jak se řeší migrace, když běží víc instancí appky naráz?" „Co když migrace selže v půlce — je atomická?" „Kdy je bezpečné smazat starý sloupec?" To jsou přesně otázky, co dělají senior backend developera — a další zastávky oblouku.
   </div>
   <p class="source"><strong>Primární zdroj:</strong> <a href="https://github.com/salsita/node-pg-migrate">node-pg-migrate</a> · <a href="https://www.postgresql.org/docs/current/sql-altertable.html">PostgreSQL — ALTER TABLE</a> (zámky, přidání sloupce). Textové, oficiální.</p>
+  <p><strong>Další v oblouku:</strong> <a href="0008-joiny-a-n-plus-1-problem.html">Databáze 4/7 — JOINy &amp; N+1 problém</a> (jak z FK číst související data, aniž pošleš 200 dotazů).</p>
   <p><strong>Souvisí:</strong> <a href="0006-schema-jako-kontrakt.html">Databáze 2/7 — Schéma jako kontrakt</a> (odkud se bere NOT NULL, co teď migrujeme)</p>
   <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz z Node ✓ · 2 Schéma ✓ · <strong>3 Migrace ✓ (jsi tu)</strong> · 4 JOINy &amp; N+1 · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
 </div>

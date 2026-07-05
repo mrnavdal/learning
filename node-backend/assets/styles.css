@@ -204,6 +204,32 @@ pre code { background: none; padding: 0; font-size: .8rem; }
 .mr-applied { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .78rem; color: var(--ink-soft); }
 .mr-applied-row { padding: .12rem 0; }
 
+/* ---- N+1 vizualizér ---- */
+.nplus1-viz { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.nq-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: .9rem 0 .4rem; }
+.nq-h:first-child { margin-top: 0; }
+.nq-strats { display: flex; gap: .5rem; flex-wrap: wrap; }
+.nq-strat { font: inherit; font-size: .85rem; font-weight: 700; padding: .4rem .9rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.nq-strat:hover { border-color: var(--accent); }
+.nq-strat.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.nq-sliderwrap { display: flex; align-items: center; gap: .6rem; margin: .9rem 0; }
+.nq-lbl { font-size: .8rem; color: var(--ink-soft); }
+.nq-slider { flex: 1; max-width: 16rem; }
+.nq-slabel { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 1.6rem; }
+.nq-counter { font-size: 1rem; padding: .6rem .9rem; border-radius: 8px; border: 1px solid var(--rule); margin-bottom: .4rem; }
+.nq-counter.good { background: rgba(31,107,59,.12); border-color: var(--good); }
+.nq-counter.ok { background: var(--code-bg); }
+.nq-counter.bad { background: rgba(155,28,28,.1); border-color: var(--bad); }
+.nq-counter strong { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.nq-formula { font-size: .82rem; color: var(--ink-soft); }
+.nq-log { display: flex; flex-direction: column; gap: .3rem; max-height: 13rem; overflow-y: auto; }
+.nq-qline { display: flex; gap: .5rem; align-items: flex-start; }
+.nq-qnum { font-size: .72rem; font-weight: 700; color: var(--accent); min-width: 1.8rem; padding-top: .5rem; font-variant-numeric: tabular-nums; }
+.nq-sql { flex: 1; margin: 0; font-size: .74rem; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 5px; padding: .4rem .6rem; overflow-x: auto; white-space: pre; line-height: 1.4; }
+.nq-more { font-size: .8rem; color: var(--ink-soft); font-style: italic; padding: .2rem 0; }
+.nq-row { font-size: .85rem; padding: .25rem 0; border-bottom: 1px solid var(--rule); }
+.nq-row:last-child { border-bottom: none; }
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }

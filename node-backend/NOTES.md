@@ -23,7 +23,7 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
-- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06), `migration-runner.js` (l07 — naivní vs bezpečná migrace na živých datech).
+- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06), `migration-runner.js` (l07), `nplus1-viz.js` (l08 — N+1 vs JOIN vs batch, posuvník počtu postů).
 - **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`. Drž se ho — ověřuj logiku, ne jen typecheck.
 - **Backlog (nápady dle mise, stav 2026-07-04):**
   - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
@@ -38,13 +38,14 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 - 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`.
 - 2026-07-04: **Přechod na hloubkový styl (téma = oblouk).** Databáze se stávají oblohem 7 dílů. Lekce 05 přeznačena jako díl 1/7. Dodán **díl 2/7 (0006 Schéma jako kontrakt)** + komponent `constraint-sandbox.js`. Auth přesunut ZA DB oblouk.
 - 2026-07-04: Dodán **díl 3/7 (0007 Migrace)** + `migration-runner.js`. Uživatel: schéma i migrace jsou pro něj opakování, zatím bez dotazů. Další = díl 4 (JOINy & N+1).
+- 2026-07-04: Dodán **díl 4/7 (0008 JOINy & N+1)** + `nplus1-viz.js`. Přitvrzeno tempo (JOIN svižně, těžiště N+1 + tradeoff JOIN vs batch). Další = díl 5 (Indexy & výkon).
 - 2026-07-04: **Diagnostika přes háčky z lekce 07** (uživatel poprvé prošel retrieval loop). Skóre 2/3 s dobrým citem: transakční DDL/rollback ✅, kdy dropnout sloupec ✅ (princip; doplněn timing přes deploy), multi-instance migrace 🔴 (doučeno: advisory lock + kompatibilita během rolloutu). **Kalibrace:** DB hloubku má solidní, můžu v dalších dílech přitvrdit tempo/úroveň. Retrieval-first loop mu sedí → používat háčky aktivně.
 
 ## DB oblouk (7 dílů) — plán a stav
 1. **Dotaz z Node** — `pg`, pool, parametrizace, injection · lekce 0005 ✓
 2. **Schéma jako kontrakt** — typy, NOT NULL/UNIQUE/CHECK/PK/FK, ON DELETE · lekce 0006 ✓
 3. **Migrace** — verzování schématu, expand/backfill/contract na živých datech, zámky (CONCURRENTLY) · lekce 0007 ✓ (`migration-runner.js`). Schéma je uživateli povědomé (opakování) → jel jsem svižněji přes základy, hloubka v live-data části.
-4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO ← DALŠÍ
+4. **JOINy & N+1** — vztahy, N+1 (lazy loading), JOIN vs batch/DataLoader tradeoff, jak N+1 poznat · lekce 0008 ✓ (`nplus1-viz.js`)
 4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO
 5. **Indexy & výkon** — proč SELECT bez indexu škáluje blbě, B-tree, EXPLAIN, kdy (ne)indexovat · TODO
 6. **Transakce & souběh** — ACID, BEGIN/COMMIT, race conditions (navazuje na 23505), izolační úrovně, optimistic vs pessimistic locking · TODO

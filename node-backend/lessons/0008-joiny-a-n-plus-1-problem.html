@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 08 — JOINy & N+1 problém (Databáze 4/7)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 08 · Databáze — díl 4 ze 7</p>
+<h1>JOINy &amp; N+1 problém</h1>
+<p class="subtitle">Foreign key z dílu 2 znamená, že budeš tahat související data. <em>Jak</em> to uděláš rozhoduje, jestli pošleš do DB jeden dotaz, nebo dvě stě. Tady je nejčastější výkonnostní past — a ORM tě do ní navede samo.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý díl</span>
+  Získat „posty i s jejich autory" jde dvěma cestami se <strong>stejným výsledkem</strong>, ale <strong>propastně jiným počtem dotazů</strong>. Naivní cesta škáluje jako <code>1 + N</code> (roste s daty), správná jako <code>1</code> nebo <code>2</code> (konstanta). Rozdíl nevidíš na 5 řádcích v devu — uvidíš ho, až produkce načítá 500.
+</div>
+
+<h2>JOIN v jedné větě (SQL už umíš)</h2>
+<p><code>JOIN</code> spojí řádky ze dvou tabulek přes klíč. Chceš posty i se jménem autora? Napojíš <code>posts.author_id</code> na <code>authors.id</code>:</p>
+<pre><code>SELECT p.title, a.name
+FROM posts p
+JOIN authors a ON a.id = p.author_id;</code></pre>
+<p>Jeden dotaz, hotová data. Drž si tenhle obrázek — je to ta „správná cesta" níž.</p>
+
+<h2>N+1: tichý zabiják</h2>
+<p>Představ si stejný úkol napsaný „objektově", jak tě k tomu svede kód (a hlavně ORM):</p>
+<pre><code>const posts = await db.query('SELECT * FROM posts');   // ① jeden dotaz na seznam
+for (const post of posts) {
+  post.author = await db.query(                        // ② a teď PRO KAŽDÝ post další dotaz
+    'SELECT * FROM authors WHERE id = $1', [post.author_id]
+  );
+}</code></pre>
+<p>Máš 1 dotaz na seznam + <strong>N dotazů</strong> na autory = <code>1 + N</code>. Pro 5 postů 6 dotazů. Pro 200 postů <strong>201 dotazů</strong> — a každý má režii round-tripu na DB. Stránka, co měla trvat 5 ms, najednou trvá vteřinu.</p>
+
+<div class="callout myth">
+  <span class="label">Proč tě do toho ORM navede samo</span>
+  ORM (Prisma, Sequelize, TypeORM) nabízí <em>lazy loading</em>: napíšeš <code>post.author</code> a ono to <strong>potají pošle dotaz</strong>. Kód vypadá nevinně — jedna tečka — ale v cyklu z toho je N dotazů, které v kódu <em>nevidíš</em>. Proto se N+1 tak snadno propašuje do produkce: nejsou to viditelné <code>await db.query</code>, ale skryté přístupy k property.
+</div>
+
+<h2>🧪 Vizualizér: přetáhni posuvník a sleduj počítadlo</h2>
+<p>Táhni <strong>počet postů</strong> nahoru a přepínej strategie. U <strong>N+1</strong> počítadlo dotazů roste s každým postem; u <strong>JOIN</strong> zůstane na <code>1</code>, u <strong>Batch</strong> na <code>2</code> — ať je postů kolik chce. Výsledek (dole) je u všech tří identický.</p>
+
+<div class="nplus1-viz"></div>
+
+<h2>Dvě opravy — a jejich tradeoff</h2>
+<p>Jak se N+1 zbavit? Dvě idiomatické cesty, každá s háčkem:</p>
+
+<h3>A) <code>JOIN</code> / eager load — 1 dotaz</h3>
+<p>V ORM se jmenuje <code>include</code> / <code>join</code> / <code>with</code>. Jeden dotaz spojí vše. <strong>Háček:</strong> u vztahu <em>one-to-many</em> (post má mnoho komentářů) JOIN <strong>duplikuje rodičovská data</strong> — každý řádek postu se zopakuje pro každý komentář (row explosion). Na to se pak nasazuje <code>GROUP BY</code> / agregace nebo skládání v aplikaci.</p>
+
+<h3>B) Batch / <code>IN (…)</code> — 2 dotazy</h3>
+<pre><code>const posts   = await db.query('SELECT * FROM posts');
+const ids     = [...new Set(posts.map(p => p.author_id))];   // unikátní id
+const authors = await db.query('SELECT * FROM authors WHERE id = ANY($1)', [ids]);
+// spoj v paměti: post.author = authors.find(a => a.id === post.author_id)</code></pre>
+<p>Dva dotazy, ať je postů kolik chce, a <strong>žádná duplikace</strong>. Tohle je přesně princip, který zabalí knihovna <a href="https://github.com/graphql/dataloader">DataLoader</a> (batching + cache v rámci requestu) — proto ji potkáš hlavně u GraphQL, kde N+1 hrozí na každém kroku.</p>
+
+<div class="callout">
+  <span class="label">Kdy je N+1 vlastně v pohodě</span>
+  Ne vždy je nepřítel. Když je <strong>N maličké a fixní</strong> (načítáš detail jednoho postu + jeho autora = 2 dotazy) nebo když jsou autoři <strong>v cache</strong>, N+1 nikoho nebolí. Zabiják je N+1 <em>uvnitř cyklu nad rostoucím seznamem</em>. Nejdřív měř (query log, APM jako datadog), pak optimalizuj — předčasná optimalizace JOINem umí kód zbytečně zamotat.</p>
+</div>
+
+<h2>Jak N+1 vůbec poznáš</h2>
+<ul>
+  <li><strong>Query log.</strong> Zapni logování SQL (v <code>pg</code> nebo ORM) a koukni, kolik dotazů padne na jeden endpoint. 50 skoro stejných <code>SELECT … WHERE id = ?</code> = N+1.</li>
+  <li><strong>APM.</strong> Nástroje jako Datadog/New Relic ukážou „N podobných dotazů" jako typický N+1 signál.</li>
+  <li><strong>Latence roste s velikostí seznamu.</strong> Endpoint je svižný na 5 položkách, mrtvý na 500 — klasický otisk.</li>
+</ul>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Endpoint načte 50 postů a pak v cyklu ke každému autora zvlášť. Kolik dotazů?",
+    "options": [
+      "1 dotaz, cyklus se sloučí",
+      "2 dotazy, seznam a autoři",
+      "51 dotazů (1 + N)",
+      "50 dotazů, jeden na post"
+    ],
+    "answer": 2,
+    "why": "1 dotaz na seznam postů + 50 dotazů na jednotlivé autory = 51. To je N+1: jeden plus jeden za každou položku. Pro 500 postů 501 dotazů."
+  },
+  {
+    "q": "Proč se N+1 tak snadno propašuje do produkce přes ORM?",
+    "options": [
+      "ORM dotazy schválně zdvojuje kvůli cache",
+      "Lazy loading pošle dotaz skrytě při post.author",
+      "ORM neumí JOIN, musí po jednom",
+      "Databáze odmítá JOIN nad dvěma tabulkami"
+    ],
+    "answer": 1,
+    "why": "Lazy loading: přístup k property (post.author) potají spustí dotaz. V kódu nevidíš žádné explicitní db.query — jen tečku — takže N skrytých dotazů v cyklu snadno přehlédneš."
+  },
+  {
+    "q": "Máš N+1 nad seznamem postů a jejich autory. Batch přes IN(…) místo JOIN má tu výhodu, že…",
+    "options": [
+      "je vždy rychlejší než JOIN",
+      "u one-to-many neduplikuje rodičovská data",
+      "pošle jen jeden jediný dotaz",
+      "nepotřebuje unikátní author_id"
+    ],
+    "answer": 1,
+    "why": "Batch pošle 2 dotazy (posty + autoři přes IN) a data spojí v paměti — bez row explosion, kterou JOIN způsobí u one-to-many. Není nutně rychlejší, ale u many vztahů čistší. To je ten tradeoff JOIN vs batch."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď naskakuje?</strong> „Co když je vztah many-to-many (post má tagy, tag má posty)?" „Kdy přesně JOIN duplikuje řádky a jak to poskládám zpět přes <code>GROUP BY</code>?" „Jak DataLoader ví, které dotazy sloučit?" To jsou další zastávky — napiš, co chceš rozbalit.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/tutorial-join.html">PostgreSQL — Joins</a> · <a href="https://github.com/graphql/dataloader">DataLoader</a> (batching &amp; caching). Textové.</p>
+  <p><strong>Souvisí:</strong> <a href="0006-schema-jako-kontrakt.html">Databáze 2/7 — Schéma</a> (odkud se bere ten <code>author_id</code> FK)</p>
+  <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz z Node ✓ · 2 Schéma ✓ · 3 Migrace ✓ · <strong>4 JOINy &amp; N+1 ✓ (jsi tu)</strong> · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
+</div>
+
+<script src="../assets/nplus1-viz.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
