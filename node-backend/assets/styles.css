@@ -179,6 +179,31 @@ pre code { background: none; padding: 0; font-size: .8rem; }
 .cs-thead { background: var(--code-bg); font-weight: 700; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .75rem; }
 .cs-td { overflow: hidden; text-overflow: ellipsis; }
 
+/* ---- Migration runner ---- */
+.migration-runner { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.mr-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: .9rem 0 .4rem; }
+.mr-h:first-child { margin-top: 0; }
+.mr-btns { display: flex; flex-direction: column; gap: .4rem; align-items: flex-start; }
+.mr-btn { font: inherit; font-size: .84rem; font-family: "SF Mono", Menlo, Consolas, monospace; padding: .4rem .8rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink); cursor: pointer; transition: all .12s; text-align: left; }
+.mr-btn:hover { border-color: var(--accent); }
+.mr-danger { border-color: var(--bad); color: var(--bad); }
+.mr-danger:hover { background: rgba(155,28,28,.06); }
+.mr-reset { border-style: dashed; color: var(--ink-soft); }
+.mr-out { margin: .8rem 0; font-size: .88rem; line-height: 1.5; padding: .5rem .8rem; border-radius: 8px; }
+.mr-out.ok { background: rgba(31,107,59,.1); border: 1px solid var(--good); }
+.mr-out.reject { background: rgba(155,28,28,.08); border: 1px solid var(--bad); }
+.mr-out:empty { display: none; }
+.mr-schema { display: flex; flex-wrap: wrap; gap: .4rem; }
+.mr-colrow { font-size: .82rem; padding: .25rem .5rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); }
+.mr-badge { display: inline-block; font-size: .64rem; font-weight: 700; letter-spacing: .04em; background: var(--code-bg); color: var(--ink-soft); padding: .05rem .35rem; border-radius: 3px; margin-left: .3rem; }
+.mr-data { border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto; font-size: .8rem; }
+.mr-tr { display: flex; gap: .5rem; padding: .3rem .6rem; border-bottom: 1px solid var(--rule); }
+.mr-tr:last-child { border-bottom: none; }
+.mr-thead { background: var(--code-bg); font-weight: 700; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .72rem; }
+.mr-td { min-width: 4rem; flex: 1; }
+.mr-applied { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: .78rem; color: var(--ink-soft); }
+.mr-applied-row { padding: .12rem 0; }
+
 /* ---- Print ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; }

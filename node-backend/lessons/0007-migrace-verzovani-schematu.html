@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 07 — Migrace: verzování schématu (Databáze 3/7)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 07 · Databáze — díl 3 ze 7</p>
+<h1>Migrace: verzování schématu</h1>
+<p class="subtitle">Schéma z minula není vytesané do kamene — musí se vyvíjet. Ale máš už <em>data</em>, <em>tým</em> a <em>běžící produkci</em>. Tady je proč se schéma nemění ručně a co dělá migrace na živých datech záludné.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý díl</span>
+  Migrace je <strong>verzování schématu</strong> — git pro strukturu databáze. Ne „přihlásím se do <code>psql</code> a dám <code>ALTER TABLE</code>". Migrace je <strong>uspořádaná, sledovaná, append-only historie</strong> kroků, kterou umí kdokoli deterministicky přehrát z prázdné DB do aktuálního stavu — u sebe na kompu, na CI, na produkci. Stejná struktura všude, žádné „u mě to funguje".
+</div>
+
+<h2>Proč vůbec migrace (a ne ruční <code>ALTER</code>)</h2>
+
+<p>Ruční změna schématu má tři fatální díry, které migrace zavírají:</p>
+<ul>
+  <li><strong>Reprodukovatelnost.</strong> Kolega, CI i produkce potřebují <em>tu samou</em> strukturu. Migrace = soubory v gitu → každý přehraje stejné kroky.</li>
+  <li><strong>Uspořádání.</strong> Migrace jsou očíslované (<code>0001_</code>, <code>0002_</code>…) a běží <strong>v pořadí</strong>. DB si v <strong>migrační tabulce</strong> pamatuje, které už proběhly — takže se každá pustí právě jednou.</li>
+  <li><strong>Historie.</strong> Vidíš, jak se schéma vyvíjelo, a k releasu kódu patří odpovídající migrace. Kód a schéma jdou spolu.</li>
+</ul>
+
+<p>Každá migrace má typicky <strong><code>up</code></strong> (aplikuj změnu) a <strong><code>down</code></strong> (vrať ji). <code>down</code> je ale často jen zbožné přání — <code>DROP COLUMN</code> ti data nevrátí. Ber rollback jako záchranu na pár minut po deployi, ne jako spolehlivou cestu zpět.</p>
+
+<h2>Ta těžká část: DDL na <em>živých</em> datech</h2>
+
+<p>Na prázdné tabulce je migrace triviální. Problém začne, když v tabulce už jsou řádky a běží na ní produkce. Nejklasičtější past:</p>
+
+<pre><code>-- ❌ Naivně: přidat povinný sloupec na plnou tabulku
+ALTER TABLE users ADD COLUMN phone text NOT NULL;
+-- ERROR: column "phone" contains null values
+-- (existující řádky by měly phone = NULL, což NOT NULL zakazuje)</code></pre>
+
+<p>Řešení je <strong>rozložit jednu „nemožnou" změnu do tří bezpečných kroků</strong> — vzor <em>expand → backfill → contract</em>:</p>
+
+<pre><code>-- ① EXPAND: přidej jako nullable (projde vždy)
+ALTER TABLE users ADD COLUMN phone text;
+
+-- ② BACKFILL: doplň hodnotu do existujících řádků
+UPDATE users SET phone = '—' WHERE phone IS NULL;
+
+-- ③ CONTRACT: teď už constraint projde
+ALTER TABLE users ALTER COLUMN phone SET NOT NULL;</code></pre>
+
+<div class="callout myth">
+  <span class="label">Proč to nejde jedním krokem — hlubší důvod</span>
+  <strong>Deploy kódu a migrace nejsou atomické.</strong> Chvíli běží stará verze aplikace proti novému schématu (nebo naopak). Kdybys naráz přejmenoval/smazal sloupec, starý kód by spadl. Proto se i <em>rename</em> dělá jako parallel change: přidej nový sloupec → piš do obou → přečti z nového → smaž starý (přes několik deployů). Migrace musí být <strong>zpětně kompatibilní</strong> s ještě běžící starou verzí.
+</div>
+
+<h2>🧪 Migration runner: rozbij to a pak sprav</h2>
+<p>Tabulka <code>users</code> má 3 řádky. Klikni <strong>💥 ADD phone NOT NULL (naivně)</strong> a uvidíš pád. Pak projdi bezpečnou cestu odshora dolů (nullable → backfill → SET NOT NULL). Sleduj sloupec „Applied" — to je ta verzovaná historie.</p>
+
+<div class="migration-runner"></div>
+
+<h2>Ještě jeden had v trávě: zámky</h2>
+<p>Některé DDL operace berou <strong>zámek</strong>, který blokuje zápisy — na velké tabulce i na minuty = výpadek. Nejznámější případ:</p>
+<pre><code>-- ❌ zamkne tabulku proti zápisům po dobu stavby indexu
+CREATE INDEX idx_users_email ON users(email);
+
+-- ✅ staví index bez zámku zápisů (nesmí být v transakci)
+CREATE INDEX CONCURRENTLY idx_users_email ON users(email);</code></pre>
+<p>„Migrace proběhla za 3 ms lokálně" ≠ „proběhne bezpečně na produkční tabulce s 50 miliony řádků". <em>(Indexy do hloubky — díl 5.)</em></p>
+
+<h2>Nástroje (koncept &gt; nástroj)</h2>
+<p>V Node ekosystému <a href="https://github.com/salsita/node-pg-migrate">node-pg-migrate</a> nebo <a href="https://knexjs.org/guide/migrations.html">Knex migrations</a>, s ORM třeba Prisma Migrate. Všechny dělají totéž: číslované soubory, migrační tabulka, <code>up</code>/<code>down</code>, příkaz „domigruj na nejnovější". Až pochopíš <em>proč</em>, nástroj je detail.</p>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Proč se schéma na produkci nemění ručním <code>ALTER</code> v psql?",
+    "options": [
+      "psql neumí ALTER TABLE na produkci",
+      "Migrace = reprodukovatelná, uspořádaná, sledovaná historie",
+      "Ruční ALTER je vždy pomalejší než migrace",
+      "Produkční DB ruční příkazy odmítá"
+    ],
+    "answer": 1,
+    "why": "Migrace jsou soubory v gitu: každé prostředí přehraje stejné uspořádané kroky, migrační tabulka hlídá, co už proběhlo. Ruční ALTER nikde nezanechá stopu a rozjede prostředí od sebe."
+  },
+  {
+    "q": "<code>ADD COLUMN phone text NOT NULL</code> na tabulce se 3 řádky spadne. Nejbezpečnější postup?",
+    "options": [
+      "Zvýšit timeout a příkaz zopakovat",
+      "Nejdřív smazat existující řádky",
+      "Nullable → backfill hodnot → SET NOT NULL",
+      "Přidat sloupec rovnou s UNIQUE místo NOT NULL"
+    ],
+    "answer": 2,
+    "why": "Expand→backfill→contract: přidej jako nullable (projde), dopň hodnoty do starých řádků, teprve pak přitvrď na NOT NULL. Každý krok je bezpečný a zpětně kompatibilní s běžící starou verzí kódu."
+  },
+  {
+    "q": "Proč <code>CREATE INDEX CONCURRENTLY</code> místo obyčejného <code>CREATE INDEX</code> na produkci?",
+    "options": [
+      "CONCURRENTLY postaví index rychleji",
+      "Obyčejný CREATE INDEX zamkne zápisy do tabulky",
+      "CONCURRENTLY funguje i uvnitř transakce",
+      "Bez CONCURRENTLY se index nevytvoří"
+    ],
+    "answer": 1,
+    "why": "Obyčejný CREATE INDEX drží zámek blokující zápisy, dokud se index nepostaví — na velké tabulce klidně minuty výpadku. CONCURRENTLY staví bez toho zámku (za cenu, že nesmí běžet v transakci a je pomalejší)."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď vrtá hlavou?</strong> „Jak se řeší migrace, když běží víc instancí appky naráz?" „Co když migrace selže v půlce — je atomická?" „Kdy je bezpečné smazat starý sloupec?" To jsou přesně otázky, co dělají senior backend developera — a další zastávky oblouku.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://github.com/salsita/node-pg-migrate">node-pg-migrate</a> · <a href="https://www.postgresql.org/docs/current/sql-altertable.html">PostgreSQL — ALTER TABLE</a> (zámky, přidání sloupce). Textové, oficiální.</p>
+  <p><strong>Souvisí:</strong> <a href="0006-schema-jako-kontrakt.html">Databáze 2/7 — Schéma jako kontrakt</a> (odkud se bere NOT NULL, co teď migrujeme)</p>
+  <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz z Node ✓ · 2 Schéma ✓ · <strong>3 Migrace ✓ (jsi tu)</strong> · 4 JOINy &amp; N+1 · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
+</div>
+
+<script src="../assets/migration-runner.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

@@ -23,7 +23,7 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
-- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06 — INSERT vs constraints, PG error kódy → HTTP status).
+- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06), `migration-runner.js` (l07 — naivní vs bezpečná migrace na živých datech).
 - **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`. Drž se ho — ověřuj logiku, ne jen typecheck.
 - **Backlog (nápady dle mise, stav 2026-07-04):**
   - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
@@ -37,11 +37,13 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 - 2026-07-03: Lekce 0004 (REST — idempotence + status kódy + 409) dodána, + reference cheat sheet + interaktivní REST hrací plocha (`rest-playground.js`).
 - 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`.
 - 2026-07-04: **Přechod na hloubkový styl (téma = oblouk).** Databáze se stávají oblohem 7 dílů. Lekce 05 přeznačena jako díl 1/7. Dodán **díl 2/7 (0006 Schéma jako kontrakt)** + komponent `constraint-sandbox.js`. Auth přesunut ZA DB oblouk.
+- 2026-07-04: Dodán **díl 3/7 (0007 Migrace)** + `migration-runner.js`. Uživatel: schéma i migrace jsou pro něj opakování, zatím bez dotazů. Další = díl 4 (JOINy & N+1).
 
 ## DB oblouk (7 dílů) — plán a stav
 1. **Dotaz z Node** — `pg`, pool, parametrizace, injection · lekce 0005 ✓
 2. **Schéma jako kontrakt** — typy, NOT NULL/UNIQUE/CHECK/PK/FK, ON DELETE · lekce 0006 ✓
-3. **Migrace** — jak měnit schéma bez ztráty dat, verzování (node-pg-migrate / knex migrations) · TODO
+3. **Migrace** — verzování schématu, expand/backfill/contract na živých datech, zámky (CONCURRENTLY) · lekce 0007 ✓ (`migration-runner.js`). Schéma je uživateli povědomé (opakování) → jel jsem svižněji přes základy, hloubka v live-data části.
+4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO ← DALŠÍ
 4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO
 5. **Indexy & výkon** — proč SELECT bez indexu škáluje blbě, B-tree, EXPLAIN, kdy (ne)indexovat · TODO
 6. **Transakce & souběh** — ACID, BEGIN/COMMIT, race conditions (navazuje na 23505), izolační úrovně, optimistic vs pessimistic locking · TODO
