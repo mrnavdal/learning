@@ -38,6 +38,7 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 - 2026-07-04: Lekce 0005 (databáze — `pg`, parametrizace, SQL injection, 409 přes 23505) dodána + komponent `sql-injection.js`.
 - 2026-07-04: **Přechod na hloubkový styl (téma = oblouk).** Databáze se stávají oblohem 7 dílů. Lekce 05 přeznačena jako díl 1/7. Dodán **díl 2/7 (0006 Schéma jako kontrakt)** + komponent `constraint-sandbox.js`. Auth přesunut ZA DB oblouk.
 - 2026-07-04: Dodán **díl 3/7 (0007 Migrace)** + `migration-runner.js`. Uživatel: schéma i migrace jsou pro něj opakování, zatím bez dotazů. Další = díl 4 (JOINy & N+1).
+- 2026-07-04: **Diagnostika přes háčky z lekce 07** (uživatel poprvé prošel retrieval loop). Skóre 2/3 s dobrým citem: transakční DDL/rollback ✅, kdy dropnout sloupec ✅ (princip; doplněn timing přes deploy), multi-instance migrace 🔴 (doučeno: advisory lock + kompatibilita během rolloutu). **Kalibrace:** DB hloubku má solidní, můžu v dalších dílech přitvrdit tempo/úroveň. Retrieval-first loop mu sedí → používat háčky aktivně.
 
 ## DB oblouk (7 dílů) — plán a stav
 1. **Dotaz z Node** — `pg`, pool, parametrizace, injection · lekce 0005 ✓
