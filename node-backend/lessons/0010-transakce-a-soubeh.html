@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 10 — Transakce & souběh (Databáze 6/7)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 10 · Databáze — díl 6 ze 7</p>
+<h1>Transakce &amp; souběh</h1>
+<p class="subtitle">Tady se ti slepí dohromady všechno kolem <code>23505</code>, race conditions a „co když dva requesty naráz". Node zvládá tisíce souběžných requestů (lekce 01) — a všechny sahají do jedné databáze.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý díl</span>
+  <strong>Jeden SQL příkaz je atomický. Dva příkazy za sebou nejsou.</strong> Mezi <code>SELECT</code> zůstatku a <code>UPDATE</code> nového zůstatku je <em>škvíra v čase</em>, do které se vejde jiná transakce — a máš <strong>lost update</strong>. Transakce, izolace a zámky existují proto, aby tu škvíru zavřely.
+</div>
+
+<h2>Transakce a ACID (v kostce)</h2>
+<p>Transakce = skupina příkazů mezi <code>BEGIN</code> a <code>COMMIT</code>, která platí <strong>všechna, nebo žádná</strong>. Při <code>ROLLBACK</code> (nebo pádu) se vrátí do stavu před <code>BEGIN</code>. To jsou ta písmena <strong>ACID</strong>:</p>
+<ul>
+  <li><strong>A</strong>tomicity — všechno, nebo nic (viděls u migrací: DDL v transakci se při chybě celé vrátí).</li>
+  <li><strong>C</strong>onsistency — transakce nechá DB v platném stavu (dodrží constraints z dílu 2).</li>
+  <li><strong>I</strong>solation — souběžné transakce si <em>nelezou do zelí</em> (tenhle díl je hlavně o tomhle).</li>
+  <li><strong>D</strong>urability — po <code>COMMIT</code> data přežijou i výpadek proudu.</li>
+</ul>
+
+<h2>Problém: lost update</h2>
+<p>Účet má 100. Dva requesty naráz odečtou po 30 — správně má zůstat 40. Napsáno naivně jako <em>přečti → uprav → zapiš</em>:</p>
+<pre><code>const { rows } = await db.query('SELECT balance FROM accounts WHERE id = 1');
+const next = rows[0].balance - 30;               // ⬅ tady je ta škvíra
+await db.query('UPDATE accounts SET balance = $1 WHERE id = 1', [next]);</code></pre>
+<p>Když oba requesty přečtou <code>100</code> dřív, než kterýkoli zapíše, oba spočítají <code>70</code> a oba zapíšou <code>70</code>. Jeden odečet <strong>zmizel</strong>.</p>
+
+<h2>🧪 Simulátor: sleduj, jak update mizí</h2>
+<p>Přepínej strategie a sleduj časovou osu (T1 vlevo, T2 vpravo) a <code>DB=</code> zůstatek. U <strong>naivní</strong> skončíš na 70 (chyba). U <strong>atomického UPDATE</strong> a <strong>zámku</strong> na správných 40.</p>
+
+<div class="race-sim"></div>
+
+<h2>Tři opravy (od nejlepší po nejtěžší)</h2>
+
+<h3>A) Atomický <code>UPDATE</code> — nech počítat databázi</h3>
+<pre><code>UPDATE accounts SET balance = balance - 30 WHERE id = 1;</code></pre>
+<p>Žádné čtení do aplikace, žádná škvíra — DB provede odečet <strong>atomicky v jednom příkazu</strong>. Kdykoli jde úprava vyjádřit relativně (<code>balance - 30</code>), tohle je nejlepší volba. Prosté a neprůstřelné.</p>
+
+<h3>B) Pesimistický zámek — <code>SELECT … FOR UPDATE</code></h3>
+<pre><code>BEGIN;
+SELECT balance FROM accounts WHERE id = 1 FOR UPDATE;  -- zamkne řádek
+-- ...spočítej v aplikaci (T2 zatím čeká)...
+UPDATE accounts SET balance = $1 WHERE id = 1;
+COMMIT;                                                 -- odemkne</code></pre>
+<p>Když musíš mezi čtením a zápisem něco spočítat v kódu, <code>FOR UPDATE</code> řádek zamkne — druhá transakce <strong>čeká</strong>, dokud první necommitne. „Pesimistický" = předpokládám konflikt a rovnou zamykám.</p>
+
+<h3>C) Optimistický zámek — verzovací sloupec</h3>
+<pre><code>UPDATE accounts SET balance = $1, version = version + 1
+WHERE id = 1 AND version = $2;   -- $2 = verze, kterou jsem četl
+-- když UPDATE zasáhl 0 řádků → někdo mě předběhl → retry / 409</code></pre>
+<p>Pamatuješ <code>version</code> z lekce 04 (a to <code>409 Conflict</code>)? Tady je jeho mechanika: nezamykám, ale při zápisu ověřím, že se verze nezměnila. Když ano, někdo byl rychlejší → zopakuj, nebo vrať <code>409</code>. „Optimistický" = počítám, že konflikt je vzácný, a řeším ho, až <em>když</em> nastane. Ideál pro málo kolizní zápisy.</p>
+
+<h2>Izolační úrovně (proč to samo neřeší)</h2>
+<p>Napadlo tě: „nemá to hlídat databáze sama?" Částečně ano — přes <strong>izolační úroveň</strong>. Postgresí default je <code>READ COMMITTED</code>, který lost update v read-modify-write <em>nezabrání</em>. Nejpřísnější <code>SERIALIZABLE</code> se chová, jako by transakce běžely po sobě — konflikt <strong>detekuje a jednu shodí</strong> chybou <code>40001</code> (serialization_failure), kterou v aplikaci <strong>odchytíš a transakci zopakuješ</strong>.</p>
+<div class="callout">
+  <span class="label">Trade-off</span>
+  Vyšší izolace = míň anomálií, ale víc zahozených transakcí a nutnost retry logiky. Nižší = rychlejší, ale hlídáš si souběh sám (atomický UPDATE / zámek). Není „nejlepší" úroveň — je to volba podle toho, co endpoint dělá.
+</div>
+
+<div class="callout aha">
+  <span class="label">Zpátky k 23505</span>
+  Ten unique-violation závod z lekce 05 (dva stejné e-maily naráz) je <strong>tentýž druh problému</strong>: souběh + read-then-write. A řešení bylo stejné jako tady varianta A — <strong>nech to na databázi</strong> (constraint / atomický příkaz) a odchyť výsledek. Teď vidíš, do jaké rodiny to patří.
+</div>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Proč <code>SELECT balance</code> → v kódu <code>- 30</code> → <code>UPDATE balance = výsledek</code> ztratí update při souběhu?",
+    "options": [
+      "UPDATE bez WHERE přepíše všechny řádky",
+      "Mezi SELECT a UPDATE se vejde druhá transakce",
+      "SELECT vrací zastaralá data z cache",
+      "balance je špatný datový typ na peníze"
+    ],
+    "answer": 1,
+    "why": "Read-modify-write má mezi čtením a zápisem časovou škvíru. Oba requesty přečtou 100 dřív, než kdokoli zapíše, oba spočítají 70, oba zapíšou 70 → jeden odečet zmizí (lost update)."
+  },
+  {
+    "q": "Nejjednodušší spolehlivá oprava, když jde úprava vyjádřit relativně?",
+    "options": [
+      "UPDATE … SET balance = balance − 30 (atomicky)",
+      "Zvýšit izolaci na SERIALIZABLE",
+      "Přečíst zůstatek dvakrát pro jistotu",
+      "Dát na endpoint globální mutex v Node"
+    ],
+    "answer": 0,
+    "why": "Atomický UPDATE nechá aritmetiku na DB v jednom příkazu — žádné čtení do aplikace, žádná škvíra. Když jde úprava napsat relativně (balance − 30), je to nejjednodušší neprůstřelná volba."
+  },
+  {
+    "q": "Optimistický zámek přes <code>version</code> pozná konflikt tak, že…",
+    "options": [
+      "zamkne řádek a druhá transakce čeká",
+      "UPDATE … WHERE version = $2 zasáhne 0 řádků",
+      "databáze vyhodí 23505 unique_violation",
+      "SELECT FOR UPDATE vrátí prázdný výsledek"
+    ],
+    "answer": 1,
+    "why": "Optimistický přístup nezamyká — při zápisu ověří WHERE version = (verze, kterou jsem četl). Když mezitím někdo zapsal, verze nesedí, UPDATE zasáhne 0 řádků → víš o konfliktu a retryuješ / vrátíš 409."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď naskakuje?</strong> „Co je deadlock a jak vznikne (dvě transakce se zamknou navzájem)?" „Kdy pesimistický vs optimistický zámek?" „Co dělá <code>FOR UPDATE SKIP LOCKED</code> (fronty úloh)?" „Jak vypadá retry smyčka na <code>40001</code>?" To jsou zastávky, které z tebe dělají člověka, co umí psát na souběh — napiš, kterou.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/transaction-iso.html">PostgreSQL — Transaction Isolation</a> · <a href="https://www.postgresql.org/docs/current/explicit-locking.html">Explicit Locking</a>. Oficiální, textové.</p>
+  <p><strong>Souvisí:</strong> <a href="0005-postgres-z-node-a-parametrizovane-dotazy.html">1/7 — 23505 závod</a> · <a href="0004-rest-poradne-idempotence-a-status-kody.html">Lekce 04 — version &amp; 409</a> · <a href="0001-jak-node-obslouzi-tisice-pozadavku.html">Lekce 01 — souběh v Node</a></p>
+  <p><strong>DB oblouk (7 dílů):</strong> 1 ✓ · 2 ✓ · 3 ✓ · 4 ✓ · 5 ✓ · <strong>6 Transakce &amp; souběh ✓ (jsi tu)</strong> · 7 Provoz &amp; bezpečnost</p>
+</div>
+
+<script src="../assets/race-sim.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

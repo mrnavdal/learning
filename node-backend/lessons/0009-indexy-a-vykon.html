@@ -109,6 +109,7 @@ Index Scan using users_email_idx  (cost=0.29..8.31 rows=1)  (actual time=0.05 ms
     <strong>Co ti teď vyskakuje?</strong> „Když mám <code>WHERE country_id = 1 AND age &gt; 30</code>, dá se udělat index přes oba sloupce — a záleží na pořadí?" (ano, <em>leftmost prefix</em>) „Co je <em>covering index</em> / index-only scan?" „Kdy má smysl <em>partial index</em> jen na část řádků?" Přesně tyhle otázky dělají seniora — napiš, kterou rozbalit.
   </div>
   <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/indexes.html">PostgreSQL — Indexes</a> · <a href="https://use-the-index-luke.com/">Use The Index, Luke!</a> (výborný textový průvodce indexy). Textové.</p>
+  <p><strong>Další v oblouku:</strong> <a href="0010-transakce-a-soubeh.html">Databáze 6/7 — Transakce &amp; souběh</a> (co když do těch řádků sahají dva requesty naráz).</p>
   <p><strong>Souvisí:</strong> <a href="0008-joiny-a-n-plus-1-problem.html">Databáze 4/7 — JOINy &amp; N+1</a> (proč FK <code>author_id</code> chce index) · <a href="0007-migrace-verzovani-schematu.html">3/7 — Migrace</a> (CONCURRENTLY)</p>
   <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz ✓ · 2 Schéma ✓ · 3 Migrace ✓ · 4 JOINy &amp; N+1 ✓ · <strong>5 Indexy &amp; výkon ✓ (jsi tu)</strong> · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
 </div>
