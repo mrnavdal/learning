@@ -112,6 +112,7 @@ const authors = await db.query('SELECT * FROM authors WHERE id = ANY($1)', [ids]
     <strong>Co ti teď naskakuje?</strong> „Co když je vztah many-to-many (post má tagy, tag má posty)?" „Kdy přesně JOIN duplikuje řádky a jak to poskládám zpět přes <code>GROUP BY</code>?" „Jak DataLoader ví, které dotazy sloučit?" To jsou další zastávky — napiš, co chceš rozbalit.
   </div>
   <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/tutorial-join.html">PostgreSQL — Joins</a> · <a href="https://github.com/graphql/dataloader">DataLoader</a> (batching &amp; caching). Textové.</p>
+  <p><strong>Další v oblouku:</strong> <a href="0009-indexy-a-vykon.html">Databáze 5/7 — Indexy &amp; výkon</a> (proč ten JOIN po <code>author_id</code> chce index, ať není seq scan).</p>
   <p><strong>Souvisí:</strong> <a href="0006-schema-jako-kontrakt.html">Databáze 2/7 — Schéma</a> (odkud se bere ten <code>author_id</code> FK)</p>
   <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz z Node ✓ · 2 Schéma ✓ · 3 Migrace ✓ · <strong>4 JOINy &amp; N+1 ✓ (jsi tu)</strong> · 5 Indexy &amp; výkon · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
 </div>

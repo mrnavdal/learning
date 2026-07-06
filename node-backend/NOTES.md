@@ -23,7 +23,7 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
-- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06), `migration-runner.js` (l07), `nplus1-viz.js` (l08 — N+1 vs JOIN vs batch, posuvník počtu postů).
+- **Hotové:** `styles.css`, `quiz.js`, `rest-playground.js` (l04), `sql-injection.js` (l05), `constraint-sandbox.js` (l06), `migration-runner.js` (l07), `nplus1-viz.js` (l08), `scan-viz.js` (l09 — seq vs index scan, posuvník velikosti tabulky, kdy index nepomůže).
 - **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`. Drž se ho — ověřuj logiku, ne jen typecheck.
 - **Backlog (nápady dle mise, stav 2026-07-04):**
   - `event-loop-viz` — animace requestu: call stack → callback queue → libuv thread pool (pozvedne abstraktní lekci 01).
@@ -39,6 +39,7 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 - 2026-07-04: **Přechod na hloubkový styl (téma = oblouk).** Databáze se stávají oblohem 7 dílů. Lekce 05 přeznačena jako díl 1/7. Dodán **díl 2/7 (0006 Schéma jako kontrakt)** + komponent `constraint-sandbox.js`. Auth přesunut ZA DB oblouk.
 - 2026-07-04: Dodán **díl 3/7 (0007 Migrace)** + `migration-runner.js`. Uživatel: schéma i migrace jsou pro něj opakování, zatím bez dotazů. Další = díl 4 (JOINy & N+1).
 - 2026-07-04: Dodán **díl 4/7 (0008 JOINy & N+1)** + `nplus1-viz.js`. Přitvrzeno tempo (JOIN svižně, těžiště N+1 + tradeoff JOIN vs batch). Další = díl 5 (Indexy & výkon).
+- 2026-07-04: Dodán **díl 5/7 (0009 Indexy & výkon)** + `scan-viz.js`. Zbývá díl 6 (Transakce & souběh) a 7 (Provoz & bezpečnost).
 - 2026-07-04: **Háčky l08 loop.** many-to-many ✅ (junction table zná), JOIN duplikace 🟡 (myslel „víc joinů"; opraveno: kořen je one-to-many kardinalita, +json_agg/GROUP BY reassembly), DataLoader 🔬 chtěl rozvést → doučeno (batching v okně 1 ticku event loopu + per-request cache; past for-await serializace; tie zpět na lekci 01). Uživatel dobře napojuje na dřívější znalosti.
 - 2026-07-04: **Diagnostika přes háčky z lekce 07** (uživatel poprvé prošel retrieval loop). Skóre 2/3 s dobrým citem: transakční DDL/rollback ✅, kdy dropnout sloupec ✅ (princip; doplněn timing přes deploy), multi-instance migrace 🔴 (doučeno: advisory lock + kompatibilita během rolloutu). **Kalibrace:** DB hloubku má solidní, můžu v dalších dílech přitvrdit tempo/úroveň. Retrieval-first loop mu sedí → používat háčky aktivně.
 
@@ -48,7 +49,7 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 3. **Migrace** — verzování schématu, expand/backfill/contract na živých datech, zámky (CONCURRENTLY) · lekce 0007 ✓ (`migration-runner.js`). Schéma je uživateli povědomé (opakování) → jel jsem svižněji přes základy, hloubka v live-data části.
 4. **JOINy & N+1** — vztahy, N+1 (lazy loading), JOIN vs batch/DataLoader tradeoff, jak N+1 poznat · lekce 0008 ✓ (`nplus1-viz.js`)
 4. **JOINy & N+1** — vztahy napříč tabulkami, N+1 problém, kdy JOIN vs víc dotazů · TODO
-5. **Indexy & výkon** — proč SELECT bez indexu škáluje blbě, B-tree, EXPLAIN, kdy (ne)indexovat · TODO
+5. **Indexy & výkon** — seq vs index scan (O(n) vs O(log n)), B-tree (co umí/ne), EXPLAIN, cena indexů, PK auto vs FK ne · lekce 0009 ✓ (`scan-viz.js`)
 6. **Transakce & souběh** — ACID, BEGIN/COMMIT, race conditions (navazuje na 23505), izolační úrovně, optimistic vs pessimistic locking · TODO
 7. **Provoz & bezpečnost** — connection pooling do hloubky, secrets/env, least privilege, zálohy · TODO
 (Otevřené hloubkové otázky, co si mají „napadnout samy": partial unique index, composite PK, deferred FK checks, ON DELETE volby — zapleteny do dílů 3–6.)

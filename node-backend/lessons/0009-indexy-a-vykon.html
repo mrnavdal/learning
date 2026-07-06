@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 09 — Indexy & výkon (Databáze 5/7)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 09 · Databáze — díl 5 ze 7</p>
+<h1>Indexy &amp; výkon</h1>
+<p class="subtitle">Nejšťavnatější díl oblouku. Jeden <code>CREATE INDEX</code> umí proměnit dvouvteřinový endpoint na dvoumilisekundový — a když pochopíš proč, přestaneš je sázet i tam, kde škodí.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý díl</span>
+  Bez indexu musí DB pro <code>WHERE email = 'x'</code> přečíst <strong>každý řádek</strong> a porovnat (sekvenční scan, <code>O(n)</code>). S indexem jde přes <strong>seřazený strom</strong> a trefí se za <code>~log n</code> kroků. Pro milion řádků je to rozdíl mezi <strong>1 000 000</strong> a <strong>~20</strong>. Index je rejstřík na konci knihy — nečteš celou knihu, skočíš na stránku.
+</div>
+
+<h2>Seq scan vs index scan</h2>
+<p>Dvě cesty, jak DB najde řádky:</p>
+<ul>
+  <li><strong>Sequential scan</strong> — projdi tabulku řádek po řádku, na každém vyhodnoť podmínku. Roste <strong>lineárně</strong> s počtem řádků. U malé tabulky fajn, u velké katastrofa.</li>
+  <li><strong>Index scan</strong> — použij index (seřazenou strukturu) a skoč rovnou na místo. Roste <strong>logaritmicky</strong>. Dotaz na 10× větší tabulku stojí jen o pár kroků víc.</li>
+</ul>
+
+<h2>🧪 Osahej si tu propast</h2>
+<p>Táhni <strong>počet řádků</strong> nahoru na milion a sleduj, kolik řádků musí DB „osahat" bez indexu (červená) a s ním (zelená). Pak přepni na <code>LIKE '%x'</code> a uvidíš, kdy index nepomůže vůbec.</p>
+
+<div class="scan-viz"></div>
+
+<h2>B-tree: co umí a co ne</h2>
+<p>Výchozí index v Postgresu je <strong>B-tree</strong> — vyvážený seřazený strom. Protože je <em>seřazený</em>, zvládne víc než jen rovnost:</p>
+<table style="width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:.88rem;">
+  <tr style="border-bottom:2px solid var(--rule); text-align:left;"><th style="padding:.4rem;">Dotaz</th><th style="padding:.4rem;">Použije B-tree?</th></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>WHERE email = 'x'</code></td><td style="padding:.4rem;">✅ rovnost</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>WHERE age &gt; 30</code>, <code>BETWEEN</code></td><td style="padding:.4rem;">✅ rozsah (je seřazený)</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>ORDER BY email</code></td><td style="padding:.4rem;">✅ už je seřazeno → zadarmo</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>LIKE 'ada%'</code> (prefix)</td><td style="padding:.4rem;">✅ pevný začátek = rozsah</td></tr>
+  <tr style="border-bottom:1px solid var(--rule);"><td style="padding:.4rem;"><code>LIKE '%x.cz'</code> (leading wildcard)</td><td style="padding:.4rem;">❌ nemá kde v stromě začít</td></tr>
+  <tr><td style="padding:.4rem;"><code>WHERE lower(email) = 'x'</code></td><td style="padding:.4rem;">❌ funkce na sloupci* </td></tr>
+</table>
+<p style="margin-top:.5rem; font-size:.88rem;"><em>* Pokud dotaz volá funkci na sloupci, obyčejný index se nepoužije — potřebuješ <strong>functional index</strong> <code>CREATE INDEX … ON users(lower(email))</code>. Podobně na fulltext (<code>%x%</code>) se nasazují jiné typy: GIN + trigram.</em></p>
+
+<h2>Jak zjistíš, co DB doopravdy dělá: <code>EXPLAIN</code></h2>
+<p>Neháduj — zeptej se. <code>EXPLAIN</code> ukáže plán dotazu, <code>EXPLAIN ANALYZE</code> ho i spustí a změří:</p>
+<pre><code>EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'ada@x.cz';
+
+-- Bez indexu:
+Seq Scan on users  (cost=0.00..18334 rows=1)  (actual time=210 ms …)
+--   ^^^^^^^^ projíždí celou tabulku
+
+-- Po CREATE INDEX ON users(email):
+Index Scan using users_email_idx  (cost=0.29..8.31 rows=1)  (actual time=0.05 ms …)
+--   ^^^^^^^^^^ skočil rovnou; 210 ms → 0.05 ms</code></pre>
+<p>Když v plánu vidíš <strong><code>Seq Scan</code></strong> na velké tabulce u dotazu, který se má trefit přesně — máš kandidáta na index. Tohle je nástroj, kterým se ladí pomalé endpointy v praxi.</p>
+
+<h2>Proč tedy neindexovat všechno</h2>
+<div class="callout myth">
+  <span class="label">Index není zadarmo</span>
+  Každý index je <strong>kopie dat navíc</strong>, kterou musí DB <strong>udržovat při každém zápisu</strong>. <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> musí aktualizovat i všechny indexy na tabulce → zápisy jsou pomalejší a index žere místo na disku. Indexuj sloupce, podle kterých <strong>filtruješ, joinuješ a řadíš</strong> — ne naslepo všechno.
+</div>
+<p>Dva praktické záchytné body, které tě odliší:</p>
+<ul>
+  <li><strong>PRIMARY KEY je automaticky indexovaný, FOREIGN KEY není.</strong> Sloupec <code>author_id</code> z dílu 2, po kterém pořád joinuješ, si index musíš přidat <em>sám</em> — jinak je JOIN seq scan. Klasická díra.</li>
+  <li><strong>Na produkci</strong> <code>CREATE INDEX CONCURRENTLY</code> (z dílu 3 o migracích) — obyčejný <code>CREATE INDEX</code> zamkne zápisy.</li>
+</ul>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Proč je <code>WHERE email = 'x'</code> bez indexu na milionové tabulce pomalé?",
+    "options": [
+      "DB musí projít každý řádek (seq scan, O(n))",
+      "Rovnost neumí Postgres optimalizovat",
+      "text sloupce se porovnávají znak po znaku",
+      "Bez indexu se dotaz posílá vícekrát"
+    ],
+    "answer": 0,
+    "why": "Bez indexu = sequential scan: DB přečte a porovná každý z milionu řádků. S B-tree indexem jde přes seřazený strom za ~log n (≈20) kroků. To je ten rozdíl lineární vs logaritmické."
+  },
+  {
+    "q": "Na kterém dotazu B-tree index na sloupci email NEPOMŮŽE?",
+    "options": [
+      "WHERE email = \"ada@x.cz\"",
+      "WHERE email LIKE \"ada%\"",
+      "WHERE email LIKE \"%x.cz\"",
+      "ORDER BY email"
+    ],
+    "answer": 2,
+    "why": "Leading wildcard LIKE \"%x.cz\" nemá pevný začátek, takže seřazený B-tree nemá kde začít hledat → seq scan. Rovnost, prefix (ada%) i ORDER BY index využijí, protože strom je seřazený."
+  },
+  {
+    "q": "Proč neindexovat úplně každý sloupec „pro jistotu\"?",
+    "options": [
+      "Index nejde na některé datové typy",
+      "Každý index zpomaluje zápisy a žere místo",
+      "Postgres dovolí max 3 indexy na tabulku",
+      "Čtení by pak bylo pomalejší"
+    ],
+    "answer": 1,
+    "why": "Index je kopie dat, kterou DB udržuje při každém INSERT/UPDATE/DELETE — víc indexů = pomalejší zápisy a víc místa. Indexuj podle toho, jak filtruješ/joinuješ/řadíš, ne naslepo."
+  }
+]'></div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď vyskakuje?</strong> „Když mám <code>WHERE country_id = 1 AND age &gt; 30</code>, dá se udělat index přes oba sloupce — a záleží na pořadí?" (ano, <em>leftmost prefix</em>) „Co je <em>covering index</em> / index-only scan?" „Kdy má smysl <em>partial index</em> jen na část řádků?" Přesně tyhle otázky dělají seniora — napiš, kterou rozbalit.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.postgresql.org/docs/current/indexes.html">PostgreSQL — Indexes</a> · <a href="https://use-the-index-luke.com/">Use The Index, Luke!</a> (výborný textový průvodce indexy). Textové.</p>
+  <p><strong>Souvisí:</strong> <a href="0008-joiny-a-n-plus-1-problem.html">Databáze 4/7 — JOINy &amp; N+1</a> (proč FK <code>author_id</code> chce index) · <a href="0007-migrace-verzovani-schematu.html">3/7 — Migrace</a> (CONCURRENTLY)</p>
+  <p><strong>DB oblouk (7 dílů):</strong> 1 Dotaz ✓ · 2 Schéma ✓ · 3 Migrace ✓ · 4 JOINy &amp; N+1 ✓ · <strong>5 Indexy &amp; výkon ✓ (jsi tu)</strong> · 6 Transakce &amp; souběh · 7 Provoz &amp; bezpečnost</p>
+</div>
+
+<script src="../assets/scan-viz.js"></script>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
