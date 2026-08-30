@@ -3,7 +3,7 @@
  * Spusť:  node tools/test-session-runner.js
  */
 'use strict';
-const { buildTimeline, stepAt, formatClock, DEFAULT_SEC_PER_BREATH } = require('../assets/session-runner.js');
+const { buildTimeline, stepAt, formatClock, filterSteps, DEFAULT_SEC_PER_BREATH } = require('../assets/session-runner.js');
 
 let pass = 0, fail = 0;
 function ok(label, cond) { console.log((cond ? '✓' : '✗') + ' ' + label); cond ? pass++ : fail++; }
@@ -63,6 +63,28 @@ ok('formatClock(65) = 1:05', formatClock(65) === '1:05');
 ok('formatClock(600) = 10:00', formatClock(600) === '10:00');
 ok('formatClock zaokrouhluje nahoru', formatClock(59.2) === '1:00');
 ok('formatClock nejde do záporu', formatClock(-5) === '0:00');
+
+// --- varianty délky praxe (rampa 25/30/35) ---
+const tiered = [
+  { name: 'Usazení', sec: 60 },                 // jádro — v každé variantě
+  { name: 'Cat-Cow', sec: 60 },                 // jádro
+  { name: 'Postoje navíc', sec: 300, tier: 30 },
+  { name: 'Zem navíc', sec: 300, tier: 35 },
+  { name: 'Savasana', sec: 120 }                // jádro
+];
+ok('varianta 25 obsahuje jen jádro', filterSteps(tiered, 25).length === 3);
+ok('varianta 30 přidá krok s tier 30', filterSteps(tiered, 30).length === 4);
+ok('varianta 35 obsahuje všechno', filterSteps(tiered, 35).length === 5);
+ok('varianty jsou vnořené (delší obsahuje kratší)',
+  filterSteps(tiered, 25).every(s => filterSteps(tiered, 30).indexOf(s) !== -1) &&
+  filterSteps(tiered, 30).every(s => filterSteps(tiered, 35).indexOf(s) !== -1));
+ok('delší varianta je fakt delší',
+  buildTimeline(filterSteps(tiered, 25)).total < buildTimeline(filterSteps(tiered, 30)).total &&
+  buildTimeline(filterSteps(tiered, 30)).total < buildTimeline(filterSteps(tiered, 35)).total);
+ok('jádro zůstává v každé variantě (končí savasanou)',
+  [25, 30, 35].every(m => filterSteps(tiered, m).slice(-1)[0].name === 'Savasana'));
+ok('filtr nemodifikuje původní seznam', tiered.length === 5);
+ok('kroky bez tier projdou i při nulové délce', filterSteps(tiered, 0).length === 3);
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

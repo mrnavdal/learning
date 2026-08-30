@@ -131,6 +131,10 @@ code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; fon
 
 /* ---- Session runner (běhoun praxe — používá se na telefonu u podložky) ---- */
 .session-runner { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem; background: #fff; }
+.sr-lengths { display: flex; gap: .4rem; justify-content: center; margin-bottom: .9rem; }
+.sr-len { font: inherit; font-size: .82rem; font-weight: 700; padding: .35rem .9rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.sr-len:hover { border-color: var(--accent); }
+.sr-len.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .sr-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .6rem; }
 .sr-block { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); }
 .sr-clock { font-size: .82rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }

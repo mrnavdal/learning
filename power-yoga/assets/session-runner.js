@@ -12,6 +12,13 @@
  *   { "name": "Cat-Cow", "sanskrit": "Marjaryasana", "breaths": 8, "cue": "…", "block": "Rozehřátí" }
  *   Délka se zadá BUĎ `breaths` (přepočte se přes secPerBreath), NEBO `sec` napevno.
  *
+ * Varianty délky praxe:
+ *   Krok bez `tier` je jádro praxe a je v každé variantě. Krok s `tier: 75` se objeví
+ *   ve variantě 75 min a delší, `tier: 90` jen v devadesátiminutové. Nabídku variant
+ *   určí `lengths: [60, 75, 90]`, výchozí je `defaultLength`.
+ *   Uživatel si tak podle dne vybere kratší nebo delší verzi TÉŽE praxe — oblouk
+ *   zůstane celý, jen se ubere z prostředka.
+ *
  * Jádro (buildTimeline / stepAt / formatClock) jsou čisté funkce → testovatelné v Node
  * (viz tools/test-session-runner.js).
  */
@@ -39,6 +46,11 @@
     return { items: items, total: t };
   }
 
+  /* Kroky patřící do varianty dlouhé `minutes`. Krok bez `tier` je v každé variantě. */
+  function filterSteps(steps, minutes) {
+    return steps.filter(function (s) { return !s.tier || s.tier <= minutes; });
+  }
+
   /* Kde jsme v praxi po `elapsed` sekundách. */
   function stepAt(timeline, elapsed) {
     if (elapsed < 0) elapsed = 0;
@@ -64,7 +76,7 @@
 
   var CORE = {
     buildTimeline: buildTimeline, stepAt: stepAt, formatClock: formatClock,
-    DEFAULT_SEC_PER_BREATH: DEFAULT_SEC_PER_BREATH
+    filterSteps: filterSteps, DEFAULT_SEC_PER_BREATH: DEFAULT_SEC_PER_BREATH
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = CORE;
@@ -86,7 +98,12 @@
     catch (e) { root.textContent = 'Chyba v datech praxe: ' + e.message; return; }
     if (!cfg.steps || !cfg.steps.length) { root.textContent = 'Praxe nemá žádné kroky.'; return; }
 
-    var tl = buildTimeline(cfg.steps, cfg.secPerBreath);
+    var lengths = cfg.lengths && cfg.lengths.length ? cfg.lengths : null;
+    var current = cfg.defaultLength || (lengths ? lengths[lengths.length - 1] : null);
+    var tl = buildTimeline(lengths ? filterSteps(cfg.steps, current) : cfg.steps, cfg.secPerBreath);
+
+    var lenBar = el('div', 'sr-lengths');
+    var lenBtns = [];
 
     var head = el('div', 'sr-head');
     var blockLbl = el('div', 'sr-block');
@@ -116,22 +133,50 @@
     controls.appendChild(go); controls.appendChild(skip); controls.appendChild(reset);
 
     var list = el('div', 'sr-list');
-    tl.items.forEach(function (it, i) {
-      var row = el('div', 'sr-row');
-      row.setAttribute('data-i', i);
-      var dur = it.breaths ? it.breaths + ' dech' + (it.breaths >= 5 ? 'ů' : it.breaths > 1 ? 'y' : '') : formatClock(it.sec);
-      row.innerHTML = '<span class="sr-row-name">' + esc(it.name)
-        + (it.side ? ' <em>(' + esc(it.side) + ')</em>' : '') + '</span>'
-        + '<span class="sr-row-dur">' + esc(dur) + '</span>';
-      list.appendChild(row);
-    });
+    var listHead = el('div', 'sr-listhead');
+
+    function renderList() {
+      listHead.textContent = 'Celá praxe — ' + formatClock(tl.total);
+      list.innerHTML = '';
+      tl.items.forEach(function (it, i) {
+        var row = el('div', 'sr-row');
+        row.setAttribute('data-i', i);
+        var dur = it.breaths ? it.breaths + ' dech' + (it.breaths >= 5 ? 'ů' : it.breaths > 1 ? 'y' : '') : formatClock(it.sec);
+        row.innerHTML = '<span class="sr-row-name">' + esc(it.name)
+          + (it.side ? ' <em>(' + esc(it.side) + ')</em>' : '') + '</span>'
+          + '<span class="sr-row-dur">' + esc(dur) + '</span>';
+        list.appendChild(row);
+      });
+    }
+    renderList();
+
+    if (lengths) {
+      lengths.forEach(function (mins) {
+        var b = el('button', 'sr-len' + (mins === current ? ' is-on' : ''), mins + ' min');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          if (mins === current) return;
+          current = mins;
+          lenBtns.forEach(function (x, xi) { x.classList.toggle('is-on', lengths[xi] === current); });
+          stop();
+          elapsed = 0;
+          tl = buildTimeline(filterSteps(cfg.steps, current), cfg.secPerBreath);
+          renderList();
+          go.textContent = 'Spustit praxi';
+          paint();
+        });
+        lenBtns.push(b);
+        lenBar.appendChild(b);
+      });
+      root.appendChild(lenBar);
+    }
 
     root.appendChild(head);
     root.appendChild(now);
     root.appendChild(bar);
     root.appendChild(nextEl);
     root.appendChild(controls);
-    root.appendChild(el('div', 'sr-listhead', 'Celá praxe — ' + formatClock(tl.total)));
+    root.appendChild(listHead);
     root.appendChild(list);
 
     var timer = null, elapsed = 0, running = false, lastTick = 0;

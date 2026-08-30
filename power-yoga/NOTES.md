@@ -3,8 +3,9 @@
 ## Learner profile (zjištěno 2026-08-30)
 - **Zkušenost:** „párkrát zkusil" — byl na pár lekcích / zkoušel video. Základní pozice
   zná jménem, ale **nic systematicky**. Neber jako úplného nováčka, ale nic nepředpokládej.
-- **Rozpočet:** 20–30 min, 3–4× týdně. → Lekce musí být krátká a **každá sestava musí
-  reálně vejít do 20–30 min**. Nedělej 60min sekvence, které si stejně nezacvičí.
+- **Rozpočet:** cíl **60–90 min, 2–3× týdně**; teď je na 1. kroku rampy (25–35 min).
+  → Lekce zůstává krátká (pracovní paměť), ale **sestavy stav pro aktuální krok rampy**.
+  Nikdy nestav rovnou 90min praxi, protože je to cíl — stav pro to, co unese dnes.
 - **Zdraví:** bez omezení a bolestí. Standardní progrese je OK.
   ⚠️ Ověřuj průběžně — power jóga zatěžuje **zápěstí a ramena**; kdyby se něco ozvalo,
   hned to zapiš sem a přidej learning record.
@@ -84,6 +85,30 @@ jinak nemám jak vidět, jak cvičí. Rozdělení:
 Pozor na past: sessions **nesmí nahradit** učební oblouk. Kdyby to sklouzlo k „vygeneruj mi
 sestavu na dnešek", uživatel se naučí cvičit, ale ne skládat — a to je přesně cíl mise.
 
+## Rampa délky praxe (cíl 60–90 min, 2–3× týdně)
+Uživatel míří na 60–90 min 2–3× týdně, ale **chce se tam vypracovat postupně** (výslovně
+2026-08-30). Délka praxe je tím pádem sama o sobě páka progresivního overloadu — patří
+do oblouku D.
+
+| Krok | Délka | Stav |
+|---|---|---|
+| 1 | 25–35 min | ← teď (trénink 01) |
+| 2 | 40–45 min | |
+| 3 | 55–60 min | |
+| cíl | 75–90 min | |
+
+**Postup podle důkazů, ne kalendáře.** Na další krok až když platí všechno:
+1. ujjayi vydrží plynulé celou praxi včetně poslední třetiny,
+2. druhý den žádná bolest v ramenou/zápěstích (svalová únava OK, bolest kloubu ne),
+3. poslední blok praxe neodbývá,
+4. současnou délku zvládl 3× po sobě.
+
+Když podmínka neplatí, zůstává na kroku. Celá rampa ≈ 2 měsíce.
+
+⚠️ **Délka nesmí přicházet z většího objemu vinyas.** Prodlužuj drženými pozicemi, prací
+na zemi a delším závěrem — objem opakování vůči síle je hlavní faktor zranění ramene
+(viz RESOURCES, Yoganatomy). Zátěž na ramena a zápěstí drž zatím konstantní.
+
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
 **Vzor komponentu:** čisté jádro (`CORE`, testovatelné) + `module.exports` guard +
@@ -92,7 +117,8 @@ DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`
 - **Hotové:** `styles.css`, `quiz.js`, `breath-pacer.js` (l01 — časovaný dech s vizuální
   vlnou a počítadlem kol), `breath-match.js` (l01 — drill nádech/výdech na pohyb),
   `session-runner.js` (s01 — **běhoun praxe**: přehraje libovolnou sestavu krok po kroku
-  s odpočtem, cue, náhledem dalšího kroku a přehledem celé praxe).
+  s odpočtem, cue, náhledem dalšího kroku a přehledem celé praxe; umí **varianty délky**
+  přes `tier` na kroku + `lengths`, takže jedna praxe jede v 25/30/35 a jádro zůstane).
   ⭐ `session-runner` je **datově řízený** — nová session = jen nová JSON sada kroků, žádný
   nový kód. Používej ho pro každý trénink a později i v oblouku C pro přehrání sestav,
   které si uživatel sám složí. Tím pádem `flow-player` z backlogu odpadá, je to on.
@@ -131,8 +157,14 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
   overload) a **vyrobí první číslo do záznamu** — nultý bod, proti kterému se dá měřit.
   Praxe 17:16, oblouk usazení → rozehřátí → hlavní → závěr, jen pohyby z lekce 01
   + poloviční pozdrav slunci (bezpečný pro začátečníka, plná čaturanga až v lekci 03).
-- **Čeká na zápis z tréninku 01** (prkna: vteřina zlomu dechu ×3, tempo, kde zmizelo
-  ujjayi, tužší strana u thread the needle, co tlačilo). Z toho postavit trénink 02.
+- 2026-08-30: **Cíl délky změněn na 60–90 min / 2–3× týdně, s postupnou rampou.**
+  Trénink 01 přepsán z 17 min na 25/30/35 (volba v běhounu) a doplněn o rampu i podmínky
+  postupu. `session-runner` rozšířen o varianty délky (`tier`), +8 testů.
+  Délka přibyla drženými pozicemi a prací na zemi (Puppy pose, Sphinx, holubička, most),
+  **ne dalšími vinyasami** — zátěž na ramena zůstala stejná.
+- **Čeká na zápis z tréninku 01** (zvolená délka, prkna: vteřina zlomu dechu ×3, kde zmizelo
+  ujjayi, přítomnost v poslední třetině, tužší strana u thread the needle, co tlačilo
+  a co druhý den). Z toho postavit trénink 02 a rozhodnout o kroku rampy.
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
   zdraví, komunita). Dodána **lekce 0001 (Dech řídí pohyb)** + komponenty `breath-pacer.js`,
   `breath-match.js` + reference `dech-a-pohyb.html`.

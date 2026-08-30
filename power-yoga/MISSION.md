@@ -12,7 +12,8 @@ v ní jít **progresivně přidávat zátěž** (postup k těžším pozicím), 
 měsících zastaví na místě.
 
 ## Success looks like
-- Sám sestaví 20–30min power jógovou sestavu s jasným **obloukem** (rozehřátí → vrchol → protipozice → závěr)
+- Sám sestaví **60–90min** power jógovou sestavu s jasným **obloukem** (rozehřátí → vrchol → protipozice → závěr)
+- Umí tutéž sestavu zkrátit i prodloužit podle dne, aniž by rozbil oblouk
 - Zvládne bezpečně **pozdrav slunci A i B** včetně čaturangy, bez přetěžování ramen
 - Vybere si **vrcholovou pozici** a odvodí, které přípravné pozice k ní vedou
 - Naplánuje si **týden**: kolik praxí, jaké intenzity, kam patří regenerace
@@ -26,7 +27,11 @@ měsících zastaví na místě.
 
 ## Constraints
 - **Začátečník s letmou zkušeností** — pár lekcí/videí, pozice zná zběžně jménem, nic systematicky.
-- **20–30 min, 3–4× týdně.** Lekce i sestavy musí sedět do tohoto rozpočtu.
+- **Cíl: 60–90 min, 2–3× týdně** (upřesněno 2026-08-30). **Ale vypracovává se tam postupně** —
+  na začátku 25–35 min. Sestavy vždycky stav pro *aktuální* krok rampy, ne pro cíl;
+  rampa a podmínky postupu jsou v `NOTES.md`.
+  Týdenní objem tím poroste z ~60–105 min na 150–270, tedy víc než trojnásobek — proto
+  postup podle důkazů (dech, bolest druhý den), ne podle kalendáře.
 - Cvičí **doma a sám**, bez lektora. Zpětná vazba musí přijít z lekce, ne od učitele.
 - **Nemá rád videa** → text + interaktivní prvky, ne odkazy na YouTube.
 - Jazyk **čeština**; sanskrtské a zavedené anglické názvy pozic zůstávají v originále.
