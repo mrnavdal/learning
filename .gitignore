@@ -1,5 +1,6 @@
-# Generated standalone builds (Artifact-ready, regenerable via node-backend/tools/build-standalone.js)
+# Generated standalone builds (Artifact-ready, regenerable via <tema>/tools/build-standalone.js)
 node-backend/build/
+power-yoga/build/
 
 # Node
 node_modules/

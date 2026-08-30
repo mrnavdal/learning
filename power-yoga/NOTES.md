@@ -66,6 +66,20 @@ DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`
     vejde se to do 25 min?) a dává okamžitou zpětnou vazbu.
 - Omezení hostingu: statický hosting, jen client-side JS (žádný backend).
 
+## Hosting lekcí (jak si je prohlížím v browseru)
+Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá publikace, žádné CI.
+- Build: `node tools/build-standalone.js lessons/000X-....html` → `build/` (inlinuje `styles.css`
+  i všechny `assets/*.js`). Pak publikovat přes Artifact tool. `build/` je v `.gitignore`.
+- Build zahazuje `<head>`, takže **název artifactu se předává parametrem `title`** — při
+  redeploji ho drž stejný, jinak se uživateli přejmenuje záložka.
+- Křížové prokliky mezi lekcemi uvnitř artifactu nefungují (každý = vlastní URL).
+- Redeploy jde na stejnou URL při stejné `file_path` **ve stejné konverzaci**; z jiné session
+  se musí předat `url`.
+
+**Publikované URL (aktualizovat při nové lekci / re-deploji):**
+- L01 Dech řídí pohyb: https://claude.ai/code/artifact/53dc86cf-b875-487a-a8b5-9a1301cb5d78
+- 📄 Reference „Dech u podložky": https://claude.ai/code/artifact/d08ae0f8-f236-4157-9be4-f35a24db05fd
+
 ## Working notes
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
   zdraví, komunita). Dodána **lekce 0001 (Dech řídí pohyb)** + komponenty `breath-pacer.js`,
