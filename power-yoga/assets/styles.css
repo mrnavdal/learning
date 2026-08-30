@@ -129,6 +129,40 @@ code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; fon
 .bm-score { margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); font-size: .95rem; color: var(--ink-soft); }
 .bm-score:empty { display: none; padding: 0; border: none; }
 
+/* ---- Session runner (běhoun praxe — používá se na telefonu u podložky) ---- */
+.session-runner { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem; background: #fff; }
+.sr-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .6rem; }
+.sr-block { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); }
+.sr-clock { font-size: .82rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.sr-now { text-align: center; padding: 1.1rem .5rem .9rem; }
+.sr-name { font-family: Georgia, serif; font-size: 1.5rem; line-height: 1.2; text-wrap: balance; }
+.sr-sanskrit { font-style: italic; color: var(--ink-soft); font-size: .88rem; margin-top: .15rem; min-height: 1.1rem; }
+.sr-count { font-size: 3rem; font-weight: 300; line-height: 1.1; margin: .4rem 0 .3rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+.sr-cue { font-size: .92rem; line-height: 1.5; color: var(--ink-soft); max-width: 26rem; margin: 0 auto; text-wrap: pretty; }
+.sr-bar { height: .35rem; background: var(--code-bg); border-radius: 20px; overflow: hidden; margin-bottom: .7rem; }
+.sr-bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s linear; }
+.sr-next { font-size: .85rem; color: var(--ink-soft); text-align: center; min-height: 1.3rem; }
+.sr-controls { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin: .9rem 0 .3rem; }
+.sr-go { font: inherit; font-weight: 700; font-size: .95rem; padding: .6rem 1.6rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.sr-go:hover { opacity: .88; }
+.sr-go.is-running { background: var(--paper); color: var(--accent); }
+.sr-skip { font: inherit; font-size: .85rem; padding: .6rem 1rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink-soft); cursor: pointer; }
+.sr-skip:hover { border-color: var(--accent); color: var(--accent); }
+.sr-reset { border-style: dashed; }
+.sr-listhead { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: 1.3rem 0 .4rem; padding-top: .9rem; border-top: 1px solid var(--rule); }
+.sr-list { display: flex; flex-direction: column; }
+.sr-row { display: flex; justify-content: space-between; gap: .8rem; font-size: .85rem; padding: .32rem .5rem; border-radius: 5px; }
+.sr-row-dur { color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sr-row.is-now { background: var(--accent-soft); font-weight: 700; }
+.sr-row.is-done { opacity: .42; }
+.sr-row em { font-style: italic; color: var(--ink-soft); font-weight: 400; }
+
+/* ---- Zápis po praxi ---- */
+.logbox { border: 2px solid var(--accent); border-radius: 10px; padding: 1rem 1.2rem; margin: 1.6rem 0; background: var(--accent-soft); }
+.logbox .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); display: block; margin-bottom: .5rem; }
+.logbox ol { margin: .4rem 0 0; padding-left: 1.3rem; }
+.logbox li { margin: .35rem 0; font-size: .95rem; }
+
 /* ---- Karta pozice (reference — musí se dobře tisknout) ---- */
 .pose { border: 1px solid var(--rule); border-radius: 8px; padding: .9rem 1.1rem; margin: 1rem 0; background: #fff; break-inside: avoid; }
 .pose h3 { margin: 0 0 .1rem; color: var(--ink); font-size: 1rem; }
@@ -161,7 +195,7 @@ code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; fon
 /* ---- Tisk (karty pozic na papír vedle podložky) ---- */
 @media print {
   body { background: #fff; padding: 1rem; max-width: 100%; font-size: 11pt; }
-  .quiz, .breath-pacer, .breath-match, .lesson-footer .ask { display: none; }
+  .quiz, .breath-pacer, .breath-match, .session-runner, .lesson-footer .ask { display: none; }
   a { border: none; color: var(--ink); }
   h2 { page-break-after: avoid; }
   .pose, .callout, .selfcheck { break-inside: avoid; }

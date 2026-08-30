@@ -72,9 +72,13 @@ jinak nemám jak vidět, jak cvičí. Rozdělení:
 
 - **`lessons/`** — číslovaný učební oblouk (A–D výše). Backbone, jede svým tempem,
   jedna lekce = jedna nová dovednost nebo mentální model.
-- **`sessions/`** — *(vznikne s prvním tréninkem)* konkrétní plány praxe. Každá session:
-  co dnes cvičit (sestava s dechem a počty), **jeden bod k procvičení** z aktuální lekce,
-  a místo na zápis, jak to dopadlo. Odkazuje do `lessons/`, neduplikuje je.
+- **`sessions/`** — konkrétní plány praxe, `NNNN-<nazev>.html`. Založeno 2026-08-30.
+  Každá session má **pevný tvar**: (1) 🎯 *dnešní téma* — jedna nová aplikovaná věc k probrání,
+  (2) běhoun praxe (`session-runner`), (3) 📝 *zápis* — konkrétní čísla, která mi uživatel
+  pošle do chatu, (4) odkazy zpět do `lessons/`. Session nikdy neduplikuje teorii z lekce,
+  jen ji aplikuje.
+  **Další session vzniká ze zápisu předchozí, ne ze šablony.** To je celý smysl — uživatel
+  chtěl „probírat každou tréninkovou jednotku něco nového".
 - Po tréninku mi napiš, jak to šlo → z toho vzniká learning record a kalibruje se další lekce.
 
 Pozor na past: sessions **nesmí nahradit** učební oblouk. Kdyby to sklouzlo k „vygeneruj mi
@@ -86,10 +90,13 @@ Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujícíc
 DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`.
 
 - **Hotové:** `styles.css`, `quiz.js`, `breath-pacer.js` (l01 — časovaný dech s vizuální
-  vlnou a počítadlem kol), `breath-match.js` (l01 — drill nádech/výdech na pohyb).
+  vlnou a počítadlem kol), `breath-match.js` (l01 — drill nádech/výdech na pohyb),
+  `session-runner.js` (s01 — **běhoun praxe**: přehraje libovolnou sestavu krok po kroku
+  s odpočtem, cue, náhledem dalšího kroku a přehledem celé praxe).
+  ⭐ `session-runner` je **datově řízený** — nová session = jen nová JSON sada kroků, žádný
+  nový kód. Používej ho pro každý trénink a později i v oblouku C pro přehrání sestav,
+  které si uživatel sám složí. Tím pádem `flow-player` z backlogu odpadá, je to on.
 - **Backlog:**
-  - `flow-player.js` (l02) — přehraje pozdrav slunci krok po kroku, časovaně, s dechem.
-    Postav ho tak, aby uměl přehrát **libovolnou** sekvenci → použije se pak i v oblouku C.
   - `shoulder-check.js` (l05) — self-test rozsahu ramene, uživatel zapíše výsledek, opakuje za měsíc.
   - `training-log.js` (před obloukem D) — **předpoklad progresivního overloadu.** Zápis
     praxe (datum, pozice, výdrž/počty, příčka progrese, jak šel dech), uloženo v
@@ -114,8 +121,18 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 **Publikované URL (aktualizovat při nové lekci / re-deploji):**
 - L01 Dech řídí pohyb: https://claude.ai/code/artifact/53dc86cf-b875-487a-a8b5-9a1301cb5d78
 - 📄 Reference „Dech u podložky": https://claude.ai/code/artifact/d08ae0f8-f236-4157-9be4-f35a24db05fd
+- 🧘 Trénink 01 „První praxe": https://claude.ai/code/artifact/f0d12b87-14ab-46c9-b97d-eefc6a272c05
 
 ## Working notes
+- 2026-08-30: **Založen `sessions/` + trénink 01.** Uživatel chce ke každé tréninkové
+  jednotce probrat něco nového → session dostala sekci „🎯 dnešní téma". U tréninku 01 je
+  tématem **dech jako měřák zátěže** (v prknech si všímat vteřiny, kdy se dech zlomí).
+  Zvoleno schválně: propojí lekci 01 (dech je limit) s novým cílem mise (progresivní
+  overload) a **vyrobí první číslo do záznamu** — nultý bod, proti kterému se dá měřit.
+  Praxe 17:16, oblouk usazení → rozehřátí → hlavní → závěr, jen pohyby z lekce 01
+  + poloviční pozdrav slunci (bezpečný pro začátečníka, plná čaturanga až v lekci 03).
+- **Čeká na zápis z tréninku 01** (prkna: vteřina zlomu dechu ×3, tempo, kde zmizelo
+  ujjayi, tužší strana u thread the needle, co tlačilo). Z toho postavit trénink 02.
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
   zdraví, komunita). Dodána **lekce 0001 (Dech řídí pohyb)** + komponenty `breath-pacer.js`,
   `breath-match.js` + reference `dech-a-pohyb.html`.
