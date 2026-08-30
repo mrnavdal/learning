@@ -33,7 +33,7 @@ kolik je potřeba pro dovednost. Platí:
 - Nemám jak vidět, jak cvičí. Proto každá pozice potřebuje **self-check cue** —
   ověřitelný pocit nebo test („když ti padá loket ven, je to špatně").
 
-## Roadmapa (3 oblouky, 8 lekcí) — stav 2026-08-30
+## Roadmapa (4 oblouky, 10 lekcí) — stav 2026-08-30 (přestavěno po upřesnění mise)
 
 **Oblouk A — Motor praxe**
 1. **Dech řídí pohyb** — jeden dech = jeden pohyb, nádech = expanze / výdech = flexe, ujjayi · lekce 0001 ✓
@@ -45,10 +45,40 @@ kolik je potřeba pro dovednost. Platí:
 5. **Ramena & hrudní páteř do hloubky** — co dělá sezení, které pozice to opravdu řeší · TODO
    (jádro mise — mobilita ramen; sem patří thread the needle, rotace Th páteře, otevírání hrudníku)
 
-**Oblouk C — Skládání a plánování (hlavní cíl mise)**
+**Oblouk C — Skládání sestavy**
 6. **Oblouk sestavy** — anatomie 25min praxe: centering → rozehřátí → slunce → postoje → vrchol → protipozice → zem → savasana · TODO
 7. **Vrcholová pozice a zpětné plánování** — vyber cíl, odvoď přípravu; protipozice jako pravidlo · TODO
-8. **Plánování týdne** — intenzita, objem, regenerace, kam dát ramenní práci · TODO
+
+**Oblouk D — Síla a progrese** ⭐ (přidán 2026-08-30, viz LR-0002)
+8. **Šest pák progrese** — jak se v józe přidává zátěž bez činek: páka (leverage), tempo
+   a excentrika, čas pod napětím, rozsah pohybu, opora/stabilita, objem a hustota. Tohle je
+   znalostní jádro celého oblouku — bez něj je „přejít na těžší pozici" jen hádání. · TODO
+9. **Progresní řady** — konkrétní žebříčky u klíčových pozic (prkno → čaturanga s koleny →
+   plná čaturanga → boční prkno; dvounožné → jednonožné stoje; příprava na crow). Kde jsi
+   teď a **jak poznáš, že je čas na další příčku** — i kdy couvnout. · TODO
+10. **Plánování týdne s progresí** — rozložení tvrdých a lehkých praxí, regenerace, vedení
+    záznamu, kdy přidat příčku. + poctivé pojmenování stropu čisté jógy (chybějící tah)
+    a co s tím v rámci jógy jde dělat. · TODO
+
+### Pravidlo pro celý oblouk D
+Progresivní overload potřebuje **záznam** — bez čísel (kolik kol, jak dlouhá výdrž, která
+příčka) se přidávat zátěž nedá, protože není proti čemu porovnávat. Než začne oblouk D,
+musí existovat komponent/formát pro trénink. Viz backlog `training-log`.
+
+## Pracovní rytmus: lekce ke každému tréninku (dohodnuto 2026-08-30)
+Uživatel sám nabídl, že si ke **každé cvičební session udělá novou lekci**, probere ji se
+mnou a věci z ní pak implementuje v tréninku. Beru to — je to ideální feedback loop, protože
+jinak nemám jak vidět, jak cvičí. Rozdělení:
+
+- **`lessons/`** — číslovaný učební oblouk (A–D výše). Backbone, jede svým tempem,
+  jedna lekce = jedna nová dovednost nebo mentální model.
+- **`sessions/`** — *(vznikne s prvním tréninkem)* konkrétní plány praxe. Každá session:
+  co dnes cvičit (sestava s dechem a počty), **jeden bod k procvičení** z aktuální lekce,
+  a místo na zápis, jak to dopadlo. Odkazuje do `lessons/`, neduplikuje je.
+- Po tréninku mi napiš, jak to šlo → z toho vzniká learning record a kalibruje se další lekce.
+
+Pozor na past: sessions **nesmí nahradit** učební oblouk. Kdyby to sklouzlo k „vygeneruj mi
+sestavu na dnešek", uživatel se naučí cvičit, ale ne skládat — a to je přesně cíl mise.
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce si projdi `assets/` a stav z existujících prvků.
@@ -61,6 +91,11 @@ DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`
   - `flow-player.js` (l02) — přehraje pozdrav slunci krok po kroku, časovaně, s dechem.
     Postav ho tak, aby uměl přehrát **libovolnou** sekvenci → použije se pak i v oblouku C.
   - `shoulder-check.js` (l05) — self-test rozsahu ramene, uživatel zapíše výsledek, opakuje za měsíc.
+  - `training-log.js` (před obloukem D) — **předpoklad progresivního overloadu.** Zápis
+    praxe (datum, pozice, výdrž/počty, příčka progrese, jak šel dech), uloženo v
+    `localStorage`, s přehledem trendu. Bez čísel se zátěž přidávat nedá.
+  - `progression-ladder.js` (l09) — žebříček příček u jedné pozice: kde jsi, co je další,
+    jaká je vstupní podmínka na postup. Znovupoužitelný pro každou pozici.
   - `sequence-builder.js` (l06/07) — **klíčový komponent celé mise.** Stavebnice: uživatel
     skládá pozice do sestavy, komponent hlídá oblouk (chybí rozehřátí? vrchol bez protipozice?
     vejde se to do 25 min?) a dává okamžitou zpětnou vazbu.

@@ -44,6 +44,17 @@ Uživatel **nechce videa** → v seznamu jsou jen textové zdroje.
   Fyzioterapeutická perspektiva na konkrétní jógový problém. Use for: lekce 3, kdyby se
   ozvalo rameno.
 
+### Síla & progrese (oblouk D)
+- [PMC — Impact of movement tempo on bar velocity and time under tension](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9331330/)
+  Peer-reviewed. Tempo jako řiditelná proměnná: pomalejší excentrika = víc času pod napětím
+  při stejném pohybu. Use for: lekce 8, páka „tempo".
+- [Odin Fitness — The Science of Progressive Overload in Bodyweight Training](https://www.odin.fitness/blog/science-progressive-overload-bodyweight-training)
+  Přehled proměnných, kterými se dá přidat zátěž bez závaží: páka (leverage), rozsah,
+  stabilita, objem, hustota. Use for: lekce 8, kostra „šesti pák".
+  ⚠️ Sekundární zdroj (blog) — principy ověřit proti r/bodyweightfitness wiki.
+- [NOSSK — Scaling bodyweight training intensity without free weights](https://nossk.com/blogs/news/the-science-of-suspension-fitness-bodyweight-training-load-scaling-intensity-without-free-weights)
+  Konkrétně o změně páky a úhlu jako způsobu škálování zátěže. Use for: lekce 9, progresní řady.
+
 ### Dech
 - [Systematic review & meta-analysis — Effects of voluntary slow breathing on heart rate and HRV](https://www.sciencedirect.com/science/article/abs/pii/S0149763422002007)
   Peer-reviewed přehled. Použito v lekci 01 pro tvrzení, že pomalý dech měřitelně zvyšuje
