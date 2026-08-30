@@ -162,9 +162,15 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
   postupu. `session-runner` rozšířen o varianty délky (`tier`), +8 testů.
   Délka přibyla drženými pozicemi a prací na zemi (Puppy pose, Sphinx, holubička, most),
   **ne dalšími vinyasami** — zátěž na ramena zůstala stejná.
-- **Čeká na zápis z tréninku 01** (zvolená délka, prkna: vteřina zlomu dechu ×3, kde zmizelo
-  ujjayi, přítomnost v poslední třetině, tužší strana u thread the needle, co tlačilo
-  a co druhý den). Z toho postavit trénink 02 a rozhodnout o kroku rampy.
+- 2026-08-30: **Zápis z tréninku 01 přijat** → `TRAINING-LOG.md` + LR-0004.
+  Ujjayi udržel celou praxi ✅. Bod zlomu dechu v prkně ~40 s, ale předepsáno bylo 20 s →
+  **silová část poddávkovaná**, praxe vyzněla relaxačně. Mobilita a dech sedly.
+  Kalibrace pro trénink 02: prkna k 30 s + boční prkno; **délku praxe zatím neměnit**
+  (dvě páky najednou = nevím, co zabralo). Asymetrie: tužší pravá hrudní rotace — sledovat.
+- **Čeká na doplnění, než postavím trénink 02:** (a) zvolená délka praxe 25/30/35,
+  (b) přítomnost v poslední třetině, (c) bolest druhý den. Bez (a) nejde určit krok rampy.
+- **Poučení pro formát zápisu:** uživatel poslal zápis volně a část položek vypadla.
+  Příště se ptát kratším a tvrdším seznamem, ideálně rovnou v běhounu na konci praxe.
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
   zdraví, komunita). Dodána **lekce 0001 (Dech řídí pohyb)** + komponenty `breath-pacer.js`,
   `breath-match.js` + reference `dech-a-pohyb.html`.
