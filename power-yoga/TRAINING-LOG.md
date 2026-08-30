@@ -14,10 +14,10 @@ plynulý. To je v téhle praxi náhrada za činku — jediné tvrdé měřítko 
 | | |
 |---|---|
 | **Praxe** | [Trénink 01 — První praxe](./sessions/0001-prvni-praxe.html) |
-| **Délka** | ❓ nezaznamenáno (25 / 30 / 35 — doplnit) |
+| **Délka** | **30 min** |
 | **Krok rampy** | 1 (25–35 min) — praxe 1 ze 3 potřebných |
 | **Ujjayi** | ✅ udrženo plynule **celou praxi** |
-| **Prkna (bod zlomu dechu)** | ~40 s *(předepsáno bylo 3× 20 s — ověřit, jestli držel dýl)* |
+| **Prkna (bod zlomu dechu)** | **~40 s** — výdrže si sám prodloužil nad předepsaných 20 s, aby našel hranici |
 | **Thread the needle** | Tužší **pravá** strana (pravá ruka a rameno na zemi) |
 | **Subjektivně** | „příjemně a uvolněně", praxe vyzněla **spíš relaxačně** |
 | **Kontext** | Náročný týden, přišel „celý rozlámaný" |
@@ -30,5 +30,5 @@ trénink, ale jako regenerace. Mobilita a dech naopak sedly.
 **Z toho plyne pro trénink 02:** zvednout silovou dávku (prkna k 30 s, přidat boční prkno
 jako novou příčku páky), objem vinyas a zátěž na zápěstí nechat beze změny.
 
-**Podmínky postupu na 2. krok rampy (40–45 min):** 1 ✅ · 2 ❓ · 3 ❓ · 4 ❌ (1 ze 3)
+**Podmínky postupu na 2. krok rampy (40–45 min):** 1 ✅ · 2 ❓ · 3 ❓ · 4 ❌ (1 ze 3 praxí ve 30 min)
 → **zůstává na 1. kroku.**

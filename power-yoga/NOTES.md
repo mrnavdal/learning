@@ -148,6 +148,7 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - L01 Dech řídí pohyb: https://claude.ai/code/artifact/53dc86cf-b875-487a-a8b5-9a1301cb5d78
 - 📄 Reference „Dech u podložky": https://claude.ai/code/artifact/d08ae0f8-f236-4157-9be4-f35a24db05fd
 - 🧘 Trénink 01 „První praxe": https://claude.ai/code/artifact/f0d12b87-14ab-46c9-b97d-eefc6a272c05
+- 💪 Trénink 02 „Páka místo činky": https://claude.ai/code/artifact/e18d540c-fff5-456a-be12-46d702923d1e
 
 ## Working notes
 - 2026-08-30: **Založen `sessions/` + trénink 01.** Uživatel chce ke každé tréninkové
@@ -167,8 +168,15 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
   **silová část poddávkovaná**, praxe vyzněla relaxačně. Mobilita a dech sedly.
   Kalibrace pro trénink 02: prkna k 30 s + boční prkno; **délku praxe zatím neměnit**
   (dvě páky najednou = nevím, co zabralo). Asymetrie: tužší pravá hrudní rotace — sledovat.
-- **Čeká na doplnění, než postavím trénink 02:** (a) zvolená délka praxe 25/30/35,
-  (b) přítomnost v poslední třetině, (c) bolest druhý den. Bez (a) nejde určit krok rampy.
+- 2026-08-30: Doplněno — cvičil **30 min** a prkna si sám prodloužil nad předepsaných 20 s.
+  **Dodán trénink 02 „Páka místo činky"** (`sessions/0002`). Téma: páka jako náhrada činky,
+  aplikovaná na páru prkno → boční prkno. První ochutnávka oblouku D, ale postavená na
+  jeho vlastním měření, ne na teorii. Silová dávka zvednuta (prkna 30 s, boční prkno,
+  závěrečné měření na 45 s); **objem vinyas a délka praxe schválně beze změny** — mění se
+  jen jedna páka, ať je vidět, co zabralo. Rozehřátí dává tužší pravé straně 2 kola
+  thread the needle proti 1 vlevo.
+- **Čeká na zápis z tréninku 02** + pořád chybí z jedničky: přítomnost v poslední třetině
+  a bolest druhý den (podmínky 2 a 3 rampy).
 - **Poučení pro formát zápisu:** uživatel poslal zápis volně a část položek vypadla.
   Příště se ptát kratším a tvrdším seznamem, ideálně rovnou v běhounu na konci praxe.
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
