@@ -3,7 +3,8 @@
  * Spusť:  node tools/test-session-runner.js
  */
 'use strict';
-const { buildTimeline, stepAt, formatClock, filterSteps, DEFAULT_SEC_PER_BREATH } = require('../assets/session-runner.js');
+const { buildTimeline, stepAt, formatClock, filterSteps, countdownCue, remainingFrom,
+        DEFAULT_SEC_PER_BREATH, DEFAULT_LEAD } = require('../assets/session-runner.js');
 
 let pass = 0, fail = 0;
 function ok(label, cond) { console.log((cond ? '✓' : '✗') + ' ' + label); cond ? pass++ : fail++; }
@@ -85,6 +86,47 @@ ok('jádro zůstává v každé variantě (končí savasanou)',
   [25, 30, 35].every(m => filterSteps(tiered, m).slice(-1)[0].name === 'Savasana'));
 ok('filtr nemodifikuje původní seznam', tiered.length === 5);
 ok('kroky bez tier projdou i při nulové délce', filterSteps(tiered, 0).length === 3);
+
+// --- zvukový odpočet ---
+ok('výchozí odpočet jsou 3 vteřiny', DEFAULT_LEAD === 3);
+ok('pípne na 3. vteřině do konce', countdownCue(3.05, 2.95, 3) === 'tick');
+ok('pípne na 2. vteřině', countdownCue(2.05, 1.95, 3) === 'tick');
+ok('pípne na 1. vteřině', countdownCue(1.05, 0.95, 3) === 'tick');
+ok('mlčí dřív než 3 vteřiny do konce', countdownCue(4.05, 3.95, 3) === null);
+ok('mlčí uprostřed kroku', countdownCue(20.1, 20.0, 3) === null);
+ok('na konci kroku zahraje end', countdownCue(0.05, -0.05, 3) === 'end');
+ok('end zazní jen jednou', countdownCue(-0.05, -0.15, 3) === null);
+ok('nepípne dvakrát ve stejné vteřině', countdownCue(2.9, 2.85, 3) === null);
+ok('delší odpočet lze nastavit', countdownCue(5.05, 4.95, 5) === 'tick' && countdownCue(5.05, 4.95, 3) === null);
+ok('odpočet 0 nepípá vůbec', countdownCue(1.05, 0.95, 0) === null);
+// každá vteřina odpočtu pípne právě jednou (simulace 100ms ticků)
+(function () {
+  let prev = 10, ticks = 0, ends = 0;
+  for (let t = 0.1; t <= 10.5; t += 0.1) {
+    const nowR = 10 - t;
+    const c = countdownCue(prev, nowR, 3);
+    if (c === 'tick') ticks++;
+    if (c === 'end') ends++;
+    prev = nowR;
+  }
+  ok('přes celý krok pípne přesně 3× + 1 konec', ticks === 3 && ends === 1);
+})();
+
+// --- zbývající čas praxe od daného kroku ---
+ok('od začátku zbývá celá praxe', remainingFrom(tl, 0, 0) === tl.total);
+ok('odečte odcvičené v aktuálním kroku', remainingFrom(tl, 0, 30) === tl.total - 30);
+ok('od druhého kroku chybí první', remainingFrom(tl, 1, 0) === tl.total - 80);
+ok('v posledním kroku zbývá jen on', remainingFrom(tl, 2, 0) === 30);
+ok('za koncem praxe zbývá 0', remainingFrom(tl, tl.items.length, 0) === 0);
+ok('nikdy nejde do záporu', remainingFrom(tl, 2, 999) === 0);
+
+// --- přechody se propisují do časové osy ---
+const withTrans = buildTimeline([
+  { name: 'A', sec: 10, transition: 'Z lehu se posaď.' },
+  { name: 'B', sec: 10 }
+]);
+ok('transition se přenese na položku', withTrans.items[0].transition === 'Z lehu se posaď.');
+ok('chybějící transition je prázdný řetězec', withTrans.items[1].transition === '');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

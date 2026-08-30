@@ -116,9 +116,16 @@ DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`
 
 - **Hotové:** `styles.css`, `quiz.js`, `breath-pacer.js` (l01 — časovaný dech s vizuální
   vlnou a počítadlem kol), `breath-match.js` (l01 — drill nádech/výdech na pohyb),
-  `session-runner.js` (s01 — **běhoun praxe**: přehraje libovolnou sestavu krok po kroku
-  s odpočtem, cue, náhledem dalšího kroku a přehledem celé praxe; umí **varianty délky**
-  přes `tier` na kroku + `lengths`, takže jedna praxe jede v 25/30/35 a jádro zůstane).
+  `session-runner.js` (s01 — **běhoun praxe**, datově řízený). Umí:
+  **(a) zvukový odpočet** — 3 pípnutí před koncem kroku + tón na konci přes Web Audio
+  (žádné externí soubory, odemyká se na první kliknutí kvůli autoplay policy), s tlačítkem
+  na ztlumení; **(b) obrazovku přechodu** — po každém kroku se zastaví, ukáže `transition`
+  (jak se dostat do další pozice) a čeká na ťuknutí, takže má uživatel čas se srovnat;
+  **(c) varianty délky** přes `tier` na kroku + `lengths`.
+  ⚠️ Kvůli (b) je součet praxe **čistý čas cvičení** — reálně trvá o pár minut víc.
+  ⚠️ `transition` piš tak, aby platil i **po odfiltrování `tier` kroků** — předchozí pozice
+  se ve variantách mění. Prakticky: popiš cestu do pozice z obecné výchozí polohy, ne
+  „z předchozí pozice udělej…".
   ⭐ `session-runner` je **datově řízený** — nová session = jen nová JSON sada kroků, žádný
   nový kód. Používej ho pro každý trénink a později i v oblouku C pro přehrání sestav,
   které si uživatel sám složí. Tím pádem `flow-player` z backlogu odpadá, je to on.
@@ -175,8 +182,15 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
   závěrečné měření na 45 s); **objem vinyas a délka praxe schválně beze změny** — mění se
   jen jedna páka, ať je vidět, co zabralo. Rozehřátí dává tužší pravé straně 2 kola
   thread the needle proti 1 vlevo.
+- 2026-08-30: **Běhoun přepsán na žádost uživatele** (u podložky mu chybělo): zvukový
+  odpočet, popis přechodu mezi pozicemi, a zastavení po každém kroku místo automatického
+  navazování. Do obou tréninků doplněno **71 popisů přechodů**. Testy jádra 56.
 - **Čeká na zápis z tréninku 02** + pořád chybí z jedničky: přítomnost v poslední třetině
   a bolest druhý den (podmínky 2 a 3 rampy).
+- **Nápad do backlogu:** uživatel zmínil i obrázky k pozicím. Zatím řešeno slovním popisem
+  (zvládne to statický hosting a dobře se to tiskne). Kdyby chtěl vizuál, nejlevnější cesta
+  je jednoduchý **inline SVG panáček** jako komponent `pose-figure.js` — ne fotky, ty nemám
+  odkud vzít v použitelné licenci.
 - **Poučení pro formát zápisu:** uživatel poslal zápis volně a část položek vypadla.
   Příště se ptát kratším a tvrdším seznamem, ideálně rovnou v běhounu na konci praxe.
 - 2026-08-30: Workspace založen. Mise vyjasněna přes vstupní dotazník (zkušenost, čas,
