@@ -1,0 +1,168 @@
+/* Sdílený stylesheet pro všechny lekce & reference power-jógového workspace.
+   Tufte-inspired: čitelná míra řádku, štědré okraje, střídmá paleta.
+   Musí dobře vypadat na telefonu (u podložky) i po vytištění (karty pozic). */
+
+:root {
+  --ink: #1f1e1b;
+  --ink-soft: #55524a;
+  --paper: #fbfaf6;
+  --rule: #e3dfd4;
+  --accent: #3f6152;      /* hluboká šalvěj — odkazy, důraz */
+  --accent-soft: rgba(63, 97, 82, .07);
+  --good: #2f6b45;
+  --bad: #9b3b2e;
+  --breath-in: #3f6152;   /* nádech = expanze */
+  --breath-out: #8a6a3a;  /* výdech = komprese */
+  --code-bg: #f2efe7;
+  --measure: 40rem;
+}
+
+html { font-size: 18px; }
+
+body {
+  margin: 0 auto;
+  padding: 4rem 2rem 8rem;
+  max-width: var(--measure);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Typografie ---- */
+h1, h2, h3 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.2; font-weight: 700; }
+h1 { font-size: 2rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.35rem; margin: 2.6rem 0 .8rem; border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+h3 { font-size: 1.05rem; margin: 1.8rem 0 .5rem; color: var(--ink-soft); }
+p, li { color: var(--ink); }
+.subtitle { font-family: -apple-system, "Segoe UI", sans-serif; color: var(--ink-soft); font-size: 1rem; margin: 0 0 2rem; }
+.kicker { font-family: -apple-system, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; color: var(--accent); font-weight: 700; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(63,97,82,.3); }
+a:hover { border-bottom-color: var(--accent); }
+
+/* Sanskrtský / originální název pozice */
+.sanskrit { font-style: italic; color: var(--ink-soft); }
+
+code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .85em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+
+/* ---- Callouty ---- */
+.callout { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: .8rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+.callout.myth { border-left-color: var(--bad); background: rgba(155,59,46,.05); }
+.callout.myth strong { color: var(--bad); }
+.callout.aha { border-left-color: var(--good); background: rgba(47,107,69,.06); }
+.callout.safety { border-left-color: var(--bad); background: rgba(155,59,46,.05); }
+.callout .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Self-check cue (cvičí sám, nikdo ho neopraví) ---- */
+.selfcheck { border: 1px dashed var(--rule); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.4rem 0; font-size: .95rem; background: #fff; }
+.selfcheck .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Patička lekce ---- */
+.lesson-footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); font-family: -apple-system, sans-serif; font-size: .9rem; color: var(--ink-soft); }
+.lesson-footer .ask { background: var(--accent-soft); border-radius: 6px; padding: .9rem 1.1rem; margin-bottom: 1.2rem; }
+.source { font-family: -apple-system, sans-serif; font-size: .9rem; }
+
+/* ---- Kvíz ---- */
+.quiz { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; }
+.quiz-card { margin: 0 0 1.6rem; }
+.quiz-q { font-size: 1rem; margin-bottom: .7rem; font-weight: 600; }
+.quiz-num { color: var(--accent); font-weight: 700; }
+.quiz-opts { display: flex; flex-direction: column; gap: .45rem; }
+.quiz-opt {
+  text-align: left; font: inherit; font-size: .92rem;
+  padding: .6rem .8rem; border: 1px solid var(--rule); border-radius: 6px;
+  background: #fff; color: var(--ink); cursor: pointer; transition: background .12s, border-color .12s;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.quiz-opt:disabled { cursor: default; opacity: .95; }
+.quiz-opt.is-correct { border-color: var(--good); background: rgba(47,107,69,.12); font-weight: 600; }
+.quiz-opt.is-wrong { border-color: var(--bad); background: rgba(155,59,46,.1); }
+.quiz-why { margin-top: .6rem; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; line-height: 1.5; }
+.quiz-why.ok { background: rgba(47,107,69,.08); }
+.quiz-why.no { background: rgba(155,59,46,.06); }
+.quiz-score { font-size: .95rem; color: var(--ink-soft); margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); }
+
+/* ---- Breath pacer (časovač dechu) ---- */
+.breath-pacer { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem; background: #fff; }
+.bp-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 13rem; padding: .5rem 0 1rem; }
+.bp-orb {
+  width: 8.5rem; height: 8.5rem; border-radius: 50%;
+  background: var(--accent-soft); border: 2px solid var(--breath-in);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: scale(.55); will-change: transform;
+}
+.bp-orb.is-out { border-color: var(--breath-out); background: rgba(138,106,58,.07); }
+.bp-phase { font-size: .95rem; font-weight: 700; letter-spacing: .04em; color: var(--breath-in); }
+.bp-orb.is-out .bp-phase { color: var(--breath-out); }
+.bp-count { font-size: 1.5rem; font-variant-numeric: tabular-nums; color: var(--ink-soft); line-height: 1.1; }
+.bp-idle { color: var(--ink-soft); font-size: .9rem; text-align: center; }
+.bp-controls { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; justify-content: center; margin-bottom: .8rem; }
+.bp-tempo { font: inherit; font-size: .82rem; font-weight: 700; padding: .38rem .8rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.bp-tempo:hover { border-color: var(--accent); }
+.bp-tempo.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.bp-go { font: inherit; font-weight: 700; font-size: .9rem; padding: .5rem 1.4rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.bp-go:hover { opacity: .88; }
+.bp-go.is-running { background: var(--paper); color: var(--accent); }
+.bp-meter { display: flex; align-items: center; gap: .6rem; font-size: .85rem; color: var(--ink-soft); }
+.bp-track { flex: 1; height: .45rem; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 20px; overflow: hidden; }
+.bp-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s linear; }
+.bp-rounds { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink); }
+.bp-done { margin-top: .8rem; font-size: .9rem; line-height: 1.5; padding: .6rem .8rem; border-radius: 8px; background: rgba(47,107,69,.1); border: 1px solid var(--good); }
+.bp-done:empty { display: none; }
+
+/* ---- Breath match (drill nádech/výdech) ---- */
+.breath-match { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1.1rem; background: #fff; }
+.bm-progress { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); font-weight: 700; margin-bottom: .7rem; }
+.bm-move { font-family: Georgia, serif; font-size: 1.1rem; line-height: 1.5; margin-bottom: 1rem; min-height: 3.2rem; }
+.bm-btns { display: flex; gap: .6rem; }
+.bm-btn { flex: 1; font: inherit; font-size: .95rem; font-weight: 700; padding: .75rem .5rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); color: var(--ink); cursor: pointer; transition: all .12s; }
+.bm-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.bm-btn:disabled { cursor: default; }
+.bm-btn.is-correct { border-color: var(--good); background: rgba(47,107,69,.14); }
+.bm-btn.is-wrong { border-color: var(--bad); background: rgba(155,59,46,.12); }
+.bm-why { margin-top: .8rem; padding: .65rem .85rem; border-radius: 8px; font-size: .9rem; line-height: 1.5; }
+.bm-why.ok { background: rgba(47,107,69,.08); }
+.bm-why.no { background: rgba(155,59,46,.06); }
+.bm-next { margin-top: .8rem; font: inherit; font-size: .88rem; font-weight: 700; padding: .45rem 1rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+.bm-score { margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); font-size: .95rem; color: var(--ink-soft); }
+.bm-score:empty { display: none; padding: 0; border: none; }
+
+/* ---- Karta pozice (reference — musí se dobře tisknout) ---- */
+.pose { border: 1px solid var(--rule); border-radius: 8px; padding: .9rem 1.1rem; margin: 1rem 0; background: #fff; break-inside: avoid; }
+.pose h3 { margin: 0 0 .1rem; color: var(--ink); font-size: 1rem; }
+.pose .sanskrit { display: block; font-size: .85rem; margin-bottom: .5rem; }
+.pose p { margin: .35rem 0; font-size: .92rem; }
+.pose .cue { font-family: -apple-system, sans-serif; font-size: .84rem; color: var(--ink-soft); }
+.pose .cue b { color: var(--ink); }
+
+/* ---- Tabulka sekvence (reference) ---- */
+.seq { width: 100%; border-collapse: collapse; font-family: -apple-system, sans-serif; font-size: .88rem; margin: 1.2rem 0; }
+.seq th, .seq td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.seq th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); }
+.seq .b-in { color: var(--breath-in); font-weight: 700; white-space: nowrap; }
+.seq .b-out { color: var(--breath-out); font-weight: 700; white-space: nowrap; }
+.seq tbody tr:nth-child(odd) { background: rgba(0,0,0,.015); }
+
+/* ---- Mobil (u podložky) ---- */
+@media (max-width: 560px) {
+  html { font-size: 17px; }
+  body { padding: 1.5rem 1.1rem 4rem; }
+  h1 { font-size: 1.55rem; }
+  h2 { font-size: 1.2rem; margin-top: 1.9rem; }
+  .seq { font-size: .8rem; }
+  .seq th, .seq td { padding: .4rem .35rem; }
+  .bm-btn { padding: .9rem .5rem; }   /* větší cíl na dotek */
+  .bp-orb { width: 7rem; height: 7rem; }
+  .callout, .selfcheck, .pose { padding: .75rem .9rem; }
+}
+
+/* ---- Tisk (karty pozic na papír vedle podložky) ---- */
+@media print {
+  body { background: #fff; padding: 1rem; max-width: 100%; font-size: 11pt; }
+  .quiz, .breath-pacer, .breath-match, .lesson-footer .ask { display: none; }
+  a { border: none; color: var(--ink); }
+  h2 { page-break-after: avoid; }
+  .pose, .callout, .selfcheck { break-inside: avoid; }
+}

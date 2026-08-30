@@ -6,6 +6,7 @@ Osobní učební repozitář. Jedno téma = jedna složka, každá je samostatn�
 ## Témata
 
 - [`node-backend/`](./node-backend/) — Backend development v Node.js. Cíl: uplatnění jako fullstack engineer.
+- [`power-yoga/`](./power-yoga/) — Power jóga od základů. Cíl: skládat si vlastní sestavy a plánovat je; mobilita ramen proti sedavému zaměstnání.
 
 ## Jak to používám
 
