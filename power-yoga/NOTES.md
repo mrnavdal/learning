@@ -170,6 +170,7 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 🧘 Trénink 01 „První praxe": https://claude.ai/code/artifact/f0d12b87-14ab-46c9-b97d-eefc6a272c05
 - 💪 Trénink 02 „Páka místo činky": https://claude.ai/code/artifact/e18d540c-fff5-456a-be12-46d702923d1e
 - 🤲 Trénink 03 „Změň oporu": https://claude.ai/code/artifact/fe7e2890-0879-44c7-bffd-8371674ed5ad
+- 🪜 Reference „Žebřík pro zápěstí": https://claude.ai/code/artifact/86cf6dfc-58ad-4cbe-8de0-5d93a5f09210
 
 ## Obrázky pozic — co jsem zjistil (2026-08-30)
 Uživatel chtěl u každého cviku obrázek a předpokládal, že existuje databáze, ze které
