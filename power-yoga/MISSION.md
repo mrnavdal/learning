@@ -35,9 +35,11 @@ měsících zastaví na místě.
 - Cvičí **doma a sám**, bez lektora. Zpětná vazba musí přijít z lekce, ne od učitele.
 - **Nemá rád videa** → text + interaktivní prvky, ne odkazy na YouTube.
 - Jazyk **čeština**; sanskrtské a zavedené anglické názvy pozic zůstávají v originále.
-- 🔴 **Bolest zápěstí při ohybu** (od 2026-08-30, po tréninku 02). Uživatel ji připisuje
-  práci s myší, ne józe. Dokud není jasná: **žádná zátěž na otevřených dlaních** —
-  pracovat na předloktích a pěstích. Zbytek progrese běží normálně.
+- 🔴 **Ztuhlé zápěstí, bolest na konci ohybu** (od 2026-08-30). Bez brnění, nebudí v noci —
+  tedy problém tolerance zátěže a rozsahu, ne nervový. Řeší se **postupným zatěžováním**
+  podle `reference/zapesti-zebrik.html`, ne vyhýbáním. Předloktní varianty u silových
+  pozic zůstávají jen dokud je uživatel pod příčkou 4 žebříku — aby zápěstí dostávalo
+  řízenou dávku ze žebříku místo náhodné z prkna.
 - Komunita: **jen online** (fóra ano, studio ne).
 - **Čistá jóga, bez doplňků** (rozhodnuto uživatelem 2026-08-30). Uživatel ví, že power
   jóga skoro neobsahuje tah, a přijal to. Nenavrhovat hrazdu, gumy ani jiné necvičební

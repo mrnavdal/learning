@@ -6,12 +6,18 @@
 - **Rozpočet:** cíl **60–90 min, 2–3× týdně**; teď je na 1. kroku rampy (25–35 min).
   → Lekce zůstává krátká (pracovní paměť), ale **sestavy stav pro aktuální krok rampy**.
   Nikdy nestav rovnou 90min praxi, protože je to cíl — stav pro to, co unese dnes.
-- **Zdraví:** 🔴 **bolest zápěstí při ohybu** (od 2026-08-30, po tréninku 02), připisuje ji
-  práci s myší. **Pravidlo do odvolání: žádná zátěž na otevřených dlaních.** Náhrady:
-  Downward Dog → Dolphin, prkno → předloktní prkno, boční prkno → na předloktí,
-  Cat-Cow → na pěstích. Půlpozdrav slunci je bez zátěže na rukou, ten jde beze změny.
-  Ramena a zbytek progrese jedou dál — omezení je lokální, ne globální.
-  ⚠️ Ptát se na zápěstí v **každém** zápisu, dokud to neustoupí.
+- **Zdraví:** 🔴 **ztuhlé zápěstí, bolest na konci ohybu** (od 2026-08-30). Bez brnění,
+  nebudí v noci → tolerance zátěže a rozsah, ne nerv.
+  ⭐ **Uživatel mě opravil a měl pravdu:** první reakcí bylo zátěž odebrat, což u ztuhlosti
+  nefunguje. Správně je **odstupňovaně zatěžovat** — `reference/zapesti-zebrik.html`
+  (příčky 0 rozsah → 1 izometrie → 2 částečná váha → 3 plná váha v kleku → 4 krátké prkno
+  → 5 návrat). Postup: ≤3/10 během cvičení a druhý den ne hůř.
+  Předloktní varianty v praxi drží jen **dokud je pod příčkou 4** — smysl je dát zápěstí
+  řízenou dávku ze žebříku místo náhodné z prkna, ne ho ušetřit.
+  ⚠️ Ptát se na zápěstí a na aktuální příčku v **každém** zápisu.
+  📌 **Obecné poučení:** u bolesti nesahat automaticky po odebrání zátěže. Rozlišit akutní
+  zánět (klid) od ztuhlosti a nízké tolerance (odstupňovaná zátěž). Uživatel má pohybový
+  rozhled a pozná, když to zjednoduším.
 - **Komunita:** jen online (fóra, subreddity). **Nenabízej studia ani lektory naživo.**
 - **Prostředí:** doma, sám. Žádná korekce zvenčí → zpětná vazba musí být zabudovaná
   přímo v lekci (self-check cues, „jak poznáš, že to je špatně").
