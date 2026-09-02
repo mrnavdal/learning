@@ -140,6 +140,10 @@ DOM wrapper + Node test v `tools/test-*.js`. Stejný vzor jako v `node-backend/`
   které si uživatel sám složí. Tím pádem `flow-player` z backlogu odpadá, je to on.
 - **Backlog:**
   - `shoulder-check.js` (l05) — self-test rozsahu ramene, uživatel zapíše výsledek, opakuje za měsíc.
+  - `pose-figure.js` (**doporučený další krok**) — kreslené inline SVG figury pozic.
+    Viz zjištění o fotkách níž: Wikimedia Commons je pro tenhle účel nespolehlivá.
+    SVG dá 100% pokrytí, konzistentní styl, funguje v artifactu (CSP blokuje externí
+    obrázky), tiskne se a váží nic.
   - `training-log.js` (před obloukem D) — **předpoklad progresivního overloadu.** Zápis
     praxe (datum, pozice, výdrž/počty, příčka progrese, jak šel dech), uloženo v
     `localStorage`, s přehledem trendu. Bez čísel se zátěž přidávat nedá.
@@ -166,6 +170,29 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 🧘 Trénink 01 „První praxe": https://claude.ai/code/artifact/f0d12b87-14ab-46c9-b97d-eefc6a272c05
 - 💪 Trénink 02 „Páka místo činky": https://claude.ai/code/artifact/e18d540c-fff5-456a-be12-46d702923d1e
 - 🤲 Trénink 03 „Změň oporu": https://claude.ai/code/artifact/fe7e2890-0879-44c7-bffd-8371674ed5ad
+
+## Obrázky pozic — co jsem zjistil (2026-08-30)
+Uživatel chtěl u každého cviku obrázek a předpokládal, že existuje databáze, ze které
+se dají vytáhnout odkazy. **Neexistuje — aspoň ne použitelná.** Co jsem ověřil:
+
+- **Externí odkazy na obrázky v artifactu nefungují.** CSP publikovaných artifactů blokuje
+  obrázky z cizích hostů. Jediná cesta je **data URI** (nebo inline SVG).
+- **Wikimedia Commons jde stahovat** (API + `User-Agent`), ale **rate limituje agresivně** —
+  429 po pár requestech, i s několikavteřinovými pauzami. Počítej s během na pozadí.
+- **Kvalita a relevance jsou špatné.** Z 21 pozic jsem po vizuální kontrole našel
+  **7 použitelných**. Konkrétní selhání: „Marjaryasana" vrátí fotky **skutečných koček**;
+  „Setu Bandha" vrátí předklony; „Eka Pada Rajakapotasana" vrátí jen pokročilou king pigeon
+  (pro začátečníka zavádějící); Dolphin, předloktní prkno, thread the needle a Anahatasana
+  nemají **nic** použitelného.
+- **Ironie:** pozice, které Commons nepokrývá, jsou přesně ty z tréninku 03 (předloktní
+  varianty) — tedy z praxe, kterou uživatel zrovna dělá.
+- **Vždy obrázek vizuálně zkontroluj** (Read na montáž kandidátů) — podle názvu souboru se
+  to poznat nedá.
+
+`assets/pose-images.js` obsahuje těch **7 ověřených** (down-dog, uttanasana, chair,
+warrior2, plank, side-plank, sphinx) i s autorem a licencí — atribuce je u CC povinná.
+Zatím **není zapojený do běhounu**, protože 7 z 21 by vypadalo rozbitě.
+**Doporučená cesta: nakreslit `pose-figure.js`.**
 
 ## Working notes
 - 2026-08-30: **Založen `sessions/` + trénink 01.** Uživatel chce ke každé tréninkové
