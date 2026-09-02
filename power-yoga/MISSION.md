@@ -35,7 +35,9 @@ měsících zastaví na místě.
 - Cvičí **doma a sám**, bez lektora. Zpětná vazba musí přijít z lekce, ne od učitele.
 - **Nemá rád videa** → text + interaktivní prvky, ne odkazy na YouTube.
 - Jazyk **čeština**; sanskrtské a zavedené anglické názvy pozic zůstávají v originále.
-- Bez zdravotních omezení (stav 2026-08-30) → standardní progrese.
+- 🔴 **Bolest zápěstí při ohybu** (od 2026-08-30, po tréninku 02). Uživatel ji připisuje
+  práci s myší, ne józe. Dokud není jasná: **žádná zátěž na otevřených dlaních** —
+  pracovat na předloktích a pěstích. Zbytek progrese běží normálně.
 - Komunita: **jen online** (fóra ano, studio ne).
 - **Čistá jóga, bez doplňků** (rozhodnuto uživatelem 2026-08-30). Uživatel ví, že power
   jóga skoro neobsahuje tah, a přijal to. Nenavrhovat hrazdu, gumy ani jiné necvičební

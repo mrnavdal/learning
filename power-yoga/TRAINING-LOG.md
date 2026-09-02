@@ -32,3 +32,34 @@ jako novou příčku páky), objem vinyas a zátěž na zápěstí nechat beze z
 
 **Podmínky postupu na 2. krok rampy (40–45 min):** 1 ✅ · 2 ❓ · 3 ❓ · 4 ❌ (1 ze 3 praxí ve 30 min)
 → **zůstává na 1. kroku.**
+
+---
+
+## Trénink 02 · 2026-08-30
+
+| | |
+|---|---|
+| **Praxe** | [Trénink 02 — Páka místo činky](./sessions/0002-paka-misto-cinky.html) |
+| **Délka** | ❓ nezaznamenáno |
+| **Krok rampy** | 1 (25–35 min) — praxe 2 ze 3 |
+| **Prkno — měření** | **45 s, a ani vteřinu víc.** ⚠️ Naráz na strop: běhoun dával jen 45 s, takže skutečné maximum může být vyšší. Příště měřit s rezervou. |
+| **Boční prkno — pravá ruka dole** | ❌ **nedokončeno** — slabost |
+| **Boční prkno — levá ruka dole** | ❓ nezaznamenáno |
+| **Zápěstí** | 🔴 **BOLEST při ohybu.** Uživatel to připisuje práci s myší, ne józe. První zdravotní signál v celém workspace. |
+| **Ujjayi** | ❓ nezaznamenáno |
+
+**Čtení:** prkno vzrostlo z ~40 s na ≥45 s — reálný pokrok za jednu praxi.
+Ale **bolest zápěstí mění priority**: dokud není jasná, nemá smysl řešit sílu v pozicích
+na dlaních. Navíc je nejasné, jestli pravé boční prkno selhalo na sílu, nebo na zápěstí —
+opora byla přesně na bolavé ruce. To je **konfundovaná proměnná**, kterou je potřeba
+rozplést, ne přehlédnout.
+
+**Vzniká vzorec na pravé straně:** tužší hrudní rotace (T01) + slabší boční prkno (T02)
++ ruka na myši. Zatím hypotéza, sledovat.
+
+**Z toho plyne pro trénink 03:** celá praxe **bez zátěže na dlaních** (předloktí, pěsti),
+přidán blok péče o zápěstí, a předloktní boční prkno jako **test**, který oddělí sílu
+od zápěstí.
+
+**Podmínky postupu na 2. krok rampy:** 1 ❓ · 2 🔴 (bolest) · 3 ❓ · 4 ❌ (2 ze 3)
+→ **zůstává na 1. kroku.**

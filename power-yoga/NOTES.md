@@ -6,9 +6,12 @@
 - **Rozpočet:** cíl **60–90 min, 2–3× týdně**; teď je na 1. kroku rampy (25–35 min).
   → Lekce zůstává krátká (pracovní paměť), ale **sestavy stav pro aktuální krok rampy**.
   Nikdy nestav rovnou 90min praxi, protože je to cíl — stav pro to, co unese dnes.
-- **Zdraví:** bez omezení a bolestí. Standardní progrese je OK.
-  ⚠️ Ověřuj průběžně — power jóga zatěžuje **zápěstí a ramena**; kdyby se něco ozvalo,
-  hned to zapiš sem a přidej learning record.
+- **Zdraví:** 🔴 **bolest zápěstí při ohybu** (od 2026-08-30, po tréninku 02), připisuje ji
+  práci s myší. **Pravidlo do odvolání: žádná zátěž na otevřených dlaních.** Náhrady:
+  Downward Dog → Dolphin, prkno → předloktní prkno, boční prkno → na předloktí,
+  Cat-Cow → na pěstích. Půlpozdrav slunci je bez zátěže na rukou, ten jde beze změny.
+  Ramena a zbytek progrese jedou dál — omezení je lokální, ne globální.
+  ⚠️ Ptát se na zápěstí v **každém** zápisu, dokud to neustoupí.
 - **Komunita:** jen online (fóra, subreddity). **Nenabízej studia ani lektory naživo.**
 - **Prostředí:** doma, sám. Žádná korekce zvenčí → zpětná vazba musí být zabudovaná
   přímo v lekci (self-check cues, „jak poznáš, že to je špatně").
@@ -156,6 +159,7 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 📄 Reference „Dech u podložky": https://claude.ai/code/artifact/d08ae0f8-f236-4157-9be4-f35a24db05fd
 - 🧘 Trénink 01 „První praxe": https://claude.ai/code/artifact/f0d12b87-14ab-46c9-b97d-eefc6a272c05
 - 💪 Trénink 02 „Páka místo činky": https://claude.ai/code/artifact/e18d540c-fff5-456a-be12-46d702923d1e
+- 🤲 Trénink 03 „Změň oporu": https://claude.ai/code/artifact/fe7e2890-0879-44c7-bffd-8371674ed5ad
 
 ## Working notes
 - 2026-08-30: **Založen `sessions/` + trénink 01.** Uživatel chce ke každé tréninkové
@@ -185,8 +189,18 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 2026-08-30: **Běhoun přepsán na žádost uživatele** (u podložky mu chybělo): zvukový
   odpočet, popis přechodu mezi pozicemi, a zastavení po každém kroku místo automatického
   navazování. Do obou tréninků doplněno **71 popisů přechodů**. Testy jádra 56.
-- **Čeká na zápis z tréninku 02** + pořád chybí z jedničky: přítomnost v poslední třetině
-  a bolest druhý den (podmínky 2 a 3 rampy).
+- 2026-08-30: **Zápis z tréninku 02** → 🔴 bolest zápěstí, nedokončené pravé boční prkno,
+  prkno 45 s na strop běhounu. Viz LR-0005 a `TRAINING-LOG.md`.
+  **Dodán trénink 03 „Změň oporu"** — celá praxe mimo dlaně (Dolphin, předloktní prkno,
+  Cat-Cow na pěstích), nový blok péče o zápěstí, a **předloktní boční prkno jako
+  diagnostický test**, který oddělí sílu od zápěstí. Měřicí okno zvětšeno na 90 s,
+  aby strop nebyl v běhounu. Zápis zkrácen na 4 položky.
+- **Poučení o měření:** měřicí krok vždy s velkou rezervou, jinak měřím svoje nastavení,
+  ne uživatele. A pozor na **konfundované měření** — když je opora na bolavé části,
+  výsledek nevypovídá o tom, co si myslím.
+- **Čeká na zápis z tréninku 03:** hlavně výsledek testu (předloktní boční prkno vpravo)
+  a stav zápěstí. Podle toho buď návrat k dlaním s postupným zatěžováním, nebo cílená
+  práce na síle pravé strany.
 - **Nápad do backlogu:** uživatel zmínil i obrázky k pozicím. Zatím řešeno slovním popisem
   (zvládne to statický hosting a dobře se to tiskne). Kdyby chtěl vizuál, nejlevnější cesta
   je jednoduchý **inline SVG panáček** jako komponent `pose-figure.js` — ne fotky, ty nemám
