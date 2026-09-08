@@ -63,3 +63,31 @@ od zápěstí.
 
 **Podmínky postupu na 2. krok rampy:** 1 ❓ · 2 🔴 (bolest) · 3 ❓ · 4 ❌ (2 ze 3)
 → **zůstává na 1. kroku.**
+
+---
+
+## Trénink 03 · 2026-09-08
+
+| | |
+|---|---|
+| **Praxe** | [Trénink 03 — Změň oporu](./sessions/0003-zmen-oporu.html) |
+| **Krok rampy** | 1 (25–35 min) — praxe **3 ze 3** ✅ |
+| **Zápěstí — příčka žebříku** | **1** (izometrie). Na příčce 1 „začíná táhnout" → tam je jeho pracovní úroveň, příčky 2–3 jsou zatím nad ním. |
+| **🔬 TEST: předloktní boční prkno vpravo** | ✅ **ZVLÁDL** |
+| **Předloktní prkno — měření** | **50 s** (z 90 s okna → strop byl v něm, ne v běhounu ✅) |
+| **Obtížnost praxe** | **3,5 / 10** |
+
+**Čtení — test dopadl a rozplétá to:**
+Boční prkno vpravo na předloktí zvládl, na dlani před týdnem ne. **Brzdilo ho tedy
+zápěstí, ne síla.** „Slabá pravá strana" z tréninku 02 byl artefakt měření —
+pravá strana je v pořádku a nemá smysl na ni cílit zvlášť.
+
+**Čtení — praxe je moc lehká:**
+3,5/10 je regenerační pásmo, ne tréninkové. Předloktní prkno dal 50 s, tedy se u
+předepsaných 30 s ani nepřiblížil hranici. Dávky byly pod jeho kapacitou.
+
+**Nová metrika:** zavádí se **subjektivní obtížnost 1–10** ke každé praxi.
+Cílové pásmo pro tréninkovou praxi **6–7**, pro regenerační 3–4.
+
+**Podmínky postupu na 2. krok rampy:** 1 ❓ · 2 ✅ (zápěstí jen táhne, nezhoršilo se)
+· 3 ❓ · 4 ✅ (3× ve 30 min) → **POSTUPUJE na 40–45 min.**

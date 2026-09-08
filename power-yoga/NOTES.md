@@ -101,8 +101,8 @@ do oblouku D.
 
 | Krok | Délka | Stav |
 |---|---|---|
-| 1 | 25–35 min | ← teď (trénink 01) |
-| 2 | 40–45 min | |
+| 1 | 25–35 min | ✅ hotovo (T01–T03) |
+| 2 | 40–45 min | ← teď (T04), praxe 1 ze 3 |
 | 3 | 55–60 min | |
 | cíl | 75–90 min | |
 
@@ -171,6 +171,7 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 💪 Trénink 02 „Páka místo činky": https://claude.ai/code/artifact/e18d540c-fff5-456a-be12-46d702923d1e
 - 🤲 Trénink 03 „Změň oporu": https://claude.ai/code/artifact/fe7e2890-0879-44c7-bffd-8371674ed5ad
 - 🪜 Reference „Žebřík pro zápěstí": https://claude.ai/code/artifact/86cf6dfc-58ad-4cbe-8de0-5d93a5f09210
+- 🔥 Trénink 04 „Konečně trénink": https://claude.ai/code/artifact/c8f611ed-a5cb-48a4-9fb9-68bd4d965c75
 
 ## Obrázky pozic — co jsem zjistil (2026-08-30)
 Uživatel chtěl u každého cviku obrázek a předpokládal, že existuje databáze, ze které
@@ -232,9 +233,20 @@ Zatím **není zapojený do běhounu**, protože 7 z 21 by vypadalo rozbitě.
 - **Poučení o měření:** měřicí krok vždy s velkou rezervou, jinak měřím svoje nastavení,
   ne uživatele. A pozor na **konfundované měření** — když je opora na bolavé části,
   výsledek nevypovídá o tom, co si myslím.
-- **Čeká na zápis z tréninku 03:** hlavně výsledek testu (předloktní boční prkno vpravo)
-  a stav zápěstí. Podle toho buď návrat k dlaním s postupným zatěžováním, nebo cílená
-  práce na síle pravé strany.
+- 2026-09-08: **Zápis z T03** → test vyšel (boční prkno vpravo na předloktí ZVLÁDL →
+  brzdilo zápěstí, ne síla), měření 50 s, obtížnost **3,5/10**. Viz LR-0007.
+  **Postup na 2. krok rampy (40 min)** — podmínka 4 splněna, zápěstí se nezhoršilo.
+  **Dodán trénink 04** s výrazně vyššími dávkami (prkno 40 s, boční 35 s + druhé kolo,
+  Warrior II 50 s, Dolphin výdrž 50 s, kratší pauzy).
+  Opravena **příčka 1 žebříku** — původní „dlaně u sebe" míchala izometrii s protažením
+  do extenze, proto mu tam táhlo. Teď izometrie s rovným zápěstím proti desce stolu.
+- ⭐ **Zavedena metrika obtížnosti 1–10** ke každé praxi. Cíl 6–7 pro tréninkovou,
+  3–4 pro regenerační. Je to nejlevnější a nejinformativnější zpětná vazba, jakou od něj
+  můžu dostat — kompenzuje, že ho nevidím cvičit. **Ptát se na ni vždy.**
+- 📌 **Vzorec: podceňuju jeho kapacitu.** Dvakrát po sobě (T01, T03) byla praxe pod
+  jeho úrovní. Když si nejsem jistý dávkou, radši nahoru — má pohybový základ a sám
+  si uteče, když to bude moc.
+- **Čeká na zápis z T04:** obtížnost (cíl 6–7), měření prkna, zápěstí na opravené příčce 1.
 - **Nápad do backlogu:** uživatel zmínil i obrázky k pozicím. Zatím řešeno slovním popisem
   (zvládne to statický hosting a dobře se to tiskne). Kdyby chtěl vizuál, nejlevnější cesta
   je jednoduchý **inline SVG panáček** jako komponent `pose-figure.js` — ne fotky, ty nemám
