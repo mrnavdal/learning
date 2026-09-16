@@ -91,3 +91,30 @@ Cílové pásmo pro tréninkovou praxi **6–7**, pro regenerační 3–4.
 
 **Podmínky postupu na 2. krok rampy:** 1 ❓ · 2 ✅ (zápěstí jen táhne, nezhoršilo se)
 · 3 ❓ · 4 ✅ (3× ve 30 min) → **POSTUPUJE na 40–45 min.**
+
+---
+
+## Trénink 04 · 2026-09-16
+
+| | |
+|---|---|
+| **Praxe** | [Trénink 04 — Konečně trénink](./sessions/0004-konecne-trenink.html) |
+| **Délka** | **35 min** (z nabídky 35/40/45) |
+| **Krok rampy** | 2 (40–45 min) — praxe 1 ze 3, ale ve 35min variantě |
+| **Obtížnost** | **6–7 / 10** ✅ **trefa do cílového pásma** |
+| **Předloktní prkno — měření** | **60 s** (minule 50 s → **+10 s za týden**) |
+| **Boční prkno** | ✅ 35 s obě strany podle předpisu |
+| **Zápěstí** | ❓ nezaznamenáno (opravená příčka 1) |
+| **Kontext** | „jsem teď rozlámaný a mám takové těžší období" |
+
+**Čtení — kalibrace sedí.** Po dvou praxích pod úrovní je dávka konečně v tréninkovém
+pásmu. **Šablonu T04 držet** jako referenční tréninkovou praxi.
+
+**Čtení — progres je měřitelný.** Předloktní prkno **50 → 60 s za týden**. První tvrdý
+důkaz zesílení v celém workspace, přesně to, kvůli čemu se ten bod zlomu dechu měří.
+
+**Čtení — životní kontext podruhé.** Rozlámaný a v těžším období; totéž hlásil u T01.
+Dvě zmínky = není to výjimka, je to podmínka, se kterou musí plán počítat.
+**Rampu délky pozastavit**, přidat regenerační typ praxe.
+
+**Podmínky postupu na 3. krok rampy:** pozastaveno — nepostupuje se v náročném období.

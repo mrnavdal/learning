@@ -102,7 +102,7 @@ do oblouku D.
 | Krok | Délka | Stav |
 |---|---|---|
 | 1 | 25–35 min | ✅ hotovo (T01–T03) |
-| 2 | 40–45 min | ← teď (T04), praxe 1 ze 3 |
+| 2 | 40–45 min | ⏸️ **POZASTAVENO** — náročné období (viz LR-0008) |
 | 3 | 55–60 min | |
 | cíl | 75–90 min | |
 
@@ -172,6 +172,7 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 🤲 Trénink 03 „Změň oporu": https://claude.ai/code/artifact/fe7e2890-0879-44c7-bffd-8371674ed5ad
 - 🪜 Reference „Žebřík pro zápěstí": https://claude.ai/code/artifact/86cf6dfc-58ad-4cbe-8de0-5d93a5f09210
 - 🔥 Trénink 04 „Konečně trénink": https://claude.ai/code/artifact/c8f611ed-a5cb-48a4-9fb9-68bd4d965c75
+- 🌿 Trénink 05 „Lehký den": https://claude.ai/artifact/MTT7K8uf1UWK25BvpingAM
 
 ## Obrázky pozic — co jsem zjistil (2026-08-30)
 Uživatel chtěl u každého cviku obrázek a předpokládal, že existuje databáze, ze které
@@ -246,7 +247,19 @@ Zatím **není zapojený do běhounu**, protože 7 z 21 by vypadalo rozbitě.
 - 📌 **Vzorec: podceňuju jeho kapacitu.** Dvakrát po sobě (T01, T03) byla praxe pod
   jeho úrovní. Když si nejsem jistý dávkou, radši nahoru — má pohybový základ a sám
   si uteče, když to bude moc.
-- **Čeká na zápis z T04:** obtížnost (cíl 6–7), měření prkna, zápěstí na opravené příčce 1.
+- 2026-09-16: **Zápis z T04** → obtížnost **6–7/10 ✅ trefa**, prkno **50 → 60 s**,
+  boční prkno 35 s obě strany. Kalibrace hotová — **T04 je referenční tréninková praxe**.
+  Uživatel ale zvolil 35 min místo 40 a napsal „jsem rozlámaný a mám těžší období"
+  (podruhé, poprvé u T01). **Rampa délky POZASTAVENA**, dokud nenapíše, že je z toho venku.
+  **Dodán T05 „Lehký den"** (20/25/30 min, cíl 3–4/10) → uživatel má teď **dva typy praxe**
+  a pravidlo, kterou kdy.
+- ⭐ **Řečeno mu výslovně, že nepotřebuje novou praxi ke každému tréninku.** Opakování
+  dobře nastavené praxe je normální trénink. Nové stavět, až se změní úroveň nebo cíl —
+  tím se zároveň brání tomu, aby `sessions/` vytlačily učební oblouk.
+- 📌 **Ptát se i na kontext** (spánek, zátěž mimo podložku), ne jen na čísla. U T01 i T04
+  to vysvětlilo víc než samotné výdrže.
+- **Čeká:** zápis z T05 nebo T04 (podle toho, co si pustí) + signál, jestli náročné období
+  skončilo → pak teprve rozjet rampu na 40–45 min.
 - **Nápad do backlogu:** uživatel zmínil i obrázky k pozicím. Zatím řešeno slovním popisem
   (zvládne to statický hosting a dobře se to tiskne). Kdyby chtěl vizuál, nejlevnější cesta
   je jednoduchý **inline SVG panáček** jako komponent `pose-figure.js` — ne fotky, ty nemám
