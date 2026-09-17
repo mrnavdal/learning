@@ -83,6 +83,10 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
 
 ## Working notes
 - 2026-09-17: **Odpověděl vlastním řetězem na LASTGO — kalibrace nahoru, viz LR-0002.** Reálný výzkum s lidmi má za sebou, bariéra i rozhodnutí sedí. Mezery: cíl bez čísla, dvě bariéry slepené do jednoho rozhodnutí, rozhodnutí předběhlo důkaz (sázka místo testu). Dodána **lekce 0002 (Tok, ne obrazovky)** + `funnel-lab.js` + reference `trychtyr-a-eventy.html` s návrhem event spec pro LASTGO.
-- 2026-09-17: Publikováno jako Artifact — lekce 01: https://claude.ai/artifact/Jo98HmRsVJZH2yuNoZ89qD · reference: https://claude.ai/artifact/E2mFtmA8LE2yrqoV3vG7AX
+- **Publikované URL (Artifacty):**
+  - L01 Rozhodnutí, ne vkus — https://claude.ai/artifact/Jo98HmRsVJZH2yuNoZ89qD
+  - L02 Tok, ne obrazovky — https://claude.ai/artifact/Q4w8uUFBtyPwEwkiuKjJTz
+  - Ref Řetěz rozhodnutí — https://claude.ai/artifact/E2mFtmA8LE2yrqoV3vG7AX
+  - Ref Trychtýř a eventy — https://claude.ai/artifact/YFDfixEtv2ph54Ty5eEkqy
 - 2026-09-17: Starý rozcestník `claude.ai/code/artifact/b5de0f60-…` z node-backend NOTES **už neexistuje** (read vrací not found). Až bude potřeba, publikovat nový z `index.html`.
 - 2026-09-17: Workspace založen. Mise sepsána (portfolio + LASTGO jako vlajková případovka). Dodána **lekce 0001 (UX je rozhodnutí, ne vkus)** + komponent `decision-trace.js` + reference `retez-rozhodnuti.html`. Čeká se na popis LASTGO → pak lekce 02 (úkol uživatele) už na reálném produktu.
