@@ -50,10 +50,28 @@ Reuse je default. Před psaním lekce projít `assets/`.
 **Oblouk 4 — Portfolio**
 13. Portfolio jako produkt (struktura, positioning, cena) · 14. LASTGO jako vlajková případovka
 
+## LASTGO — co o produktu vím (zjištěno 2026-09-17 z vlastních artifactů uživatele)
+Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ověřit s ním, co je aktuální.**
+
+- **Co to je:** marketplace na **last-minute volné termíny se slevou**. Podnik (sauna, fitness, lekce…) vypíše z „aktivity“ (šablona) konkrétní **termín = „sleva“** s volnými místy; zákazník ho najde, rezervuje a **zaplatí předem**; u pultu partner ověří **pětiznakový kód** rezervace.
+- **Tři plochy:**
+  - **Flutter klient** (zákazník): `/discover`, `/offer/:id`, `/reservations`, `/reservation/:id`, `/business/:id`, `/profile`, auth, onboarding dialog. V2 zmiňuje feed **„Nabídky“ se třemi záložkami**, kartu na aktivitu, čas jako řadicí osu.
+  - **Partnerský web:** `/validate` (jediná obrazovka používaná **vestoje, s člověkem před sebou**), `/dashboard` („Dnes“), `/offers` (Slevy), `/reservations`, `/activities`, `/settings`, auth.
+  - **API:** `mrnavdal/lastgo-api` (Node), tickety s labely `track:*`.
+- **Byznys model:** provize, Stripe Connect (connected accounts partnerů), storno poplatky a penále za nedodržený závazek, DPH z provize.
+- **Fáze (k 12. 8. 2026):** v2 rozpracovaná — klient 5/8 tras, partner web 5/7 tras. **Produkce ještě neběží** (otevřené tickety na prod provisioning, domény, migraci dat, retirement legacy React klienta).
+- **⚠️ Zásadní důsledek pro výuku:** produkt **nemá živé uživatele ani analytiku**. Článek „Důkaz“ tedy zatím nemůže stát na číslech z provozu. To není problém — je to téma: důkaz se v téhle fázi bere z **usability testu s 5 lidmi**, heuristického auditu a předem vypsané metriky, kterou *budeš* měřit. Nepředstírat data, která nejsou.
+
+### Existující UX materiál v jeho artifactech (nečíst znovu celé, jen když je potřeba)
+- **„Sedm obrazovek“** (21. 8. 2026) — hotový audit partnerského portálu: globální nálezy (podtitulek u každého nadpisu = onboarding, co nikdy neskončí; tři seznamy = tři různé idiomy; obsah na třetinu využité šířky) + obrazovky Dnes / Ověření kódu / Slevy / Rezervace / Aktivity / Nastavení / Přihlášení, s konkrétním před/po a počty slov.
+- **„Portál u pultu“**, **„LastGO klient prototyp“**, **„Rozhodnutí k v4“**, **„LastGo v2 — kde stojí práce“** — další kontext.
+- ❓ **Otevřená otázka na uživatele:** kolik z těch nálezů vymyslel on a kolik mu nasypal agent? To je nejlepší dostupná diagnostika jeho skutečné úrovně — na ní stojí kalibrace oblouku 1.
+
 ## Otevřené otázky (doplnit od uživatele)
-1. **Co LASTGO je?** Komu, jaký úkol řeší, v jaké je fázi, má uživatele a data (analytika)? Bez toho jsou cvičení obecná.
-2. **Kdo je klient**, kterému se bude portfolio ukazovat? (agentura / startup / firma bez IT / freelance zakázky) — mění, co v případovce zdůraznit.
-3. **Nástroj:** Figma, nebo designovat rovnou v kódu? (viz Prostředí — Figma účet má jen View/Dev seat.)
+1. **Diagnostika:** u nálezů v „Sedm obrazovek“ — kolik z toho vymyslel sám? (Viz výše. Rozhoduje o tempu celého oblouku 1.)
+2. **Která plocha bude vlajková případovka** — partnerský portál (silná story: člověk vestoje u pultu, provozní nástroj), nebo zákaznický Flutter klient (líp se ukazuje, ale je to „další booking appka“)?
+3. **Kdo je klient**, kterému se bude portfolio ukazovat? (agentura / startup / firma bez IT / lokální podniky) — mění, co v případovce zdůraznit.
+4. **Nástroj:** Figma, nebo designovat rovnou v kódu? (viz Prostředí — Figma účet má jen View/Dev seat.)
 
 ## Prostředí (remote web session)
 - **Web fetch FUNGUJE** (ověřeno 2026-09-17: nngroup.com, lawsofux.com, w3.org, webaim.org vrací 200). Starší poznámka v `node-backend/NOTES.md` o blokovaném egressu je pro tenhle environment **neaktuální**.
@@ -61,4 +79,6 @@ Reuse je default. Před psaním lekce projít `assets/`.
 - Hosting lekcí: stejně jako u backendu → `node tools/build-standalone.js lessons/000X-*.html` → publikovat jako Artifact.
 
 ## Working notes
+- 2026-09-17: Publikováno jako Artifact — lekce 01: https://claude.ai/artifact/Jo98HmRsVJZH2yuNoZ89qD · reference: https://claude.ai/artifact/E2mFtmA8LE2yrqoV3vG7AX
+- 2026-09-17: Starý rozcestník `claude.ai/code/artifact/b5de0f60-…` z node-backend NOTES **už neexistuje** (read vrací not found). Až bude potřeba, publikovat nový z `index.html`.
 - 2026-09-17: Workspace založen. Mise sepsána (portfolio + LASTGO jako vlajková případovka). Dodána **lekce 0001 (UX je rozhodnutí, ne vkus)** + komponent `decision-trace.js` + reference `retez-rozhodnuti.html`. Čeká se na popis LASTGO → pak lekce 02 (úkol uživatele) už na reálném produktu.
