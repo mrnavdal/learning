@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Trychtýř a eventy (kostra pro LASTGO)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Reference · cheat sheet + konkrétní návrh</p>
+<h1>Trychtýř a eventy</h1>
+<p class="subtitle">Obecná pravidla vlevo, konkrétní návrh pro LASTGO vpravo. Tabulka eventů je <strong>návrh k opravení</strong>, ne hotová věc — kroky, které neodpovídají realitě produktu, přepiš. Cílem je, abys v den spuštění měl instrumentaci, která odpoví na otázky, co tě budou zajímat za tři měsíce.</p>
+
+<h2>Co rozhodnout dřív, než napíšeš první event</h2>
+<table>
+  <thead><tr><th>Rozhodnutí</th><th>Proč se musí udělat teď</th><th>Návrh pro LASTGO</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Kohorta</strong></td><td>Trychtýř potřebuje jednoho jmenovatele. Bez něj se kroky nedají porovnat.</td><td>Lidé, kteří otevřeli appku (ne instalace — ty neumíš spojit s chováním).</td></tr>
+    <tr><td><strong>Okno</strong></td><td>Jak dlouho po prvním kroku ještě počítáš dokončení. Zpětně se to dá měnit jen když máš timestampy u všeho.</td><td>Session pro dnešní termíny; 24 h jako druhý pohled. Ukládej timestamp u každého eventu, ať jde okno změnit dodatečně.</td></tr>
+    <tr><td><strong>Identita</strong></td><td>Když identifikuješ až po přihlášení, trychtýř se přetrhne přesně na kroku s účtem.</td><td>Anonymní id při prvním spuštění → po registraci slít (<code>alias</code>). <strong>Tohle je nejdražší věc, kterou lze zpackat.</strong></td></tr>
+    <tr><td><strong>Neúspěchy</strong></td><td>Když měříš jen úspěch, nepoznáš rozdíl mezi „odešel“ a „nepustilo ho to“.</td><td>Ke každému kritickému kroku i event selhání s důvodem: <code>payment_failed { duvod }</code>.</td></tr>
+  </tbody>
+</table>
+
+<h2>Kroky zákazníka → eventy (návrh)</h2>
+<table>
+  <thead><tr><th>Krok úkolu</th><th>Event</th><th>Vlastnosti</th><th>Na co ti odpoví</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Otevře appku</td>
+      <td><code>app_opened</code></td>
+      <td><code>first_open</code>, <code>zdroj</code>, <code>hodina</code>, <code>den_v_tydnu</code></td>
+      <td>Jmenovatel. <code>hodina</code> u last-minute řekne, kdy vůbec má smysl mít nabídky.</td>
+    </tr>
+    <tr>
+      <td>Uvidí aspoň jednu nabídku</td>
+      <td><code>feed_viewed</code></td>
+      <td><code>pocet_nabidek</code>, <code>vzdalenost_nejblizsi_km</code>, <code>minut_do_nejblizsiho_zacatku</code></td>
+      <td><strong>Nejdůležitější vlastnost v celém spisu.</strong> Rozliší „prázdný feed“ (nemáš nabídky = problém akvizice partnerů) od „plný feed, nikdo neklikne“ (problém návrhu). Bez toho ta dvě čteš jako jedno.</td>
+    </tr>
+    <tr>
+      <td>Otevře detail nabídky</td>
+      <td><code>offer_viewed</code></td>
+      <td><code>offer_id</code>, <code>kategorie</code>, <code>sleva_pct</code>, <code>cena</code>, <code>minut_do_zacatku</code>, <code>pozice_v_seznamu</code></td>
+      <td><code>pozice_v_seznamu</code> řekne, jestli lidé scrollují, nebo berou první. To rozhoduje o celém řazení feedu.</td>
+    </tr>
+    <tr>
+      <td>Pochopí, co kupuje<br><span class="note-small">krok bez vlastní obrazovky</span></td>
+      <td><code>storno_terms_viewed</code>, <code>offer_details_expanded</code></td>
+      <td><code>offer_id</code></td>
+      <td>Jediný měřitelný otisk toho, že si člověk ověřoval podmínky. Vysoké číslo = nejistota v návrhu, ne zvědavost.</td>
+    </tr>
+    <tr>
+      <td>Založí účet<br><span class="note-small">ověř, kde v toku fakt leží</span></td>
+      <td><code>signup_started</code>, <code>signup_completed</code></td>
+      <td><code>metoda</code>, <code>vyvolano_z</code></td>
+      <td>Krok, o kterém už víš, že na něm lidi ztrácíš. <code>vyvolano_z</code> řekne, jestli tam lidi tlačíš moc brzo.</td>
+    </tr>
+    <tr>
+      <td>Spustí rezervaci</td>
+      <td><code>reservation_started</code></td>
+      <td><code>offer_id</code>, <code>pocet_osob</code>, <code>booking_mode</code></td>
+      <td>Dělicí čára mezi zájmem a závazkem.</td>
+    </tr>
+    <tr>
+      <td>Zaplatí</td>
+      <td><code>payment_completed</code><br><code>payment_failed</code></td>
+      <td><code>castka</code>, <code>metoda</code>, u selhání <code>duvod</code></td>
+      <td>Krok, který ti <strong>v předchozím návrhu neexistoval</strong>, protože se děl jinde. Teď je tvůj — využij toho.</td>
+    </tr>
+    <tr>
+      <td>Dorazí a uplatní</td>
+      <td><code>code_validated</code></td>
+      <td><code>reservation_id</code>, <code>zpozdeni_min</code></td>
+      <td>Jediný krok, který se odehraje u partnera. Spojuje obě plochy a odhalí no-show, což je byznysový problém, ne designový — ale poznáš to jen odsud.</td>
+    </tr>
+    <tr>
+      <td>Zruší</td>
+      <td><code>reservation_cancelled</code></td>
+      <td><code>kdo</code>, <code>minut_pred_zacatkem</code>, <code>vraceno</code></td>
+      <td>Storno není opak nákupu. Ruší-li se těsně před začátkem, je to jiný problém než rušení hned po zaplacení.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Pojmenování</h2>
+<table>
+  <thead><tr><th>Pravidlo</th><th>Ano</th><th>Ne</th></tr></thead>
+  <tbody>
+    <tr><td>Objekt, pak sloveso v minulém čase</td><td><code>offer_viewed</code></td><td><code>viewOffer</code>, <code>ClickDetail</code></td></tr>
+    <tr><td>Jeden event na krok</td><td><code>reservation_started</code></td><td><code>button_clicked { name }</code> na všechno</td></tr>
+    <tr><td>Rozlišení patří do vlastností</td><td><code>offer_viewed { kategorie }</code></td><td><code>offer_viewed_fitness</code></td></tr>
+    <tr><td>Bez čísel obrazovek a verzí</td><td><code>payment_completed</code></td><td><code>step4_done</code>, <code>checkout_v2_ok</code></td></tr>
+  </tbody>
+</table>
+<div class="callout myth">
+  <span class="label">Nejčastější sebevražda</span>
+  <strong>Jeden univerzální event na všechno</strong> (<code>button_clicked { name }</code>). Vypadá to jako flexibilita, ale kroky úkolu tím zmizí — dostaneš seznam kliků, ze kterého už nikdy nesložíš cestu. Události jsou levné; udělej jich radši víc a pojmenované.
+</div>
+
+<h2>Jak trychtýř číst</h2>
+<ul class="check">
+  <li><strong>Nejdřív absolutní ztráta, pak procento.</strong> 92 % z dvanácti lidí je jedenáct lidí.</li>
+  <li><strong>Při srovnatelné ztrátě jdi výš.</strong> Ztráta nahoře se násobí do všech kroků pod ní.</li>
+  <li><strong>Sloučený úsek vypadá jako krok.</strong> Když ti chybí event, ztráta se slije a ty nepoznáš, kam patří — ověř, že žádné dva kroky nesdílí jeden event.</li>
+  <li><strong>Prázdný feed není odchod.</strong> Bez <code>pocet_nabidek</code> nerozeznáš problém návrhu od problému nabídky.</li>
+  <li><strong>Trychtýř řekne kde, ne proč.</strong> Na podezřelý krok posaď pět lidí a dívej se.</li>
+  <li><strong>Číslo úspěchu napiš dřív, než přijdou data.</strong> Po datech si obhájíš cokoliv.</li>
+</ul>
+
+<h2>Kontrola před nasazením</h2>
+<ul class="check">
+  <li>Každý krok úkolu má právě jeden event a žádný event nepokrývá dva kroky.</li>
+  <li>Anonymní id vzniká při prvním spuštění a po registraci se slévá s přihlášeným.</li>
+  <li>Každý event nese timestamp — okno se pak dá změnit i zpětně.</li>
+  <li>U kritických kroků existuje i event selhání s důvodem.</li>
+  <li>Vlastnosti, na které se budeš chtít ptát za tři měsíce, jsou tam už dnes.</li>
+  <li>Eventy jsou ověřené na reálném průchodu, ne jen napsané v tabulce.</li>
+</ul>
+
+<div class="lesson-footer">
+  <p class="source"><strong>Zdroje:</strong> <a href="https://www.nngroup.com/articles/task-analysis/">NN/g — Task Analysis</a> · <a href="https://www.nngroup.com/articles/conversion-rates/">Conversion Rates</a> · <a href="https://www.nngroup.com/articles/analytics-user-experience/">Analytics &amp; UX</a> · <a href="https://www.nngroup.com/articles/quant-vs-qual/">Quant vs. Qual</a></p>
+  <p><strong>Z lekce:</strong> <a href="../lessons/0002-tok-ne-obrazovky.html">02 — Tok, ne obrazovky</a> · <strong>Souvisí:</strong> <a href="retez-rozhodnuti.html">Řetěz rozhodnutí</a></p>
+</div>
+
+</body>
+</html>

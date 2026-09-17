@@ -22,7 +22,7 @@
 
 ## Komponenty (assets/) — inventář & backlog
 Reuse je default. Před psaním lekce projít `assets/`.
-- **Hotové:** `styles.css`, `quiz.js` (převzato z node-backend), `decision-trace.js` (l01 — skládání řetězu Cíl→Bariéra→Rozhodnutí→Důkaz, 2 scénáře, na konci složí větu do případovky).
+- **Hotové:** `styles.css`, `quiz.js` (převzato z node-backend), `decision-trace.js` (l01 — skládání řetězu Cíl→Bariéra→Rozhodnutí→Důkaz, 2 scénáře, na konci složí větu do případovky), `funnel-lab.js` (l02 — trychtýř LASTGO Před/Po, vypínání eventů vyrábí slepá místa, absolutní ztráta vs. procento).
 - **Vzor komponentu:** čisté jádro (testovatelné) + DOM wrapper + Node test v `tools/test-*.js`.
 - **Backlog:**
   - `squint-viz` — rozmazání obrazovky (CSS filter), ať je vidět skutečná vizuální hierarchie.
@@ -35,9 +35,11 @@ Reuse je default. Před psaním lekce projít `assets/`.
 ## Roadmapa (4 oblouky)
 **Oblouk 1 — Od problému k rozhodnutí**
 1. **UX je rozhodnutí, ne vkus** — řetěz Cíl → Bariéra → Rozhodnutí → Důkaz · lekce 0001 ✓ (`decision-trace.js`)
-2. Kdo a proč — úkol uživatele (JTBD), jak se ptát, aby ti lidé nelhali · TODO
-3. Tok, ne obrazovky — task flow + IA, kde se ztrácí lidi · TODO
+2. **Tok, ne obrazovky** — kroky úkolu = eventy, trychtýř, slepá místa, identita · lekce 0002 ✓ (`funnel-lab.js`)
+   ↳ *Pořadí přehozeno oproti původnímu plánu:* spouští produkci a implementuje analytiku právě teď, okno se zavírá.
+3. Úkol uživatele do hloubky (JTBD) — jak se ptát, aby lidé nelhali; + IA · TODO
 4. Heuristický audit — 10 heuristik jako rentgen, první reálný nález na LASTGO · TODO
+   ↳ *Pozn.:* lekce „co je bariéra“ odpadla — umí to (viz LR-0002).
 
 **Oblouk 2 — Řemeslo (aby to vypadalo i fungovalo profesionálně)**
 5. Vizuální hierarchie — co oko vidí první a proč · 6. Typografie & spacing systém ·
@@ -59,6 +61,7 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
   - **Partnerský web:** `/validate` (jediná obrazovka používaná **vestoje, s člověkem před sebou**), `/dashboard` („Dnes“), `/offers` (Slevy), `/reservations`, `/activities`, `/settings`, auth.
   - **API:** `mrnavdal/lastgo-api` (Node), tickety s labely `track:*`.
 - **Byznys model:** provize, Stripe Connect (connected accounts partnerů), storno poplatky a penále za nedodržený závazek, DPH z provize.
+- **Aktuální stav (od uživatele, 17. 9. 2026):** lidé se do appky dostávají (kolik = neví, nemá analytiku), část si založí účet, **slevu si nekoupí nikdo**. Z jeho vlastního UX výzkumu: nechtějí odcházet z appky do cizího rezervačního systému a nechápou, jak to celé funguje. → Rozhodl se implementovat **rezervaci i platbu přímo v appce**. Produkci spouští **příští týden**, analytika se implementuje teď.
 - **Fáze (k 12. 8. 2026):** v2 rozpracovaná — klient 5/8 tras, partner web 5/7 tras. **Produkce ještě neběží** (otevřené tickety na prod provisioning, domény, migraci dat, retirement legacy React klienta).
 - **⚠️ Zásadní důsledek pro výuku:** produkt **nemá živé uživatele ani analytiku**. Článek „Důkaz“ tedy zatím nemůže stát na číslech z provozu. To není problém — je to téma: důkaz se v téhle fázi bere z **usability testu s 5 lidmi**, heuristického auditu a předem vypsané metriky, kterou *budeš* měřit. Nepředstírat data, která nejsou.
 
@@ -68,7 +71,7 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
 - ❓ **Otevřená otázka na uživatele:** kolik z těch nálezů vymyslel on a kolik mu nasypal agent? To je nejlepší dostupná diagnostika jeho skutečné úrovně — na ní stojí kalibrace oblouku 1.
 
 ## Otevřené otázky (doplnit od uživatele)
-1. **Diagnostika:** u nálezů v „Sedm obrazovek“ — kolik z toho vymyslel sám? (Viz výše. Rozhoduje o tempu celého oblouku 1.)
+1. ~~Diagnostika úrovně~~ — **zodpovězeno jeho řetězem, viz LR-0002.** Kalibrace nahoru.
 2. **Která plocha bude vlajková případovka** — partnerský portál (silná story: člověk vestoje u pultu, provozní nástroj), nebo zákaznický Flutter klient (líp se ukazuje, ale je to „další booking appka“)?
 3. **Kdo je klient**, kterému se bude portfolio ukazovat? (agentura / startup / firma bez IT / lokální podniky) — mění, co v případovce zdůraznit.
 4. **Nástroj:** Figma, nebo designovat rovnou v kódu? (viz Prostředí — Figma účet má jen View/Dev seat.)
@@ -79,6 +82,7 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
 - Hosting lekcí: stejně jako u backendu → `node tools/build-standalone.js lessons/000X-*.html` → publikovat jako Artifact.
 
 ## Working notes
+- 2026-09-17: **Odpověděl vlastním řetězem na LASTGO — kalibrace nahoru, viz LR-0002.** Reálný výzkum s lidmi má za sebou, bariéra i rozhodnutí sedí. Mezery: cíl bez čísla, dvě bariéry slepené do jednoho rozhodnutí, rozhodnutí předběhlo důkaz (sázka místo testu). Dodána **lekce 0002 (Tok, ne obrazovky)** + `funnel-lab.js` + reference `trychtyr-a-eventy.html` s návrhem event spec pro LASTGO.
 - 2026-09-17: Publikováno jako Artifact — lekce 01: https://claude.ai/artifact/Jo98HmRsVJZH2yuNoZ89qD · reference: https://claude.ai/artifact/E2mFtmA8LE2yrqoV3vG7AX
 - 2026-09-17: Starý rozcestník `claude.ai/code/artifact/b5de0f60-…` z node-backend NOTES **už neexistuje** (read vrací not found). Až bude potřeba, publikovat nový z `index.html`.
 - 2026-09-17: Workspace založen. Mise sepsána (portfolio + LASTGO jako vlajková případovka). Dodána **lekce 0001 (UX je rozhodnutí, ne vkus)** + komponent `decision-trace.js` + reference `retez-rozhodnuti.html`. Čeká se na popis LASTGO → pak lekce 02 (úkol uživatele) už na reálném produktu.

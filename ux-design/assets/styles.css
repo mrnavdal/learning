@@ -174,3 +174,32 @@ table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-family: -
 .pullquote { margin: 1.2rem 0; padding: .8rem 1.1rem; border-left: 3px solid var(--accent); background: rgba(47,74,127,.04); font-style: italic; }
 .note-small { margin: .6rem 0 0; font-size: .85rem; color: var(--ink-soft); }
 .tight { margin: 0; }
+
+/* ---- Trychtýř (funnel-lab) ---- */
+.funnel-lab { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.fl-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: 0 0 .4rem; }
+.fl-scenarios { display: flex; gap: .5rem; flex-wrap: wrap; }
+.fl-scenario { font: inherit; font-size: .82rem; font-weight: 700; padding: .4rem .9rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.fl-scenario:hover { border-color: var(--accent); }
+.fl-scenario.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.fl-note { font-size: .86rem; line-height: 1.5; margin: .8rem 0; padding: .6rem .8rem; background: var(--code-bg); border-radius: 6px; }
+.fl-steps { display: flex; flex-direction: column; gap: .1rem; }
+.fl-step { padding: .5rem 0; }
+.fl-step-head { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .3rem; }
+.fl-label { font-size: .9rem; font-weight: 600; flex: 1; }
+.fl-step.is-hidden .fl-label { color: var(--ink-soft); font-weight: 400; }
+.fl-toggle { font: inherit; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: .2rem .55rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; flex: none; transition: all .12s; }
+.fl-toggle:hover:not(.is-locked) { border-color: var(--accent); color: var(--accent); }
+.fl-toggle.is-on { background: rgba(31,107,59,.12); border-color: var(--good); color: var(--good); }
+.fl-toggle.is-locked { cursor: default; opacity: .65; border-style: dashed; }
+.fl-track { height: 1.3rem; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 5px; overflow: hidden; }
+.fl-fill { height: 100%; background: var(--accent); transition: width .18s; }
+.fl-fill.fl-blind { background: repeating-linear-gradient(45deg, var(--rule) 0 6px, var(--paper) 6px 12px); }
+.fl-val { font-size: .82rem; color: var(--ink-soft); margin-top: .25rem; font-variant-numeric: tabular-nums; }
+.fl-dim { font-style: italic; }
+.fl-loss { font-size: .8rem; color: var(--ink-soft); margin-top: .3rem; padding-left: .6rem; border-left: 2px solid var(--rule); font-variant-numeric: tabular-nums; }
+.fl-loss.is-worst { color: var(--bad); font-weight: 700; border-left-color: var(--bad); }
+.fl-loss.is-blind { border-left-style: dashed; }
+.fl-verdict { margin-top: 1rem; font-size: .9rem; line-height: 1.55; padding: .7rem .9rem; border-radius: 8px; border: 1px solid var(--rule); }
+.fl-verdict.good { background: rgba(31,107,59,.09); border-color: var(--good); }
+.fl-verdict.warn { background: rgba(155,28,28,.08); border-color: var(--bad); }

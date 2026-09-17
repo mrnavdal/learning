@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 02 — Tok, ne obrazovky</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 02 · Oblouk 1 — Od problému k rozhodnutí (díl 2 ze 4)</p>
+<h1>Tok, ne obrazovky</h1>
+<p class="subtitle">Dostáváš ji teď, protože příští týden spouštíš produkci a stavíš analytiku. <strong>To, co se rozhodneš měřit, určí, co se kdy budeš moct dozvědět</strong> — a špatně navržené eventy se zpětně nedopočítají. Tahle lekce je o tom, jak rozložit úkol uživatele na kroky a jak z těch kroků udělat měření, které odpovídá na otázky, co tě fakt zajímají.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka</span>
+  <strong>Jednotka návrhu není obrazovka. Je to krok v úkolu uživatele.</strong> Obrazovka může nést tři kroky, jeden krok se může táhnout přes tři obrazovky. Kdo navrhuje obrazovky, skládá dům z oken. Kdo navrhuje tok, ví, kudy se v domě chodí — a hlavně: <strong>kroky úkolu jsou zároveň tvoje eventy</strong>, takže dobře rozložený tok ti vyrobí měření zadarmo.
+</div>
+
+<h2>Co je krok</h2>
+<p>Rozložit úkol na kroky je nejstarší řemeslo oboru — <a href="https://www.nngroup.com/articles/task-analysis/">task analysis</a>. Krok je místo, kde se <strong>změní stav</strong>: buď v systému (vznikla rezervace), nebo v hlavě uživatele (teď už ví, co ho to bude stát). Test: dá se to napsat jako <em>sloveso v minulém čase</em> o uživateli? Pak je to krok.</p>
+<div class="versus">
+  <div class="vs-bad">
+    <span class="label">Obrazovky</span>
+    Feed → Detail → Rezervace → Platba → Potvrzení<br><br>
+    Popisuje, co jsi postavil. Neříká nic o tom, co člověk chtěl a kde se zasekl.
+  </div>
+  <div class="vs-good">
+    <span class="label">Kroky úkolu</span>
+    Uvidí nabídku → pochopí, co kupuje → rozhodne se → zaplatí → dorazí a uplatní<br><br>
+    Popisuje, co dělá člověk. „Pochopí, co kupuje“ nemá vlastní obrazovku, a přesto je to krok, na kterém se dá spadnout.
+  </div>
+</div>
+<p>Všimni si toho rozdílu: v seznamu obrazovek <em>„nechápu, jak to funguje“ nemá kam spadnout</em>. V seznamu kroků ano. To není slovíčkaření — to je rozdíl mezi zjištěním, že lidi mizí, a zjištěním <strong>proč</strong>.</p>
+
+<h2>Trychtýř: kroky jednoho úkolu nad jednou kohortou</h2>
+<p>Trychtýř není „conversion rate na jednotlivé obrazovky“. To je běžný omyl a stojí za to ho rozpitvat, protože se drahé rozhodne podle něj:</p>
+<div class="callout myth">
+  <span class="label">Proč míra konverze na obrazovku nic neřekne</span>
+  Každá obrazovka má <strong>jiného jmenovatele</strong> — jiné lidi, jiný okamžik. „Detail nabídky konvertuje na 40 %“ je 40 % <em>z těch, co se na detail vůbec dostali</em>. Ta čísla se nedají sčítat, porovnávat ani skládat do cesty. Trychtýř má naopak <strong>jednu kohortu</strong> (ti, kdo krok 1 udělali) a sleduje ji <strong>v pořadí</strong>. Teprve to je cesta, a teprve v ní je vidět, kde se ztrácí lidi.
+</div>
+<p>Druhá věc, která se musí rozhodnout předem: <strong>okno</strong>. Počítáš ty, kdo prošli celý trychtýř za jednu session? Za 24 hodin? Za týden? U last-minute nabídky je session téměř jistě správně — u něčeho, co se rozmýšlí týden, by ti session zabila polovinu úspěšných.</p>
+
+<h2>🧪 Trychtýř naživo</h2>
+<p>Dole je zákaznický tok LASTGO ve dvou verzích: <strong>Před</strong> (rezervace a platba v systému partnera) a <strong>Po</strong> (obojí v appce). Čísla jsou vymyšlená, tvar reálný. Přepínej scénáře a zkus vypínat jednotlivé eventy — sleduj, co se stane s tím, co se dá zjistit.</p>
+
+<div class="funnel-lab"></div>
+
+<h2>Tři pravidla, která z toho plynou</h2>
+
+<h3>1 · Opravuj největší absolutní ztrátu, ne nejhorší procento</h3>
+<p>Procento je poměr, a poměr z malého čísla je šum. Krok, kde odejde 92 % z dvanácti lidí, stojí jedenáct lidí. Krok, kde odejde 29 % z devíti set, stojí dvě stě šedesát. Nejhorší procento je skoro vždycky někde dole v trychtýři, kde už skoro nikdo není — a přesně tam tě přitáhne, když se díváš na procenta.</p>
+
+<h3>2 · Co neměříš, splyne se sousedem</h3>
+<p>Chybějící event nevyrobí prázdné místo v grafu. Vyrobí <strong>sloučený úsek</strong>, který vypadá jako normální krok s velkou ztrátou — a ty nepoznáš, který z těch dvou kroků ji způsobil. Nejhorší na tom je, že to <em>vypadá</em> jako informace.</p>
+
+<h3>3 · Krok mimo tvůj produkt nezměříš nikdy</h3>
+<p>Tohle je pravidlo, které z analytiky přetéká zpátky do návrhu. Když nejdůležitější krok — ten, kde se platí — probíhá v cizím systému, není to jen nepohodlí pro uživatele. Je to <strong>trvalé slepé místo</strong> přesně v tom místě, kde se rozhoduje o penězích. Žádná instrumentace to nespraví; spraví to jedině rozhodnutí přenést ten krok k sobě.</p>
+<div class="callout aha">
+  <span class="label">Poznámka pro tvoji případovku</span>
+  Když jsi rezervaci a platbu stěhoval do appky, měl jsi pro to důvod z výzkumu: lidem se nechtělo odcházet do cizího systému a nechápali, jak to funguje. <strong>Tohle je druhý důvod, který ses tehdy možná neřekl nahlas</strong> — a v případovce má váhu navíc, protože ukazuje, že rozhodnutí mělo efekt i na schopnost firmy se cokoli dozvědět. Klienti tenhle argument slyší rádi: „tohle rozhodnutí vám zároveň otevřelo měření, které jste předtím mít nemohli.“
+</div>
+
+<h2>Jak pojmenovat eventy, aby ti odpověděly</h2>
+<p>Jeden event na krok. Ne víc (rozpadne se ti kohorta), ne míň (slepé místo). Konvence, která se nezvrhne:</p>
+<pre><code>objekt_slovesoVMinulémČase        offer_viewed
+                                   reservation_started
+                                   payment_completed
+                                   code_validated</code></pre>
+<p>Vlastnosti (properties) patří k eventu, ne do jeho jména. <code>offer_viewed { offer_id, kategorie, sleva_pct, minut_do_zacatku }</code> ti dovolí ptát se později i na věci, které tě dnes nenapadly. <strong>Nový event nasazuješ releasem; novou vlastnost u existujícího eventu taky — ale zpětně už si ji nedopočítáš ani v jednom případě.</strong> Proto se vlastnosti přidávají štědře a hned.</p>
+<div class="callout myth">
+  <span class="label">Past, na které padá většina prvních implementací</span>
+  <strong>Identita.</strong> Když začneš uživatele identifikovat až po přihlášení, trychtýř se ti přetrhne přesně na kroku s účtem — a to je krok, o kterém víš, že tam lidi ztrácíš. Anonymní id musí vzniknout při <em>prvním spuštění</em> a po registraci se <strong>slít</strong> s tím přihlášeným (běžně se tomu říká <code>alias</code> nebo identity stitching). Když se tohle neudělá hned, data z prvních týdnů jsou nepoužitelná a nejde to opravit zpětně.
+</div>
+
+<h2>Čísla řeknou kde, lidé řeknou proč</h2>
+<p>Trychtýř ti nikdy neřekne důvod. Ukáže na krok a mlčí. Důvod se dozvíš jedině od člověka — <a href="https://www.nngroup.com/articles/quant-vs-qual/">kvantitativní a kvalitativní výzkum jsou dvě různé otázky</a>, ne konkurenti. Ty už jsi tohle jednou udělal správně: <em>„nechce se jim odcházet z appky a nechápou, jak to funguje“</em> není číslo, to je zjištění od lidí — a právě proto z něj šlo odvodit rozhodnutí. Číslo by ti řeklo jen, že na tom kroku mizí.</p>
+<div class="callout">
+  <span class="label">Pořadí, které funguje</span>
+  Trychtýř zúží podezření na jeden krok → <strong>na ten krok posadíš pět lidí</strong> a díváš se, co udělají → z toho vznikne bariéra → z bariéry rozhodnutí. Čísla samotná vedou k hádání, rozhovory samotné k vylepšování věcí, na kterých nezáleží.
+</div>
+
+<div class="callout myth">
+  <span class="label">Udělej dřív, než dorazí první data</span>
+  <strong>Napiš číslo.</strong> Až uvidíš reálná čísla, obhájíš si jakýkoli výsledek — to není slabost charakteru, dělá to každý (hindsight bias). Odhad bude nepřesný a to nevadí: rozhoduje řád velikosti a směr, ne desetinné místo. Číslo vyslovené předem je jediné, které tě může usvědčit — a jedině proto něco znamená, když vyjde.
+</div>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Na jednom kroku odejde 92 % lidí, na jiném 29 %. Kde opravuješ?",
+    "options": [
+      "Tam, kde je procentní propad ze všech největší",
+      "Tam, kde v absolutních číslech zmizí víc lidí",
+      "Na tom kroku, který je v trychtýři nejdříve",
+      "Na kroku, který je nejlevnější na opravení"
+    ],
+    "answer": 1,
+    "why": "Procento je poměr a poměr z malého čísla je šum: 92 % z dvanácti lidí je jedenáct lidí. Opravuješ tam, kde se dá reálně získat zpět nejvíc lidí. (Pořadí v trychtýři je až druhé kritérium — ztráta nahoře se násobí do všech kroků pod ní, takže při srovnatelné ztrátě jdi výš.)"
+  },
+  {
+    "q": "Proč je krok v cizím systému problém i mimo samotnou analytiku?",
+    "options": [
+      "Cizí systém bývá pomalejší a hůře dostupný",
+      "Data z cizího systému nesmíš právně zpracovat",
+      "Uživatel tam musí zadat své údaje ještě jednou",
+      "Nikdy nezjistíš, jestli a kde tam lidé odešli"
+    ],
+    "answer": 3,
+    "why": "Ostatní tři můžou být pravda, ale dají se obejít nebo vyjednat. Tohle ne: krok mimo tvůj produkt je trvale mimo tvoje měření, ztráta se slije do jednoho úseku a ty nepoznáš, jestli lidé odešli před platbou, při ní nebo po ní. Přenést ten krok k sobě není jen pohodlí — je to jediný způsob, jak o něm kdy něco zjistit."
+  },
+  {
+    "q": "Kdy se má stanovit cílové číslo, podle kterého poznáš úspěch?",
+    "options": [
+      "Až bude vidět, jaká čísla vlastně chodí",
+      "Po prvním týdnu, ať je z čeho vyjít",
+      "Dříve, než dorazí první data z provozu",
+      "Až se ustálí sezónnost a objem dat"
+    ],
+    "answer": 2,
+    "why": "Až uvidíš data, dokážeš si obhájit jakýkoli výsledek — hindsight bias dělá každý a proti vlastní hlavě se argumentovat nedá. Číslo vyslovené dopředu je jediné, které tě může usvědčit. Že je odhad nepřesný, nevadí: rozhoduje řád velikosti a směr."
+  }
+]'></div>
+
+<div class="task">
+  <span class="label">Na LASTGO — udělej tenhle týden, než pustíš produkci</span>
+  <ol>
+    <li><strong>Napiš kroky zákazníkova úkolu</strong> — slovesa o člověku, ne názvy obrazovek. Šest až osm jich stačí. Přidej i kroky, které nemají vlastní obrazovku („pochopí, co kupuje“).</li>
+    <li><strong>Ke každému kroku jeden event</strong> a k němu vlastnosti, na které se budeš chtít ptát za tři měsíce. Štědře — zpětně je nedopočítáš. Hotová kostra je v <a href="../reference/trychtyr-a-eventy.html">referenci</a>, stačí ji opravit podle reality.</li>
+    <li><strong>Vyřeš identitu hned</strong> — anonymní id při prvním spuštění, slití po registraci. Jinak budou první týdny dat nepoužitelné právě na tom kroku, který tě zajímá.</li>
+    <li><strong>Napiš tři čísla</strong>, než přijdou data: kolik rezervací <em>bez tvého přičinění</em> za kolik dní znamená, že to vyšlo · kolik znamená, že to nevyšlo · a co v tom případě uděláš.</li>
+  </ol>
+  <p class="note-small">Až budeš mít body 1 a 2, pošli mi je. Projdu je s tebou — event spec se dá pokazit tiše a přijde se na to za tři měsíce, což je ta nejdražší varianta.</p>
+</div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď naskakuje?</strong> „Jak poznám, kolik kroků je moc?“ „Co s lidmi, co se vrátí za tři dny — patří do stejného trychtýře?“ „Když mám 200 instalací, není každé číslo šum?“ „Jak ten trychtýř ukázat klientovi, aby z něj něco měl?“ Ta třetí je mimochodem ta nejdůležitější a má překvapivou odpověď. Napiš, kterou chceš.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.nngroup.com/articles/task-analysis/">NN/g — Task Analysis</a>. K trychtýřům a číslům: <a href="https://www.nngroup.com/articles/conversion-rates/">Conversion Rates</a> · <a href="https://www.nngroup.com/articles/analytics-user-experience/">Analytics &amp; UX</a> · <a href="https://www.nngroup.com/articles/quant-vs-qual/">Quant vs. Qual</a>. Vše textové.</p>
+  <p><strong>Reference:</strong> <a href="../reference/trychtyr-a-eventy.html">📄 Trychtýř a eventy — kostra pro LASTGO</a> · <a href="../reference/retez-rozhodnuti.html">📄 Řetěz rozhodnutí</a></p>
+  <p><strong>Oblouk 1 (4 díly):</strong> <a href="0001-ux-je-rozhodnuti-ne-vkus.html">1 UX je rozhodnutí ✓</a> · <strong>2 Tok, ne obrazovky ✓ (jsi tu)</strong> · 3 Úkol uživatele do hloubky · 4 Heuristický audit</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script src="../assets/funnel-lab.js"></script>
+</body>
+</html>
