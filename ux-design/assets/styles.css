@@ -1,0 +1,176 @@
+/* Sdílený stylesheet pro lekce UX designu.
+   Tufteovská kostra sdílená s node-backend trackem, vlastní akcent (indigo).
+   Poznámka pro learnera: tenhle soubor JE ukázka toho, co se učíš — jeden
+   zdroj pravdy pro barvy, měřítko a rytmus. Viz lekce o design tokenech. */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #4a4a4a;
+  --paper: #fcfcfa;
+  --rule: #ddddd8;
+  --accent: #2f4a7f;      /* indigo — odkazy, důraz */
+  --good: #1f6b3b;
+  --bad: #9b1c1c;
+  --code-bg: #f2f2f0;
+  --measure: 40rem;
+}
+
+html { font-size: 18px; }
+
+body {
+  margin: 0 auto;
+  padding: 4rem 2rem 8rem;
+  max-width: var(--measure);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3 { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.2; font-weight: 700; }
+h1 { font-size: 2rem; margin: 0 0 .3rem; }
+h2 { font-size: 1.35rem; margin: 2.6rem 0 .8rem; border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+h3 { font-size: 1.05rem; margin: 1.8rem 0 .5rem; color: var(--ink-soft); }
+p, li { color: var(--ink); }
+.subtitle { font-family: -apple-system, "Segoe UI", sans-serif; color: var(--ink-soft); font-size: 1rem; margin: 0 0 2rem; }
+.kicker { font-family: -apple-system, "Segoe UI", sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; color: var(--accent); font-weight: 700; }
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(47,74,127,.3); }
+a:hover { border-bottom-color: var(--accent); }
+
+/* ---- Code ---- */
+code { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: .85em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; }
+pre { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; font-size: .8rem; }
+
+/* ---- Callouts ---- */
+.callout { border-left: 3px solid var(--accent); background: rgba(47,74,127,.04); padding: .8rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+.callout.myth { border-left-color: var(--bad); background: rgba(155,28,28,.05); }
+.callout.myth strong { color: var(--bad); }
+.callout.aha { border-left-color: var(--good); background: rgba(31,107,59,.05); }
+.callout .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Analogy box (bridge from Flutter/Dart) ---- */
+.bridge { border: 1px dashed var(--rule); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.4rem 0; font-size: .95rem; }
+.bridge .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); font-weight: 700; display: block; margin-bottom: .3rem; }
+
+/* ---- Footer nav ---- */
+.lesson-footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); font-family: -apple-system, sans-serif; font-size: .9rem; color: var(--ink-soft); }
+.lesson-footer .ask { background: rgba(47,74,127,.05); border-radius: 6px; padding: .9rem 1.1rem; margin-bottom: 1.2rem; }
+.source { font-family: -apple-system, sans-serif; font-size: .9rem; }
+
+/* ---- Quiz widget ---- */
+.quiz { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; }
+.quiz-card { margin: 0 0 1.6rem; }
+.quiz-q { font-size: 1rem; margin-bottom: .7rem; font-weight: 600; }
+.quiz-num { color: var(--accent); font-weight: 700; }
+.quiz-opts { display: flex; flex-direction: column; gap: .45rem; }
+.quiz-opt {
+  text-align: left; font: inherit; font-size: .92rem;
+  padding: .6rem .8rem; border: 1px solid var(--rule); border-radius: 6px;
+  background: #fff; color: var(--ink); cursor: pointer; transition: background .12s, border-color .12s;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(47,74,127,.03); }
+.quiz-opt:disabled { cursor: default; opacity: .95; }
+.quiz-opt.is-correct { border-color: var(--good); background: rgba(31,107,59,.12); font-weight: 600; }
+.quiz-opt.is-wrong { border-color: var(--bad); background: rgba(155,28,28,.1); }
+.quiz-why { margin-top: .6rem; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; line-height: 1.5; }
+.quiz-why.ok { background: rgba(31,107,59,.08); }
+.quiz-why.no { background: rgba(155,28,28,.06); }
+.quiz-score { font-size: .95rem; color: var(--ink-soft); margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--rule); }
+
+/* ---- Mobile (telefon) ---- */
+@media (max-width: 560px) {
+  html { font-size: 17px; }
+  body { padding: 1.5rem 1.1rem 4rem; }
+  h1 { font-size: 1.55rem; }
+  h2 { font-size: 1.2rem; margin-top: 1.9rem; }
+  pre { padding: .8rem .9rem; border-radius: 5px; }
+  pre code { font-size: .74rem; }        /* kód se vejde / roluje vodorovně */
+  table { font-size: .82rem !important; }
+  .quiz-opt { padding: .7rem .8rem; }     /* větší cíl na dotek */
+  .bridge, .callout { padding: .75rem .9rem; }
+}
+
+/* ---- Print ---- */
+@media print {
+  body { background: #fff; padding: 1rem; max-width: 100%; }
+  .quiz button { display: none; }
+  a { border: none; color: var(--ink); }
+}
+
+/* ---- Řetěz rozhodnutí (decision-trace) ---- */
+.decision-trace { margin: 1.6rem 0; font-family: -apple-system, "Segoe UI", sans-serif; border: 1px solid var(--rule); border-radius: 10px; padding: 1rem 1.1rem; background: #fff; }
+.dt-h { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--ink-soft); margin: .9rem 0 .4rem; }
+.dt-h:first-child { margin-top: 0; }
+.dt-scenarios { display: flex; gap: .5rem; flex-wrap: wrap; }
+.dt-scenario { font: inherit; font-size: .82rem; font-weight: 700; padding: .4rem .9rem; border: 1px solid var(--rule); border-radius: 20px; background: var(--paper); color: var(--ink-soft); cursor: pointer; transition: all .12s; }
+.dt-scenario:hover { border-color: var(--accent); }
+.dt-scenario.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.dt-context { font-size: .88rem; line-height: 1.5; margin: .8rem 0; padding: .6rem .8rem; background: var(--code-bg); border-radius: 6px; }
+.dt-context strong { font-variant-numeric: tabular-nums; }
+.dt-chain { display: flex; flex-direction: column; gap: .5rem; }
+.dt-link { border: 1px solid var(--rule); border-radius: 8px; padding: .6rem .8rem; background: var(--paper); transition: opacity .15s; }
+.dt-link.is-locked { opacity: .4; }
+.dt-link.is-active { border-color: var(--accent); background: #fff; }
+.dt-link.is-done { background: rgba(31,107,59,.06); border-color: rgba(31,107,59,.35); }
+.dt-link-head { display: flex; align-items: baseline; gap: .5rem; }
+.dt-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--accent); color: #fff; font-size: .72rem; font-weight: 700; flex: none; }
+.dt-link.is-locked .dt-badge { background: var(--ink-soft); }
+.dt-link.is-done .dt-badge { background: var(--good); }
+.dt-name { font-weight: 700; font-size: .95rem; }
+.dt-hint { font-size: .8rem; color: var(--ink-soft); margin: .25rem 0 .5rem; padding-left: 1.9rem; }
+.dt-opts { display: flex; flex-direction: column; gap: .4rem; padding-left: 1.9rem; }
+.dt-opt { text-align: left; font: inherit; font-size: .88rem; line-height: 1.4; padding: .5rem .7rem; border: 1px solid var(--rule); border-radius: 6px; background: #fff; color: var(--ink); cursor: pointer; transition: all .12s; }
+.dt-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(47,74,127,.03); }
+.dt-opt:disabled { cursor: default; }
+.dt-opt.is-correct { border-color: var(--good); background: rgba(31,107,59,.12); font-weight: 600; }
+.dt-opt.is-wrong { border-color: var(--bad); background: rgba(155,28,28,.08); opacity: .75; text-decoration: line-through; text-decoration-color: rgba(155,28,28,.45); }
+.dt-why { margin: .5rem 0 0 1.9rem; font-size: .84rem; line-height: 1.5; padding: .5rem .7rem; border-radius: 6px; }
+.dt-why.ok { background: rgba(31,107,59,.09); }
+.dt-why.no { background: rgba(155,28,28,.06); }
+.dt-picked { padding-left: 1.9rem; font-size: .88rem; line-height: 1.4; }
+.dt-summary { margin-top: 1rem; padding: .8rem 1rem; border: 1px solid var(--good); border-radius: 8px; background: rgba(31,107,59,.07); font-size: .92rem; line-height: 1.6; }
+.dt-summary .dt-h { margin-top: 0; }
+.dt-summary em { font-style: normal; font-weight: 700; }
+.dt-actions { margin-top: .8rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+.dt-reset { font: inherit; font-size: .8rem; padding: .35rem .8rem; border: 1px dashed var(--rule); border-radius: 6px; background: var(--paper); color: var(--ink-soft); cursor: pointer; }
+.dt-reset:hover { border-style: solid; border-color: var(--accent); color: var(--accent); }
+.dt-progress { font-size: .82rem; color: var(--ink-soft); margin-top: .6rem; }
+
+/* ---- Srovnávací tabulka (dva sloupce: amatér vs. profík) ---- */
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: 1.4rem 0; font-family: -apple-system, "Segoe UI", sans-serif; }
+.versus > div { border: 1px solid var(--rule); border-radius: 8px; padding: .8rem .9rem; font-size: .9rem; line-height: 1.5; }
+.versus .vs-bad { border-left: 3px solid var(--bad); background: rgba(155,28,28,.04); }
+.versus .vs-good { border-left: 3px solid var(--good); background: rgba(31,107,59,.04); }
+.versus .label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; display: block; margin-bottom: .35rem; color: var(--ink-soft); }
+@media (max-width: 560px) {
+  .versus { grid-template-columns: 1fr; }
+  .dt-opts, .dt-hint, .dt-why, .dt-picked { padding-left: 0; margin-left: 0; }
+  .dt-opt { padding: .6rem .7rem; }
+}
+
+/* ---- Úkol na vlastní produkt (deliverable do portfolia) ---- */
+.task { border: 2px solid var(--accent); border-radius: 8px; padding: 1rem 1.1rem; margin: 1.8rem 0; background: rgba(47,74,127,.04); }
+.task .label { font-family: -apple-system, sans-serif; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); display: block; margin-bottom: .4rem; }
+.task ol { margin: .5rem 0 0; padding-left: 1.3rem; }
+.task li { margin-bottom: .35rem; }
+
+/* ---- Referenční dokumenty: tabulky, šablona, checklist ---- */
+table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-family: -apple-system, "Segoe UI", sans-serif; font-size: .88rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-soft); border-bottom: 2px solid var(--rule); }
+  td.bad { color: var(--bad); }
+  td.good { color: var(--good); }
+  .tmpl { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem 1.1rem; font-family: -apple-system, "Segoe UI", sans-serif; font-size: .9rem; line-height: 1.7; margin: 1.2rem 0; }
+  .tmpl .slot { color: var(--accent); font-weight: 700; }
+  .check { list-style: none; padding: 0; font-family: -apple-system, "Segoe UI", sans-serif; font-size: .92rem; }
+  .check li { padding: .35rem 0 .35rem 1.7rem; position: relative; border-bottom: 1px solid var(--rule); }
+  .check li:before { content: "☐"; position: absolute; left: 0; color: var(--accent); font-size: 1.05rem; }
+
+/* ---- Vytažený citát ---- */
+.pullquote { margin: 1.2rem 0; padding: .8rem 1.1rem; border-left: 3px solid var(--accent); background: rgba(47,74,127,.04); font-style: italic; }
+.note-small { margin: .6rem 0 0; font-size: .85rem; color: var(--ink-soft); }
+.tight { margin: 0; }

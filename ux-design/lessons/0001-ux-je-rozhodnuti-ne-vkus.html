@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 01 — UX je rozhodnutí, ne vkus</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Lekce 01 · Oblouk 1 — Od problému k rozhodnutí (díl 1 ze 4)</p>
+<h1>UX je rozhodnutí, ne vkus</h1>
+<p class="subtitle">Osm let stavíš UI. Umíš layout, stavy, animace. Přesto tě klient platí jako pár rukou. Tahle lekce je o tom, co přesně chybí mezi „umím to postavit“ a „rozhoduju, co se postaví“ — a proč je to zároveň jediná věc, kterou má smysl dát do portfolia.</p>
+
+<div class="callout aha">
+  <span class="label">Jedna myšlenka, na které stojí celý oblouk</span>
+  <strong>Vkus nemá rozhodčího. Rozhodnutí ano.</strong> Když řekneš „takhle je to hezčí“, stojí proti sobě dva názory a vyhraje ten, kdo platí. Když řekneš „tady odchází 62 % lidí, protože po nich chceme VIN, který u sebe nemají — přesunu ho za potvrzení termínu a čekám dokončení nad 25 % do měsíce", není co rozporovat. Buď to čísla potvrdí, nebo ne. <strong>To je celý rozdíl mezi člověkem, co kreslí obrazovky, a designérem.</strong>
+</div>
+
+<h2>Nejdřív si vyčistíme pojmy</h2>
+<p>Termín „user experience“ zavedl Don Norman v Apple v 90. letech a myslel jím <em>všechny</em> aspekty kontaktu člověka s firmou a produktem — ne obrazovku. Nielsen Norman Group to dodnes drží takhle: <strong>UX je zážitek, UI je povrch, použitelnost je jedna z vlastností</strong> toho zážitku (<a href="https://www.nngroup.com/articles/definition-user-experience/">NN/g — Definition of UX</a>).</p>
+<p>Prakticky to znamená: když klient řekne „chceme lepší UX“, nemluví o fontech. Mluví o tom, že mu něco nefunguje v byznysu — jen na to nemá slovník. <strong>Tvoje první práce není navrhovat. Je přeložit jeho větu na něco, co má rozhodčího.</strong></p>
+
+<div class="versus">
+  <div class="vs-bad">
+    <span class="label">Kreslič obrazovek</span>
+    „Udělal jsem to čistší a modernější, přidal jsem víc prostoru a sjednotil tlačítka.“<br><br>
+    Klient: <em>„Hmm, mně se to předtím líbilo víc.“</em><br>
+    → Diskuze o vkusu. Rozhoduje ten, kdo platí. Účtuješ hodiny.
+  </div>
+  <div class="vs-good">
+    <span class="label">Designér</span>
+    „Na kroku s VINem odchází 62 % lidí. Přesunul jsem ho za potvrzení termínu. Čekám dokončení z 18 % nad 25 % do měsíce, jinak to vracím."<br><br>
+    Klient: <em>„…a co když to nevyjde?“</em><br>
+    → Diskuze o hypotéze. Rozhoduje realita. Účtuješ výsledek.
+  </div>
+</div>
+
+<h2>Řetěz: Cíl → Bariéra → Rozhodnutí → Důkaz</h2>
+<p>Tohle je celá kostra oboru, na kterou se dá pověsit všechno ostatní. Čtyři články. Každý drží ten předchozí — a když jeden vypadne, řetěz nedrží.</p>
+
+<h3>1 · Cíl — co se má změnit ve výsledku</h3>
+<p>Ne co uděláš (to je aktivita), ne jak to bude vypadat (to je popis). <strong>Co se změní a čím to změříš.</strong> Cíl bez čísla je přání.</p>
+<div class="callout myth">
+  <span class="label">Past</span>
+  <strong>Aktivita převlečená za cíl.</strong> „Zavedeme design systém“ zní jako cíl, ale je to práce. Aktivitu prodáváš na hodiny — a hodiny se dají srazit. Výsledek prodáváš na hodnotu. Tady se láme tvoje sazba.
+</div>
+
+<h3>2 · Bariéra — co konkrétně brání dojít k cíli</h3>
+<p>Bariéra musí být <strong>pozorovatelná</strong>: buď ji vidíš v datech (kde lidé odcházejí), nebo u živého člověka, který se před tebou zasekne. Bariéra není tvůj dojem a není vlastnost uživatele.</p>
+<div class="callout myth">
+  <span class="label">Dvě pasti</span>
+  <strong>a) Vina na uživateli</strong> — „jsou líní, nečtou to“. Nedá se to vyvrátit ani opravit; je to slepá ulička převlečená za vysvětlení.<br>
+  <strong>b) Řešení převlečené za bariéru</strong> — „chybí nám push notifikace“. Rychlý test: dá se to napsat větou „<em>chybí nám X</em>“? Pak je to nápad, ne překážka. Začínáš od nápravy, aniž bys věděl, co opravuješ.
+</div>
+
+<h3>3 · Rozhodnutí — co měníš a proč zrovna to</h3>
+<p>Rozhodnutí musí mířit <strong>na tu bariéru</strong>, ne vedle ní. Většina nápadů, které tě napadnou, míří vedle: bariéru ukazují (progress bar), obcházejí (push notifikace) nebo řeší její následek (e-mail s připomínkou). Ani jeden ji neodstraní.</p>
+
+<h3>4 · Důkaz — podle čeho poznáš, že to zabralo</h3>
+<p>A hlavně: <strong>co bys viděl, kdyby to nezabralo.</strong> Práh a lhůta se říkají <em>předem</em>. Zpětně si totiž každé číslo vyložíš ve svůj prospěch — to není slabost charakteru, to dělá každý.</p>
+
+<div class="bridge">
+  <span class="label">Most z Flutteru</span>
+  <strong>Důkaz je pro design to, co je pro tvůj kód test.</strong> Tvrzení, které může selhat, vyslovené dřív, než začneš. Rozhodnutí bez důkazu je widget bez testu: vypadá dobře, dokud to někdo nepoužije jinak, než sis představoval. A stejně jako u testu platí, že hodnotu má, jen když ho napíšeš <em>před</em> opravou — ne potom, až víš, jak to dopadlo.
+</div>
+
+<h2>🧪 Poskládej řetěz</h2>
+<p>Dvě situace: zakázka pro klienta a tvůj vlastní produkt. U každého článku vyber možnost, která ten článek opravdu je. Tři ze čtyř jsou pasti — a u každé ti komponent řekne, <em>proč</em> je to past. Špatná volba nic nekazí, jen ti ukáže mechanismus chyby; zkoušej dál, dokud článek nesedne.</p>
+
+<div class="decision-trace"></div>
+
+<h2>Proč zrovna tenhle řetěz drží celé portfolio</h2>
+<p>Všimni si, co ti komponent na konci složil. Odstavec, kterému rozumí i člověk, co o designu neví nic:</p>
+<blockquote class="pullquote">
+  „Protože lidé odpadají na VINu, který v tu chvíli nemají po ruce, rozhodl jsem se přesunout VIN až za potvrzení termínu. Cíl: zvednout dokončené objednávky z 18 % na 30 %. Ověřím to takhle: dokončení nad 25 % do čtyř týdnů, jinak se změna vrací."
+</blockquote>
+<p><strong>Tohle je případovka.</strong> Ne galerie obrazovek — ta z tebe dělá dodavatele pixelů, se kterým se soutěží cenou. Klient, který čte portfolio, hledá jednu jedinou věc: <em>sníží mi tenhle člověk riziko?</em> Galerie obrazovek na to neodpovídá. Řetěz ano — ukazuje, že tvoje rozhodnutí jsou <strong>odvoditelná, ne náhodná</strong>. A odvoditelné rozhodnutí se dá zopakovat i na jeho produktu, který jsi nikdy neviděl.</p>
+
+<div class="callout">
+  <span class="label">A ještě jeden důvod, ten nejdůležitější</span>
+  Kdo drží důkaz, drží rozhodnutí. Bez důkazu vyhraje v místnosti názor toho, kdo platí — vždycky, i když se mýlí. Řetěz je jediný způsob, jak si jako dodavatel <strong>udržet autorství vlastní práce</strong>. Proto se tohle učíš dřív než cokoli vizuálního.
+</div>
+
+<h2>Rychlý kvíz</h2>
+
+<div class="quiz" data-quiz='[
+  {
+    "q": "Klient napíše: „Udělejte to modernější.“ Co je první správný krok?",
+    "options": [
+      "Ukázat mu tři návrhy a nechat ho jeden vybrat",
+      "Najít v produktu místa, která působí zastarale",
+      "Zeptat se, co se má po změně měřitelně změnit",
+      "Navrhnout modernější paletu barev a sadu písem"
+    ],
+    "answer": 2,
+    "why": "„Modernější“ je popis vzhledu — nemá rozhodčího. Dokud nevíš, co se má změnit ve výsledku, nemáš cíl, jen dojem. Varianta se třemi návrhy situaci ještě zhorší: rozhodne vkus toho, kdo platí, a ty přijdeš o autorství rozhodnutí."
+  },
+  {
+    "q": "Která věta NENÍ bariéra, i když tak na první pohled vypadá?",
+    "options": [
+      "Sedm z deseti lidí odejde na obrazovce s platbou",
+      "Chybí nám push notifikace, které by lidi vracely",
+      "Lidé hledají tlačítko Zpět tam, kde žádné není",
+      "Formulář chce údaj, který uživatel u sebe nemá"
+    ],
+    "answer": 1,
+    "why": "Bariéra je překážka, kterou vidíš — v datech, nebo u člověka při testu. „Chybí nám X“ je nápad na řešení: začínáš od nápravy, aniž bys věděl, co vlastně opravuješ. Ostatní tři popisují pozorované chování nebo konkrétní překážku v toku."
+  },
+  {
+    "q": "Proč se u rozhodnutí říká předem, kdy se změna vrací zpět?",
+    "options": [
+      "Klient tím získá jistotu, že nepřijde o peníze",
+      "Bez toho by změnu nešlo technicky odnasadit",
+      "Analytika jinak nezměří dopad provedené změny",
+      "Tvrzení, které nemůže selhat, není tvrzení"
+    ],
+    "answer": 3,
+    "why": "Bez prahu vyslovaného dopředu si výsledek vždycky vyložíš ve svůj prospěch — čísla se dají ohnout zpětně. Práh a lhůta dělají z rozhodnutí tvrzení, které může prohrát. A teprve to, co mohlo prohrát, něco znamená, když vyhraje. Přesně proto píšeš test před opravou bugu, ne po ní."
+  }
+]'></div>
+
+<div class="task">
+  <span class="label">Na LASTGO — první kus portfolia</span>
+  <p class="tight">Napiš mi jeden řetěz pro LASTGO. Nemusí být správný — <strong>od toho tu jsem já</strong>, vaším společným úkolem je ho pak trhat. Stačí čtyři odrážky:</p>
+  <ol>
+    <li><strong>Cíl</strong> — co se má v LASTGO změnit ve výsledku, s číslem. (Nemáš analytiku? Napiš odhad a označ ho jako odhad — to je legitimní, jen to musí být přiznané.)</li>
+    <li><strong>Bariéra</strong> — kde konkrétně to dnes drhne a <em>odkud to víš</em>.</li>
+    <li><strong>Rozhodnutí</strong> — co bys změnil a proč zrovna to.</li>
+    <li><strong>Důkaz</strong> — podle čeho poznáš, že to zabralo, a kdy to vzdáš.</li>
+  </ol>
+  <p class="note-small">Nejčastější a nejužitečnější výsledek tohohle cvičení: zjistíš, že <strong>nevíš, kde lidi odcházejí</strong>. To není selhání — to je nález. Přesně z něj vyroste lekce 02.</p>
+</div>
+
+<div class="lesson-footer">
+  <div class="ask">
+    <strong>Co ti teď naskakuje?</strong> „Jak najdu bariéru, když nemám žádná data?“ „Co když klient trvá na svém řešení a nechce slyšet o cíli?“ „Jak se ptát uživatelů, aby mi nelhali ze zdvořilosti?“ „Kolik si za takový audit říct?“ To nejsou vedlejší otázky — to jsou další zastávky oblouku. Napiš, kterou chceš první.
+  </div>
+  <p class="source"><strong>Primární zdroj:</strong> <a href="https://www.nngroup.com/articles/definition-user-experience/">NN/g — The Definition of User Experience (UX)</a>. Norman a Nielsen, tedy lidé, kteří ten termín zavedli. Krátké, textové, bez videa.</p>
+  <p><strong>Reference k lekci:</strong> <a href="../reference/retez-rozhodnuti.html">📄 Řetěz rozhodnutí — kostra případovky (cheat sheet)</a></p>
+  <p><strong>Oblouk 1 (4 díly):</strong> <strong>1 UX je rozhodnutí ✓ (jsi tu)</strong> · 2 Kdo a proč — úkol uživatele · 3 Tok, ne obrazovky · 4 Heuristický audit</p>
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script src="../assets/decision-trace.js"></script>
+</body>
+</html>

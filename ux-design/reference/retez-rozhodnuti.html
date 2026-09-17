@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — Řetěz rozhodnutí (kostra případovky)</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<p class="kicker">Reference · cheat sheet</p>
+<h1>Řetěz rozhodnutí</h1>
+<p class="subtitle">Kostra každého UX rozhodnutí — a zároveň kostra případovky do portfolia. Vytiskni si to, nebo si to dej na plochu. Používej při každé zakázce, dokud to nebudeš mít v hlavě.</p>
+
+<h2>Čtyři články</h2>
+<table>
+  <thead><tr><th>Článek</th><th>Odpovídá na otázku</th><th>Test, jestli to drží</th></tr></thead>
+  <tbody>
+    <tr><td><strong>1 · Cíl</strong></td><td>Co se má změnit ve výsledku?</td><td>Je tam číslo a lhůta? Umím říct, kdy jsem prohrál?</td></tr>
+    <tr><td><strong>2 · Bariéra</strong></td><td>Co brání tam dojít — a odkud to vím?</td><td>Viděl jsem to v datech, nebo u živého člověka? Nebo si to jen myslím?</td></tr>
+    <tr><td><strong>3 · Rozhodnutí</strong></td><td>Co měním a proč zrovna to?</td><td>Míří to na tu bariéru, nebo vedle ní?</td></tr>
+    <tr><td><strong>4 · Důkaz</strong></td><td>Podle čeho poznám, že to zabralo?</td><td>Řekl jsem práh a lhůtu <em>předem</em>? Co uvidím, když to nevyjde?</td></tr>
+  </tbody>
+</table>
+
+<h2>Pasti a jak je přepsat</h2>
+<table>
+  <thead><tr><th>Slyšíš / napadne tě</th><th>Co to je</th><th>Přepiš na</th></tr></thead>
+  <tbody>
+    <tr><td class="bad">„Udělejme to modernější“</td><td>Popis vzhledu — nemá rozhodčího</td><td class="good">Co se má po změně měřitelně změnit?</td></tr>
+    <tr><td class="bad">„Zavedeme design systém“</td><td>Aktivita místo výsledku</td><td class="good">Jaký výsledek ten systém umožní?</td></tr>
+    <tr><td class="bad">„Uživatelé jsou líní / nečtou“</td><td>Vina na uživateli — slepá ulička</td><td class="good">Co konkrétně po nich chceme v tom místě?</td></tr>
+    <tr><td class="bad">„Chybí nám push notifikace“</td><td>Řešení převlečené za bariéru</td><td class="good">Jakou překážku by to mělo obejít — a je tam?</td></tr>
+    <tr><td class="bad">„Konkurence to má lepší“</td><td>Hypotéza o trhu, ne překážka v toku</td><td class="good">Kde v našem toku lidé odcházejí?</td></tr>
+    <tr><td class="bad">„Klientovi se to líbí“</td><td>Názor zadavatele ≠ chování zákazníka</td><td class="good">Které číslo se pohnulo a o kolik?</td></tr>
+    <tr><td class="bad">„Bude tam míň polí, to je lepší“</td><td>Popis změny místo důkazu</td><td class="good">Co ta změna udělala s dokončením?</td></tr>
+    <tr><td class="bad">„Zeptáme se lidí, jestli je to lepší“</td><td>Deklarovaný pocit ≠ chování</td><td class="good">Sledujme, co lidé udělají, ne co řeknou</td></tr>
+  </tbody>
+</table>
+
+<h2>Šablona odstavce do případovky</h2>
+<div class="tmpl">
+  Protože <span class="slot">[bariéra + odkud to vím]</span>,<br>
+  rozhodl jsem se <span class="slot">[rozhodnutí]</span>.<br>
+  Cíl: <span class="slot">[co se změní, s číslem]</span>.<br>
+  Ověřím to takhle: <span class="slot">[metrika, práh, lhůta]</span>.
+</div>
+<p>Čtyři věty. Klient je pochopí, i když o designu neví nic — a ty za ně můžeš ručit, protože každá stojí na té předchozí. Obrazovky patří <em>pod</em> tenhle odstavec, ne místo něj.</p>
+
+<h2>Kostra celé případovky (jedna stránka portfolia)</h2>
+<table>
+  <thead><tr><th>Sekce</th><th>Co v ní je</th><th>Proč ji klient čte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Kontext</strong></td><td>2–3 věty: co je produkt, komu slouží, v jaké byl fázi</td><td>Aby poznal, jestli je to podobné jeho situaci</td></tr>
+    <tr><td><strong>Zadání vs. skutečný problém</strong></td><td>Co se po tobě chtělo — a co jsi zjistil, že je problém</td><td>Tohle je moment, kdy přestaneš být pár rukou</td></tr>
+    <tr><td><strong>Jak jsem to zjistil</strong></td><td>Data, test s 5 lidmi, audit — konkrétně, s čísly</td><td>Odděluje tě od lidí, co „mají pocit“</td></tr>
+    <tr><td><strong>Rozhodnutí</strong></td><td>2–4 klíčová, každé jako řetěz. Ne všechna.</td><td>Ukazuje, že umíš vybrat, co je důležité</td></tr>
+    <tr><td><strong>Výsledek</strong></td><td>Čísla před/po. Nemáš je? Napiš to a řekni, co bys měřil.</td><td>Poctivost je tu silnější než vymyšlené číslo</td></tr>
+    <tr><td><strong>Co bych udělal jinak</strong></td><td>1–2 věty, upřímně</td><td>Nikdo nevěří portfoliu, kde všechno vyšlo</td></tr>
+    <tr><td><strong>Obrazovky</strong></td><td>Až tady. S popiskem, které rozhodnutí ukazují.</td><td>Důkaz, že to umíš i dodělat</td></tr>
+  </tbody>
+</table>
+
+<h2>Kontrola před odesláním klientovi</h2>
+<ul class="check">
+  <li>Každé rozhodnutí v dokumentu má svou bariéru. Žádné „protože to tak vypadá líp“.</li>
+  <li>U každého čísla je vidět, odkud je (analytika / test / odhad — a odhad je označený jako odhad).</li>
+  <li>Je tam aspoň jedna věta, která může dopadnout špatně. Když ne, neslíbil jsi nic.</li>
+  <li>Nikde není věta, která vinu za problém dává uživateli.</li>
+  <li>Obrazovky jsou až za rozhodnutími, ne místo nich.</li>
+  <li>Kdyby to četl člověk, co o designu neví nic, pochopí, proč jsi to udělal.</li>
+</ul>
+
+<div class="lesson-footer">
+  <p class="source"><strong>Zdroje:</strong> <a href="https://www.nngroup.com/articles/definition-user-experience/">NN/g — Definition of UX</a> · <a href="https://www.nngroup.com/articles/usability-101-introduction-to-usability/">NN/g — Usability 101</a></p>
+  <p><strong>Z lekce:</strong> <a href="../lessons/0001-ux-je-rozhodnuti-ne-vkus.html">01 — UX je rozhodnutí, ne vkus</a></p>
+</div>
+
+</body>
+</html>

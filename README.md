@@ -6,6 +6,7 @@ Osobní učební repozitář. Jedno téma = jedna složka, každá je samostatn�
 ## Témata
 
 - [`node-backend/`](./node-backend/) — Backend development v Node.js. Cíl: uplatnění jako fullstack engineer.
+- [`ux-design/`](./ux-design/) — UX design pro web, webové aplikace a mobil. Cíl: portfolio s případovkami (vlajková loď = LASTGO) a pozice „vývojář s přesahem do businessu a UX“.
 
 ## Jak to používám
 
