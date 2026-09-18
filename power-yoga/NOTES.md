@@ -32,6 +32,28 @@
   komponentů. U jógy to znamená: časovač dechu, přehrávač sekvence, stavebnice sestavy —
   ne jen fotky pozic a odstavce.
 - **Feedback loop musí být automatický.** Kvíz je minimum, ne cíl.
+- **⭐⭐ KAŽDÝ TRÉNINK MUSÍ BÝT JINÝ (výslovné přání, 2026-09-18).** Uživatel mě opravil:
+  moje rada „nepotřebuješ novou praxi ke každému tréninku" byla efektivní, ale pro něj
+  špatná. **Opakování ho nudí a nuda je reálné riziko, že přestane.** Variabilita je
+  u něj adherence mechanismus, ne luxus.
+  - Nemusí to být nová pozice — stačí **jiné délky výdrží, jiné počty, jiné zaměření**.
+  - Chce se na trénink **těšit, že tam bude něco nového na objevení**.
+  - **Ptát se ho předem, co chce** (zaměření, délka, pozice k rozebrání). Výslovně si to
+    vyžádal. Neblokovat tím stavbu, když už řekl, co chce.
+
+## Rotace zaměření tréninků (od 2026-09-18)
+Každý trénink má **jedno zaměření**, ostatní složky jedou v udržovací dávce.
+
+| Zaměření | Co je hlavní | Cíl obtížnosti |
+|---|---|---|
+| **Síla** | delší výdrže v prknech, čaturangy, zadní řetěz (Locust) | 6–7 |
+| **Mobilita** | dlouhé výdrže v otvíračích ramen a Th páteře, kyčle | 4–5 |
+| **Flow** | víc kol pozdravů, kratší pauzy, plynulost a tempo | 6–7 |
+| **Lehký den** | když je rozlámaný | 3–4 |
+
+Střídat, nikdy nedat dvakrát stejné zaměření po sobě. Do každého tréninku dát
+**aspoň jednu věc, kterou ještě neviděl** — novou pozici, nové schéma sérií, nový cue.
+Zaměření hlásit už v kickeru a titulku praxe, ať to vidí dopředu.
 
 ## Specifikum jógy: znalost vs. dovednost
 Tenhle workspace je **silně dovednostní**. Znalost (anatomie, názvosloví) je jen tolik,
@@ -47,7 +69,7 @@ kolik je potřeba pro dovednost. Platí:
 
 **Oblouk A — Motor praxe**
 1. **Dech řídí pohyb** — jeden dech = jeden pohyb, nádech = expanze / výdech = flexe, ujjayi · lekce 0001 ✓
-2. **Pozdrav slunci A** — první ucelená sekvence, atom power jógy · TODO
+2. **Pozdrav slunci A** — 11 kroků, proč je poloviční prázdný, čaturanga s koleny · lekce 0002 ✓
 3. **Čaturanga & rameno** — lopatka, serratus anterior, bezpečná progrese, objem opakování · TODO
 
 **Oblouk B — Slovník pozic**
@@ -102,7 +124,7 @@ do oblouku D.
 | Krok | Délka | Stav |
 |---|---|---|
 | 1 | 25–35 min | ✅ hotovo (T01–T03) |
-| 2 | 40–45 min | ⏸️ **POZASTAVENO** — náročné období (viz LR-0008) |
+| 2 | 40–45 min | ← **rozjeto 2026-09-18** (T06 na 40 min), praxe 1 ze 3 |
 | 3 | 55–60 min | |
 | cíl | 75–90 min | |
 
@@ -173,6 +195,9 @@ Stejná cesta jako u `node-backend/`: **Artifacty na claude.ai** — okamžitá 
 - 🪜 Reference „Žebřík pro zápěstí": https://claude.ai/code/artifact/86cf6dfc-58ad-4cbe-8de0-5d93a5f09210
 - 🔥 Trénink 04 „Konečně trénink": https://claude.ai/code/artifact/c8f611ed-a5cb-48a4-9fb9-68bd4d965c75
 - 🌿 Trénink 05 „Lehký den": https://claude.ai/artifact/MTT7K8uf1UWK25BvpingAM
+- ☀️ Lekce 02 „Pozdrav slunci A": https://claude.ai/artifact/UWbUCtUiwyeuuwmNzSgXTd
+- 📋 Reference „Jedenáct kroků pozdravu": https://claude.ai/artifact/DtngKTSskoCDEmAgQNL4aA
+- 💪 Trénink 06 „Silový den": https://claude.ai/artifact/1xfYLwFdotPfETeDvGbGbX
 
 ## Obrázky pozic — co jsem zjistil (2026-08-30)
 Uživatel chtěl u každého cviku obrázek a předpokládal, že existuje databáze, ze které
@@ -258,8 +283,20 @@ Zatím **není zapojený do běhounu**, protože 7 z 21 by vypadalo rozbitě.
   tím se zároveň brání tomu, aby `sessions/` vytlačily učební oblouk.
 - 📌 **Ptát se i na kontext** (spánek, zátěž mimo podložku), ne jen na čísla. U T01 i T04
   to vysvětlilo víc než samotné výdrže.
-- **Čeká:** zápis z T05 nebo T04 (podle toho, co si pustí) + signál, jestli náročné období
-  skončilo → pak teprve rozjet rampu na 40–45 min.
+- 2026-09-18: **Náročné období odeznívá** („dneska už asi tím líp"), **rampa rozjeta na 40 min**.
+  Uživatel si vyžádal (a) **nový trénink každou praxi**, (b) **zaměření na trénink**,
+  (c) **abych se ho předem ptal, co chce**, (d) dnes silový, (e) **celé pozdravy slunci**
+  — poloviční mu přišly „nic moc". Viz LR-0009.
+  **Dodáno:** lekce 0002 (Pozdrav slunci A), `reference/pozdrav-slunci-a.html`,
+  trénink 0006 (zaměření síla, 35/40/45, první celý pozdrav, nová pozice **Locust**
+  jako nejbližší náhrada chybějícího tahu, test příček zápěstí 2–3 jako gate na dlaně).
+  Drill v lekci 02 je **`breath-match.js` s vlastní sadou** 11 kroků sekvence — čistý reuse,
+  žádný nový komponent.
+- ⚠️ **Pozor na české uvozovky v JSON atributech.** Zavírací musí být U+201C („…"),
+  ne ASCII `"` — to ukončí JSON string a komponent tiše umře. Validátor to chytne.
+- **Čeká:** zápis z T06 (obtížnost, příčka zápěstí, jak šel celý pozdrav, měření prkna)
+  + **co chce do dalšího tréninku**. Další zaměření by mělo být mobilita nebo flow,
+  ne znovu síla.
 - **Nápad do backlogu:** uživatel zmínil i obrázky k pozicím. Zatím řešeno slovním popisem
   (zvládne to statický hosting a dobře se to tiskne). Kdyby chtěl vizuál, nejlevnější cesta
   je jednoduchý **inline SVG panáček** jako komponent `pose-figure.js` — ne fotky, ty nemám
