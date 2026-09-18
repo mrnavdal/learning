@@ -72,10 +72,11 @@ A klientská strana téhož: vrátil se člověk zjistit výsledek?
 - **N5 · `code_validation_failed { reason }`** na straně partnera. Dnes je v
   backlogu ticket #66 („lookup nerozliší zrušený kód od neznámého“) — tohle je
   jeho měřicí strana. Bez eventu selhání nepoznáš, jak často se to u pultu děje.
-- **N6 · Krok se svolením k poloze.** V tabulce je `nearest_distance_km ⚠` —
-  pokud to znamená „potřebuje polohu“, pak je mezi kroky 1 a 2 **schovaný krok
-  „povolí polohu“**, kde se v mobilních appkách masivně umírá. Systémový dialog
-  je krok úkolu jako každý jiný a patří do trychtýře.
+- ~~**N6 · Krok se svolením k poloze.**~~ **Neplatí.** ⚠ znamenalo, že polohu ani
+  `party_size` produkt nepotřebuje; obojí ze specu odstraněno (2026-09-18).
+  Nález byl podmíněný a podmínka neplatí. **Zbývá ověřit:** jestli feed polohu
+  nepoužívá *vůbec* (pak opravdu žádný krok se svolením neexistuje), nebo jen
+  nezaznamenává vzdálenost (pak ten krok v trychtýři pořád je).
 - **N7 · Dwell / scroll na detailu nabídky.** Krok 4 („works out what they are
   buying“) je dnes nejhůř instrumentovaný krok celého toku — a přitom odpovídá
   **druhé bariéře z výzkumu** („nechápou, jak to funguje“), tedy té, kterou
@@ -97,3 +98,59 @@ redeemed / cancelled / expired*. Objektem je rezervace, kód je jen mechanismus.
 Sloupec „What it answers“ je ta nejcennější část celé tabulky a klient ho nikdy
 nevidí. **Neškrtat.** Do případovky patří jako důkaz, že měření bylo *navržené*
 — ne že se zapnula analytika a čekalo se, co vypadne.
+
+
+---
+
+# Rozhodnutí 2026-09-18: `payment_result_shown` × `reservation_result_viewed`
+
+**Verdikt: nechat zvlášť.** Ne kvůli preferenci — kvůli tomu, že jde o **dva
+různé objekty**, a to rozhodla už zvolená konvence `objekt_slovesoVMinulémČase`.
+
+- `payment` a `reservation` mají **různý životní cyklus**. Platba může selhat,
+  aniž kdy vznikne stav rezervace. Rezervace může být odmítnuta nebo vypršet
+  dlouho po dokonale úspěšné platbě.
+- Sloučený event by musel u `outcome: failed` popisovat rezervaci, která
+  neexistuje. Tam, kde jeden event potřebuje větev „tahle vlastnost pro tenhle
+  případ nedává smysl“, jsou to ve skutečnosti dva eventy.
+- **Různý jmenovatel.** `payment_result_shown` se počítá z lidí, kteří platili.
+  `reservation_result_viewed` z rezervací, které došly do konečného stavu.
+  Jiná kohorta = jiný trychtýř; sloučit je je táž chyba jako míra konverze na obrazovku.
+- **Mezi nimi je čekání** — a právě ta mezera je to nejcennější, co se tu dá
+  měřit: **kolik lidí se nikdy nedozvědělo, jak to dopadlo.** Po sloučení ta
+  otázka zmizí.
+
+## Pravidlo, které z toho plyne obecně
+**Dva eventy jde v dotazu sloučit. Jeden event nejde zpětně rozdělit.**
+Při pochybnostech se tedy štěpí. Sloučení je vratné rozhodnutí, sloučení
+předem je nevratné.
+
+## Kdy naopak sloučit
+Stejný okamžik **a** stejný jmenovatel **a** stejné rozhodnutí, které z toho
+plyne **a** defekt nemůže existovat v jednom bez druhého. Musí platit všechno.
+
+## Pravidla vzniku
+| Případ | `payment_result_shown` | `reservation_result_viewed` |
+|---|---|---|
+| Instant, zaplaceno | `outcome: paid` | `surface: checkout`, `minutes_since_payment: 0`, `first_view: true` |
+| Vyžaduje potvrzení | `outcome: awaiting_confirmation` | až později — `surface: push / reservations`, `minutes_since_payment: 47` |
+| Platba selhala | `outcome: failed` | **nevzniká** — rezervace žádný stav nemá |
+
+Vlastnosti k doplnění na `reservation_result_viewed`: `surface`
+(checkout / push / reservations / deep_link), `minutes_since_payment`,
+`first_view` (bool), `outcome` (confirmed / rejected / expired).
+
+Díky `surface: checkout` jdou ta dvě čísla kdykoli složit do jednoho
+(„viděl výsledek“), kdyby se to ukázalo jako správný pohled.
+
+**Metrika, kterou to celé odemyká:** zaplacené rezervace, které došly do
+konečného stavu a **nikdy** k nim nevznikl `reservation_result_viewed`.
+To jsou lidé, kteří zaplatili a nedozvěděli se, jestli něco mají.
+
+## Poznámka: `party_size` odstraněn
+Rozumné, pokud je dohledatelný joinem přes `reservation_id`. **Ověřit ale kde
+se budeš ptát:** když se otázky kladou v analytickém nástroji, který na
+aplikační databázi nevidí, je vlastnost, co není na eventu, prakticky
+neexistující. Navíc se to dotýká nedořešené nejednoznačnosti z auditu
+„Sedm obrazovek“ (*jedna rezervace pro dva lidi obsadila jedno místo*) —
+až se bude rozhodovat, co „místo“ znamená, budou se reálná čísla hodit.

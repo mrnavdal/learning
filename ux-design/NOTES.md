@@ -82,6 +82,7 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
 - Hosting lekcí: stejně jako u backendu → `node tools/build-standalone.js lessons/000X-*.html` → publikovat jako Artifact.
 
 ## Working notes
+- 2026-09-18: Rozhodnut překryv `payment_result_shown` × `reservation_result_viewed` → **zvlášť** (různé objekty, různý jmenovatel, mezi nimi čekání). Vytěženo obecné pravidlo: *dva eventy jde v dotazu sloučit, jeden nejde zpětně rozdělit → při pochybnostech štěpit.* N6 (krok se svolením k poloze) **neplatí** — polohu ani `party_size` produkt nepotřebuje.
 - 2026-09-18: **Dodal vlastní event spec (9 kroků + 7b) — nad úroveň lekce, viz LR-0003.** Klient/server split se zdůvodněním přes 3-D Secure, oddělení „peníze proběhly“ od „zákazník viděl výsledek“. Review zapsáno v `case-lastgo/02-event-spec-review.md`; tři nálezy jsou blokující před spuštěním (spoj identity klient↔server, `feed_viewed` při nule nabídek, chybějící větev čekání na potvrzení).
   - **Vzorec jeho slepého místa:** kroky, které se nedějí na obrazovce (systémový dialog s polohou, čekání na partnera, handoff do banky). Zapracovat do dalších lekcí.
   - Založena složka `case-lastgo/` — surovina pro případovku, jak vzniká.
