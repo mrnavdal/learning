@@ -82,6 +82,9 @@ Nezjišťoval jsem to dotazem — přečetl jsem artifacty v jeho účtu. **Ově
 - Hosting lekcí: stejně jako u backendu → `node tools/build-standalone.js lessons/000X-*.html` → publikovat jako Artifact.
 
 ## Working notes
+- 2026-09-18: **Dodal vlastní event spec (9 kroků + 7b) — nad úroveň lekce, viz LR-0003.** Klient/server split se zdůvodněním přes 3-D Secure, oddělení „peníze proběhly“ od „zákazník viděl výsledek“. Review zapsáno v `case-lastgo/02-event-spec-review.md`; tři nálezy jsou blokující před spuštěním (spoj identity klient↔server, `feed_viewed` při nule nabídek, chybějící větev čekání na potvrzení).
+  - **Vzorec jeho slepého místa:** kroky, které se nedějí na obrazovce (systémový dialog s polohou, čekání na partnera, handoff do banky). Zapracovat do dalších lekcí.
+  - Založena složka `case-lastgo/` — surovina pro případovku, jak vzniká.
 - 2026-09-17: **Odpověděl vlastním řetězem na LASTGO — kalibrace nahoru, viz LR-0002.** Reálný výzkum s lidmi má za sebou, bariéra i rozhodnutí sedí. Mezery: cíl bez čísla, dvě bariéry slepené do jednoho rozhodnutí, rozhodnutí předběhlo důkaz (sázka místo testu). Dodána **lekce 0002 (Tok, ne obrazovky)** + `funnel-lab.js` + reference `trychtyr-a-eventy.html` s návrhem event spec pro LASTGO.
 - **Publikované URL (Artifacty):**
   - L01 Rozhodnutí, ne vkus — https://claude.ai/artifact/Jo98HmRsVJZH2yuNoZ89qD
